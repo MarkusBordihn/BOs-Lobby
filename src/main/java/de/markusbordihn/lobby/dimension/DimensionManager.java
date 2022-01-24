@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -174,11 +175,11 @@ public class DimensionManager {
       } else if (dimensionLocation.equals(lobbyDimension)) {
         log.info("Found lobby dimension with name {}: {}", lobbyDimension, serverLevel);
         lobbyLevel = serverLevel;
-        DataPackHandler.prepareDataPack(serverLevel);
+        DataPackHandler.prepareDataPackOnce(serverLevel);
       } else if (dimensionLocation.equals(miningDimension)) {
         log.info("Found mining dimension with name {}: {}", miningDimension, serverLevel);
         miningLevel = serverLevel;
-        DataPackHandler.prepareDataPack(serverLevel);
+        DataPackHandler.prepareDataPackOnce(serverLevel);
       }
     }
 

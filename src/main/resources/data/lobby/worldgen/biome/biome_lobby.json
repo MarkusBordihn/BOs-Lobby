@@ -1,8 +1,8 @@
 {
   "scale": 1,
   "effects": {
-    "sky_color": 8103167,
     "fog_color": 12638463,
+    "sky_color": 8103167,
     "water_color": 6776679,
     "water_fog_color": 329011
   },
@@ -11,12 +11,12 @@
   "features": [],
   "starts": [],
   "spawners": {
-    "monster": [],
-    "creature": [],
     "ambient": [],
-    "water_creature": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
     "water_ambient": [],
-    "misc": []
+    "water_creature": []
   },
   "spawn_costs": {},
   "player_spawn_friendly": false,

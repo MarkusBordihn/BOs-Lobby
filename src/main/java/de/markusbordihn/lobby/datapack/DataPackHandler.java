@@ -26,12 +26,34 @@ import net.minecraft.server.level.ServerLevel;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.commands.CommandManager;
+import de.markusbordihn.lobby.data.LobbyData;
+import de.markusbordihn.lobby.dimension.DimensionManager;
 
 public class DataPackHandler {
 
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected DataPackHandler() {}
+
+  public static void prepareDataPackOnce(ServerLevel level) {
+    if (level == DimensionManager.getLobbyDimension()) {
+      if (LobbyData.get().isLobbyDimensionLoaded()) {
+        log.info("Data Pack for lobby dimension {} was already loaded!", level);
+      } else {
+        prepareDataPack(level);
+        LobbyData.get().setLobbyDimensionLoaded(true);
+      }
+    } else if (level == DimensionManager.getMiningDimension()) {
+      if (LobbyData.get().isMiningDimensionLoaded()) {
+        log.info("Data Pack for mining dimension {} was already loaded!", level);
+      } else {
+        prepareDataPack(level);
+        LobbyData.get().setMiningDimensionLoaded(true);
+      }
+    } else {
+      log.warn("Unable to get status for level {} to confirm data pack load status!", level);
+    }
+  }
 
   public static void prepareDataPack(ServerLevel level) {
     String dimensionLocation = level.dimension().location().toString();

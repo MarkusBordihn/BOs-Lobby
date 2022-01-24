@@ -26,6 +26,8 @@ public final class Constants {
 
   // General Mod definitions
   public static final String LOG_NAME = "Lobby";
+  public static final String LOG_ICON = "🏝";
+  public static final String LOG_ICON_NAME = LOG_ICON + " " + LOG_NAME;
   public static final String MOD_COMMAND = "lobby";
   public static final String MOD_ID = "lobby";
   public static final String MOD_NAME = "Lobby";

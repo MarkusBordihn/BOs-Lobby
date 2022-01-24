@@ -5,7 +5,7 @@
 # Structure Block: -17 8 -17 (1 1 1 relative)
 # Structure Block Corner: 16 23 16
 #
-tellraw @p {"text":"Lobby dimension data pack will been initialized!", "color":"gold", "bold":true}
+tellraw @p {"text":"Lobby dimension data pack will been re-initialized!", "color":"gold", "bold":true}
 
 # Force Load chunks in a 100 x 100 area
 forceload add -50 -50 50 50

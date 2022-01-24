@@ -5,7 +5,7 @@
 # Structure Block: 216 8 550 (-31 1 1 relative)
 # Structure Block Corner: 185 16 570
 #
-tellraw @p {"text":"Mining dimension data pack will been initialized!", "color":"gold", "bold":true}
+tellraw @p {"text":"Mining dimension data pack will been re-initialized!", "color":"gold", "bold":true}
 
 # Force Load chunks in a 32 x 32 area
 forceload add 186 545 234 593
