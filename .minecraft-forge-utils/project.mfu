@@ -1,0 +1,45 @@
+{
+  "author": "Markus Bordihn",
+  "bedrock": {
+    "behaviorPack": {
+      "description": "Behavior Pack for New cool items"
+    },
+    "resourcePack": {
+      "description": "Resource Pack for New cool items"
+    },
+    "skinPack": {
+      "description": "Skin Pack for New cool skins"
+    },
+    "folderName": "New_cool_items"
+  },
+  "component": "project",
+  "configVersion": "0.0.1",
+  "forge": {
+    "assetsPath": "src\\main\\resources\\assets\\lobby",
+    "className": "Lobby",
+    "classPath": "src\\main\\java\\de\\markusbordihn\\lobby",
+    "dataPath": "src\\main\\resources\\data",
+    "description": "Provides a simple lobby which could be customized.",
+    "namespace": "de.markusbordihn.lobby",
+    "templatePath": "node_modules\\minecraft-forge-utils\\third_party\\minecraft-forge-template-1.18.1",
+    "templatesPath": "node_modules\\minecraft-forge-utils\\third_party\\minecraft-forge-template-1.18.1\\templates",
+    "vendorName": "markusbordihn"
+  },
+  "gameType": "forge",
+  "id": "lobby",
+  "license": "MIT",
+  "minEngineVersion": "1.18.1",
+  "misc": {},
+  "name": "Lobby",
+  "placeholder": {
+    "Author": "Markus Bordihn",
+    "ModId": "lobby",
+    "ModName": "Lobby",
+    "assetsPath": "src\\main\\resources\\assets\\lobby",
+    "classPath": "src\\main\\java\\de\\markusbordihn\\lobby",
+    "dataPath": "src\\main\\resources\\data",
+    "packageNamespace": "de.markusbordihn.lobby"
+  },
+  "type": "unknown",
+  "version": "0.0.0"
+}

@@ -1,0 +1,33 @@
+{
+  "type": "lobby:lobby_dimension",
+  "generator": {
+    "type": "minecraft:flat",
+    "seed": 599282705,
+    "settings": {
+      "biome": "lobby:biome_lobby",
+      "disable_mob_generation": true,
+      "noodle_caves_enabled": false,
+      "ore_veins_enabled": false,
+      "aquifers_enabled": false,
+      "legacy_random_source": false,
+      "noise_caves_enabled": false,
+      "bedrock_roof_position": -10,
+      "bedrock_floor_position": 0,
+      "lakes": false,
+      "features": false,
+      "layers": [],
+      "default_block": {
+        "Name": "minecraft:stone"
+      },
+      "default_fluid": {
+        "Name": "minecraft:water",
+        "Properties": {
+          "level": "0"
+        }
+      },
+      "structures": {
+        "structures": {}
+      }
+    }
+  }
+}

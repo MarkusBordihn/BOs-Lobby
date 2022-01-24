@@ -1,0 +1,103 @@
+/**
+ * Copyright 2022 Markus Bordihn
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package de.markusbordihn.lobby.config;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.config.ModConfig;
+
+import de.markusbordihn.lobby.Constants;
+
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+public final class CommonConfig {
+
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
+  private CommonConfig() {}
+
+  public static final ForgeConfigSpec commonSpec;
+  public static final Config COMMON;
+
+  static {
+    com.electronwill.nightconfig.core.Config.setInsertionOrderPreserved(true);
+    final Pair<Config, ForgeConfigSpec> specPair =
+        new ForgeConfigSpec.Builder().configure(Config::new);
+    commonSpec = specPair.getRight();
+    COMMON = specPair.getLeft();
+    log.info("Registering {} common config ...", Constants.MOD_NAME);
+    ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, commonSpec);
+  }
+
+  public static class Config {
+
+    public final ForgeConfigSpec.ConfigValue<String> defaultDimension;
+    public final ForgeConfigSpec.BooleanValue defaultUseCustomSpawnPoint;
+    public final ForgeConfigSpec.IntValue defaultSpawnPointX;
+    public final ForgeConfigSpec.IntValue defaultSpawnPointY;
+    public final ForgeConfigSpec.IntValue defaultSpawnPointZ;
+
+    public final ForgeConfigSpec.ConfigValue<String> lobbyDimension;
+    public final ForgeConfigSpec.BooleanValue lobbyUseCustomSpawnPoint;
+    public final ForgeConfigSpec.IntValue lobbySpawnPointX;
+    public final ForgeConfigSpec.IntValue lobbySpawnPointY;
+    public final ForgeConfigSpec.IntValue lobbySpawnPointZ;
+
+    public final ForgeConfigSpec.ConfigValue<String> miningDimension;
+    public final ForgeConfigSpec.BooleanValue miningUseCustomSpawnPoint;
+    public final ForgeConfigSpec.IntValue miningSpawnPointX;
+    public final ForgeConfigSpec.IntValue miningSpawnPointY;
+    public final ForgeConfigSpec.IntValue miningSpawnPointZ;
+
+    Config(ForgeConfigSpec.Builder builder) {
+      builder.comment(Constants.MOD_NAME);
+
+      builder.push("Default Dimension");
+      defaultDimension = builder.define("defaultDimension", "minecraft:overworld");
+      defaultUseCustomSpawnPoint = builder.define("defaultUseCustomSpawnPoint", false);
+      defaultSpawnPointX = builder.defineInRange("defaultSpawnPointX", 68, -1000, 1000);
+      defaultSpawnPointY = builder.defineInRange("defaultSpawnPointY", 65, -1000, 1000);
+      defaultSpawnPointZ = builder.defineInRange("defaultSpawnPointZ", -89, -1000, 1000);
+      builder.pop();
+
+      builder.push("Lobby Dimension");
+      lobbyDimension = builder.define("lobbyDimension", "lobby:lobby_dimension");
+      lobbyUseCustomSpawnPoint = builder.define("lobbyUseCustomSpawnPoint", true);
+      lobbySpawnPointX = builder.defineInRange("lobbySpawnPointX", 0, -1000, 1000);
+      lobbySpawnPointY = builder.defineInRange("lobbySpawnPointY", 11, -1000, 1000);
+      lobbySpawnPointZ = builder.defineInRange("lobbySpawnPointZ", 0, -1000, 1000);
+      builder.pop();
+
+      builder.push("Mining Dimension");
+      miningDimension = builder.define("miningDimension", "lobby:mining_dimension");
+      miningUseCustomSpawnPoint = builder.define("miningUseCustomSpawnPoint", true);
+      miningSpawnPointX = builder.defineInRange("miningSpawnPointX", 200, -1000, 1000);
+      miningSpawnPointY = builder.defineInRange("miningSpawnPointY", 11, -1000, 1000);
+      miningSpawnPointZ = builder.defineInRange("miningSpawnPointZ", 558, -1000, 1000);
+      builder.pop();
+
+    }
+  }
+
+}
