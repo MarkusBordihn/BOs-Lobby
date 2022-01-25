@@ -39,10 +39,10 @@ public class Lobby {
 
     modEventBus.addListener(ClientSetup::new);
 
-    log.info("Register Items ...");
+    log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     ModItems.ITEMS.register(modEventBus);
 
-    log.info("Register Blocks ...");
+    log.info("{} Blocks ...", Constants.LOG_REGISTER_PREFIX);
     ModBlocks.BLOCKS.register(modEventBus);
   }
 }

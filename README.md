@@ -1,5 +1,5 @@
-[![Fire Extinguisher Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
-[![Fire Extinguisher MC Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
+[![Lobby and Mining Dimension Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
+[![Lobby and Mining Dimension Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 
 # Lobby and Mining Dimension
 
@@ -8,7 +8,7 @@ Provides a easy to use lobby and optimized mining dimension for you and your fri
 ## Features ⭐
 
 - Easy to use, no extra setup needed.
-- Optimized mining dimension without mobs and without additional items.
+- Optimized mining dimension (configurable: without mobs, bats or minecart chest).
 - Provides /lobby, /mining and /spawn commands for the players.
 - Changed automatically the user game mode depending on the dimension.
 - Customization over the config file and data files, if needed.
@@ -27,10 +27,14 @@ All players are automatically in the adventure game mode in the lobby.
 
 The mining dimension will be generated on the first load over the `/mining` command.
 It will not include any treasure chest or any mobs, so it could be only use for mining.
+(This could be changed over the config file, if needed.)
+
 You will start in a mining base which provides you some of the basic stuff.
 To return to the mining base just use the `/mining` command.
 
 ![Screenshot of the mining dimension][mining_dimension]
+
+**Note:** The first load of the dimension could take some time, because the need to generate the world and preparing the spawning area.
 
 ## User Commands
 

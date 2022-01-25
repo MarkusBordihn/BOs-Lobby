@@ -34,10 +34,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.MinecartChest;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -47,7 +49,6 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -78,6 +79,10 @@ public class DimensionManager {
   private static int lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
 
   private static String miningDimension = COMMON.miningDimension.get();
+  private static boolean miningDisableBatSpawning = COMMON.miningDisableBatSpawning.get();
+  private static boolean miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
+  private static boolean miningDisableMinecartChestSpawning =
+      COMMON.miningDisableMinecartChestSpawning.get();
   private static boolean miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
   private static int miningSpawnPointX = COMMON.miningSpawnPointX.get();
   private static int miningSpawnPointY = COMMON.miningSpawnPointY.get();
@@ -88,7 +93,6 @@ public class DimensionManager {
   private static ServerLevel defaultLevel = null;
   private static ServerLevel lobbyLevel = null;
   private static ServerLevel miningLevel = null;
-  private static ServerLevel miningLevelPreloaded = null;
 
   protected DimensionManager() {}
 
@@ -98,7 +102,6 @@ public class DimensionManager {
     defaultLevel = null;
     lobbyLevel = null;
     miningLevel = null;
-    miningLevelPreloaded = null;
 
     // Make sure we have the current config settings.
     defaultDimension = COMMON.defaultDimension.get();
@@ -114,25 +117,13 @@ public class DimensionManager {
     lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
 
     miningDimension = COMMON.miningDimension.get();
+    miningDisableBatSpawning = COMMON.miningDisableBatSpawning.get();
+    miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
+    miningDisableMinecartChestSpawning = COMMON.miningDisableMinecartChestSpawning.get();
     miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
     miningSpawnPointX = COMMON.miningSpawnPointX.get();
     miningSpawnPointY = COMMON.miningSpawnPointY.get();
     miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
-  }
-
-  @SubscribeEvent
-  public static void handleServerStartingEvent(ServerStartingEvent event) {
-    // Preloading Mining Level to avoid entity and mob spawn
-    MinecraftServer server = event.getServer();
-    if (server != null) {
-      for (ServerLevel serverLevel : server.getAllLevels()) {
-        String dimensionLocation = serverLevel.dimension().location().toString();
-        if (dimensionLocation.equals(miningDimension)) {
-          log.info("Successfully pre-loaded Mining Dimension mapping ...");
-          miningLevelPreloaded = serverLevel;
-        }
-      }
-    }
   }
 
   @SubscribeEvent
@@ -143,12 +134,12 @@ public class DimensionManager {
 
   @SubscribeEvent
   public static void onChangeDimension(PlayerChangedDimensionEvent event) {
-    String location = event.getTo().location().toString();
+    String dimensionLocation = event.getTo().location().toString();
     Player player = event.getPlayer();
 
     // Ignore known dimension which automatically changing the game type.
-    if (defaultDimension.equals(location) || lobbyDimension.equals(location)
-        || miningDimension.equals(location)) {
+    if (defaultDimension.equals(dimensionLocation) || lobbyDimension.equals(dimensionLocation)
+        || miningDimension.equals(dimensionLocation)) {
       return;
     }
 
@@ -165,8 +156,7 @@ public class DimensionManager {
     // Ignore client side and everything which is not the mining dimension.
     Level level = event.getWorld();
     String dimensionLocation = level.dimension().location().toString();
-    if (level.isClientSide() || (level != miningLevel && level != miningLevelPreloaded
-        && !dimensionLocation.equals(miningDimension))) {
+    if (level.isClientSide() || !dimensionLocation.equals(miningDimension)) {
       return;
     }
 
@@ -177,41 +167,25 @@ public class DimensionManager {
         || entity instanceof Projectile || entity instanceof Player) {
       return;
     }
-    event.setResult(Event.Result.DENY);
+
+    // Allow/deny Minecart Chest spawning
+    if (miningDisableMinecartChestSpawning && entity instanceof MinecartChest) {
+      event.setResult(Event.Result.DENY);
+    }
+
+    if (miningDisableMobSpawning) {
+      event.setResult(Event.Result.DENY);
+    }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGH)
   public static void handleLivingCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event) {
-
-    // Ignore client side and everything which is not the mining dimension.
-    LevelAccessor level = event.getWorld();
-    if (level.isClientSide() || (level != miningLevel && level != miningLevelPreloaded)) {
-      return;
-    }
-
-    // Ignore specific entities and deny spawn of all others.
-    Entity entity = event.getEntity();
-    if (entity instanceof Projectile) {
-      return;
-    }
-    event.setResult(Event.Result.DENY);
+    handleSpawnEvent(event);
   }
 
   @SubscribeEvent(priority = EventPriority.HIGH)
   public static void handleLivingSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn event) {
-
-    // Ignore client side and everything which is not the mining dimension.
-    LevelAccessor level = event.getWorld();
-    if (level.isClientSide() || (level != miningLevel && level != miningLevelPreloaded)) {
-      return;
-    }
-
-    // Ignore specific entities and deny spawn of all others.
-    Entity entity = event.getEntity();
-    if (entity instanceof Projectile) {
-      return;
-    }
-    event.setResult(Event.Result.DENY);
+    handleSpawnEvent(event);
   }
 
   private static void mapServerLevel(MinecraftServer server) {
@@ -351,12 +325,40 @@ public class DimensionManager {
 
   public static void changeGameType(ServerPlayer serverPlayer, GameType gameType) {
     if (serverPlayer.gameMode.getGameModeForPlayer() != gameType) {
-      // Add player to reset list of the game mode is not survival.
+      // Add player to reset list of the game mode if game type is not survival to avoid cheating.
       if (gameType != GameType.SURVIVAL) {
         gameTypeReset.add(serverPlayer);
       }
       serverPlayer.setGameMode(gameType);
     }
+  }
+
+  private static void handleSpawnEvent(LivingSpawnEvent event) {
+
+    // Ignore client side and if mob spawning is allowed.
+    LevelAccessor level = event.getWorld();
+    if (level.isClientSide() || !miningDisableMobSpawning) {
+      return;
+    }
+
+    // Ignore null entities and specific entities.
+    Entity entity = event.getEntity();
+    if (entity == null || entity instanceof Projectile) {
+      return;
+    }
+
+    // Restrict spawn control to mining dimension
+    String dimensionLocation = entity.getLevel().dimension().location().toString();
+    if (!miningDimension.equals(dimensionLocation)) {
+      return;
+    }
+
+    // Allow/deny bat spawning for better cave experience
+    if (!miningDisableBatSpawning && entity instanceof Bat) {
+      return;
+    }
+
+    event.setResult(Event.Result.DENY);
   }
 
 }

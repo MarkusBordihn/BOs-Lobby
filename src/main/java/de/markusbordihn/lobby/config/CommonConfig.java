@@ -65,10 +65,14 @@ public final class CommonConfig {
     public final ForgeConfigSpec.IntValue lobbySpawnPointZ;
 
     public final ForgeConfigSpec.ConfigValue<String> miningDimension;
+    public final ForgeConfigSpec.BooleanValue miningDisableBatSpawning;
+    public final ForgeConfigSpec.BooleanValue miningDisableMobSpawning;
+    public final ForgeConfigSpec.BooleanValue miningDisableMinecartChestSpawning;
     public final ForgeConfigSpec.BooleanValue miningUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue miningSpawnPointX;
     public final ForgeConfigSpec.IntValue miningSpawnPointY;
     public final ForgeConfigSpec.IntValue miningSpawnPointZ;
+
 
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment(Constants.MOD_NAME);
@@ -91,6 +95,10 @@ public final class CommonConfig {
 
       builder.push("Mining Dimension");
       miningDimension = builder.define("miningDimension", "lobby:mining_dimension");
+      miningDisableBatSpawning = builder.define("miningDisableBatSpawning", true);
+      miningDisableMobSpawning = builder.define("miningDisableMobSpawning", true);
+      miningDisableMinecartChestSpawning =
+          builder.define("miningDisableMinecartChestSpawning", true);
       miningUseCustomSpawnPoint = builder.define("miningUseCustomSpawnPoint", true);
       miningSpawnPointX = builder.defineInRange("miningSpawnPointX", 200, -1000, 1000);
       miningSpawnPointY = builder.defineInRange("miningSpawnPointY", 11, -1000, 1000);

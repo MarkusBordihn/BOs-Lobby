@@ -20,14 +20,18 @@
 package de.markusbordihn.lobby.data;
 
 import java.util.Date;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
+
 import de.markusbordihn.lobby.Constants;
 
 @EventBusSubscriber
@@ -60,7 +64,7 @@ public class LobbyData extends SavedData {
       return;
     }
 
-    log.info("{} preparing data for {}", Constants.LOG_ICON_NAME, server);
+    log.info("{} preparing data for {}", Constants.LOG_NAME, server);
     LobbyData.server = server;
 
     // Using a global approach and storing relevant data in the overworld only!
@@ -98,7 +102,7 @@ public class LobbyData extends SavedData {
 
   public static LobbyData load(CompoundTag compoundTag) {
     LobbyData lobbyData = new LobbyData();
-    log.info("{} loading data ... {}", Constants.LOG_ICON_NAME, compoundTag);
+    log.info("{} loading mod data ... {}", Constants.LOG_NAME, compoundTag);
     lobbyData.lobbyDimensionLoaded = compoundTag.getBoolean("LobbyDimensionLoaded");
     lobbyData.miningDimensionLoaded = compoundTag.getBoolean("miningDimensionLoaded");
     lobbyData.lastUpdate = compoundTag.getLong("LastUpdate");
@@ -107,7 +111,7 @@ public class LobbyData extends SavedData {
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving data ... {}", Constants.LOG_ICON_NAME, this);
+    log.info("{} saving mod data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("LobbyDimensionLoaded", this.lobbyDimensionLoaded);
     compoundTag.putBoolean("MiningDimensionLoaded", this.miningDimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
