@@ -1,7 +1,7 @@
 {
   "name": "lobby:lobby_dimension",
   "ambient_light": 1,
-  "bed_works": false,
+  "bed_works": true,
   "coordinate_scale": 100,
   "effects": "minecraft:overworld",
   "fixed_time": 4000,

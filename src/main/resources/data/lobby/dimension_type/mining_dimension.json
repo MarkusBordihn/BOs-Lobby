@@ -1,7 +1,7 @@
 {
   "name": "lobby:mining_dimension",
   "ambient_light": 0.0,
-  "bed_works": false,
+  "bed_works": true,
   "coordinate_scale": 1,
   "effects": "minecraft:overworld",
   "fixed_time": 18000,

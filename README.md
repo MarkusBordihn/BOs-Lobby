@@ -1,7 +1,7 @@
 [![Lobby and Mining Dimension Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 [![Lobby and Mining Dimension Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 
-# Lobby and Mining Dimension
+# 🏝 Lobby and Mining Dimension
 
 Provides a easy to use lobby and optimized mining dimension for you and your friends.
 
@@ -69,6 +69,13 @@ The optimization are parts of the code, you can use the following data files for
 - data/lobby/functions/mining_dimension_load.mcfunction
 
 **Note:** The `mining_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
+
+## FAQ
+
+### How can I remove all entities from the dimension from other Mods?
+
+Just use the following admin command: `/execute in lobby:mining_dimension run kill @e[type=!player,distance=0..]`
+
 
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
