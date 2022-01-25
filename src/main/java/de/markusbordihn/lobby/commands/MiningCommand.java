@@ -42,9 +42,13 @@ public class MiningCommand extends CustomCommand {
 
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-    sendFeedback(context, "Teleport user to the mining !");
-    ServerPlayer player = context.getSource().getPlayerOrException();
-    DimensionManager.teleportToMining(player);
+    if (DimensionManager.getMiningDimension() == null) {
+      sendFeedback(context, "Unable to teleport to mining, mining dimension is not loaded!");
+    } else {
+      ServerPlayer player = context.getSource().getPlayerOrException();
+      sendFeedback(context, "Teleport to mining, please stand still!");
+      DimensionManager.teleportToMining(player);
+    }
     return 0;
   }
 }

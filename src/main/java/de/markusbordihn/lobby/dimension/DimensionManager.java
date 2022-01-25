@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -46,7 +47,9 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -82,14 +85,22 @@ public class DimensionManager {
 
   private static Set<ServerPlayer> gameTypeReset = ConcurrentHashMap.newKeySet();
 
-  private static ServerLevel defaultLevel;
-  private static ServerLevel lobbyLevel;
-  private static ServerLevel miningLevel;
+  private static ServerLevel defaultLevel = null;
+  private static ServerLevel lobbyLevel = null;
+  private static ServerLevel miningLevel = null;
+  private static ServerLevel miningLevelPreloaded = null;
 
   protected DimensionManager() {}
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
+    // Reset mapping to avoid issues.
+    defaultLevel = null;
+    lobbyLevel = null;
+    miningLevel = null;
+    miningLevelPreloaded = null;
+
+    // Make sure we have the current config settings.
     defaultDimension = COMMON.defaultDimension.get();
     defaultUseCustomSpawnPoint = COMMON.defaultUseCustomSpawnPoint.get();
     defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
@@ -110,9 +121,24 @@ public class DimensionManager {
   }
 
   @SubscribeEvent
-  public static void handleServerStartedEvent(ServerStartedEvent event) {
+  public static void handleServerStartingEvent(ServerStartingEvent event) {
+    // Preloading Mining Level to avoid entity and mob spawn
     MinecraftServer server = event.getServer();
-    mapServerLevel(server);
+    if (server != null) {
+      for (ServerLevel serverLevel : server.getAllLevels()) {
+        String dimensionLocation = serverLevel.dimension().location().toString();
+        if (dimensionLocation.equals(miningDimension)) {
+          log.info("Successfully pre-loaded Mining Dimension mapping ...");
+          miningLevelPreloaded = serverLevel;
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public static void handleServerStartedEvent(ServerStartedEvent event) {
+    // Map dimension and init dimension structure if needed.
+    mapServerLevel(event.getServer());
   }
 
   @SubscribeEvent
@@ -133,10 +159,14 @@ public class DimensionManager {
     }
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.HIGH)
   public static void handleEntityJoinWorldEvent(EntityJoinWorldEvent event) {
+
+    // Ignore client side and everything which is not the mining dimension.
     Level level = event.getWorld();
-    if (level.isClientSide() || level != miningLevel) {
+    String dimensionLocation = level.dimension().location().toString();
+    if (level.isClientSide() || (level != miningLevel && level != miningLevelPreloaded
+        && !dimensionLocation.equals(miningDimension))) {
       return;
     }
 
@@ -150,10 +180,29 @@ public class DimensionManager {
     event.setResult(Event.Result.DENY);
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.HIGH)
   public static void handleLivingCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event) {
+
+    // Ignore client side and everything which is not the mining dimension.
     LevelAccessor level = event.getWorld();
-    if (level.isClientSide() || level != miningLevel) {
+    if (level.isClientSide() || (level != miningLevel && level != miningLevelPreloaded)) {
+      return;
+    }
+
+    // Ignore specific entities and deny spawn of all others.
+    Entity entity = event.getEntity();
+    if (entity instanceof Projectile) {
+      return;
+    }
+    event.setResult(Event.Result.DENY);
+  }
+
+  @SubscribeEvent(priority = EventPriority.HIGH)
+  public static void handleLivingSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn event) {
+
+    // Ignore client side and everything which is not the mining dimension.
+    LevelAccessor level = event.getWorld();
+    if (level.isClientSide() || (level != miningLevel && level != miningLevelPreloaded)) {
       return;
     }
 
@@ -166,17 +215,22 @@ public class DimensionManager {
   }
 
   private static void mapServerLevel(MinecraftServer server) {
+    // Skip search if we already found all dimensions.
+    if (defaultLevel != null && lobbyLevel != null && miningLevel != null) {
+      return;
+    }
+
     // Mapping names to server level for easier access.
     for (ServerLevel serverLevel : server.getAllLevels()) {
       String dimensionLocation = serverLevel.dimension().location().toString();
-      if (dimensionLocation.equals(defaultDimension)) {
+      if (defaultLevel == null && dimensionLocation.equals(defaultDimension)) {
         log.info("Found default dimension with name {}: {}", defaultDimension, serverLevel);
         defaultLevel = serverLevel;
-      } else if (dimensionLocation.equals(lobbyDimension)) {
+      } else if (lobbyLevel == null && dimensionLocation.equals(lobbyDimension)) {
         log.info("Found lobby dimension with name {}: {}", lobbyDimension, serverLevel);
         lobbyLevel = serverLevel;
         DataPackHandler.prepareDataPackOnce(serverLevel);
-      } else if (dimensionLocation.equals(miningDimension)) {
+      } else if (miningLevel == null && dimensionLocation.equals(miningDimension)) {
         log.info("Found mining dimension with name {}: {}", miningDimension, serverLevel);
         miningLevel = serverLevel;
         DataPackHandler.prepareDataPackOnce(serverLevel);
@@ -257,7 +311,7 @@ public class DimensionManager {
     changeGameType(player, GameType.ADVENTURE);
     if (!isSameDimension) {
       player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_lobby"),
-          null);
+          Util.NIL_UUID);
     }
   }
 
@@ -285,7 +339,7 @@ public class DimensionManager {
     changeGameType(player, GameType.SURVIVAL);
     if (!isSameDimension) {
       player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_mining"),
-          null);
+          Util.NIL_UUID);
     }
   }
 

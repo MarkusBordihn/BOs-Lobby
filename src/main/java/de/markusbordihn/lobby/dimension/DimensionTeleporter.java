@@ -57,10 +57,10 @@ public class DimensionTeleporter implements ITeleporter {
   @Override
   public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld,
       Function<ServerLevel, PortalInfo> defaultPortalInfo) {
-    BlockPos spawnPoint = destWorld.getSharedSpawnPos();
     if (this.hasCoordinates && entity.isAlive()) {
       entity.setPos(this.x, this.y, this.z);
-    } else if (spawnPoint != null) {
+    } else if (destWorld.getSharedSpawnPos() != null) {
+      BlockPos spawnPoint = destWorld.getSharedSpawnPos();
       entity.setPos(spawnPoint.getX(), spawnPoint.getY(), spawnPoint.getZ());
     }
     return this.isVanilla() ? defaultPortalInfo.apply(destWorld)

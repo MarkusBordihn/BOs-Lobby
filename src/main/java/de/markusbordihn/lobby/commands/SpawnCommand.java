@@ -43,11 +43,13 @@ public class SpawnCommand extends CustomCommand {
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
     ServerPlayer player = context.getSource().getPlayerOrException();
-    if (player.getLevel() != DimensionManager.getDefaultDimension()) {
-      sendFeedback(context, "Teleport to the spawn !");
+    if (DimensionManager.getDefaultDimension() == null) {
+      sendFeedback(context, "Unable to teleport to default, default dimension is not loaded!");
+    } else if (player.getLevel() != DimensionManager.getDefaultDimension()) {
+      sendFeedback(context, "Teleport to the spawn, please stand still!");
       DimensionManager.teleportToDefault(player);
     } else {
-      sendFeedback(context, "You are already in the spawn dimension !");
+      sendFeedback(context, "You are already in the spawn dimension!");
     }
     return 0;
   }

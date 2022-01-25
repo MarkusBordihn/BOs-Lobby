@@ -7,8 +7,8 @@
 #
 tellraw @p {"text":"Lobby dimension data pack will been re-initialized!", "color":"gold", "bold":true}
 
-# Force Load chunks in a 100 x 100 area
-forceload add -50 -50 50 50
+# Force Load chunks in a 32 x 32 area
+forceload add -32 -32 32 32
 
 # Start Platform
 setblock -16 8 -16 minecraft:structure_block{mode:"LOAD",name:"lobby:lobby_base"} replace

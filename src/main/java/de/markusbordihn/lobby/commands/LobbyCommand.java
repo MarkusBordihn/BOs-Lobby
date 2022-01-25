@@ -42,9 +42,13 @@ public class LobbyCommand extends CustomCommand {
 
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-    ServerPlayer player = context.getSource().getPlayerOrException();
-    sendFeedback(context, "Teleport to lobby, please stand still !");
-    DimensionManager.teleportToLobby(player);
+    if (DimensionManager.getLobbyDimension() == null) {
+      sendFeedback(context, "Unable to teleport to lobby, lobby dimension is not loaded!");
+    } else {
+      ServerPlayer player = context.getSource().getPlayerOrException();
+      sendFeedback(context, "Teleport to lobby, please stand still!");
+      DimensionManager.teleportToLobby(player);
+    }
     return 0;
   }
 }

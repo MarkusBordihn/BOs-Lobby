@@ -7,8 +7,8 @@
 #
 tellraw @p {"text":"Mining dimension data pack will been re-initialized!", "color":"gold", "bold":true}
 
-# Force Load chunks in a 32 x 32 area
-forceload add 186 545 234 593
+# Force Load chunks for the structure
+forceload add 185 570 216 550
 
 # Mining Base
 setblock 185 9 550 minecraft:structure_block{mode:"LOAD",name:"lobby:mining_base"} replace
