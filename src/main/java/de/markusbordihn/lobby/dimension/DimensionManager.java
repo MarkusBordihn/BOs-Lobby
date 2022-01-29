@@ -19,6 +19,7 @@
 
 package de.markusbordihn.lobby.dimension;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,6 +41,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.vehicle.MinecartChest;
+import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -77,12 +79,14 @@ public class DimensionManager {
   private static int lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
   private static int lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
   private static int lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
+  private static List<String> lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
   private static String miningDimension = COMMON.miningDimension.get();
   private static boolean miningDisableBatSpawning = COMMON.miningDisableBatSpawning.get();
   private static boolean miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
   private static boolean miningDisableMinecartChestSpawning =
       COMMON.miningDisableMinecartChestSpawning.get();
+  private static boolean miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
   private static boolean miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
   private static int miningSpawnPointX = COMMON.miningSpawnPointX.get();
   private static int miningSpawnPointY = COMMON.miningSpawnPointY.get();
@@ -115,11 +119,13 @@ public class DimensionManager {
     lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
     lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
     lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
+    lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
     miningDimension = COMMON.miningDimension.get();
     miningDisableBatSpawning = COMMON.miningDisableBatSpawning.get();
     miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
     miningDisableMinecartChestSpawning = COMMON.miningDisableMinecartChestSpawning.get();
+    miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
     miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
     miningSpawnPointX = COMMON.miningSpawnPointX.get();
     miningSpawnPointY = COMMON.miningSpawnPointY.get();
@@ -134,23 +140,27 @@ public class DimensionManager {
 
   @SubscribeEvent
   public static void onChangeDimension(PlayerChangedDimensionEvent event) {
-    String dimensionLocation = event.getTo().location().toString();
     Player player = event.getPlayer();
+    String fromLocation = event.getFrom().location().toString();
+    String toLocation = event.getTo().location().toString();
 
-    // Ignore known dimension which automatically changing the game type.
-    if (defaultDimension.equals(dimensionLocation) || lobbyDimension.equals(dimensionLocation)
-        || miningDimension.equals(dimensionLocation)) {
+    // Ignore known dimension which automatically changing the game type or if the from dimension
+    // is not from the lobby.
+    if (toLocation.equals(lobbyDimension) || toLocation.equals(miningDimension)
+        || (!fromLocation.isEmpty() && !lobbyDimension.equals(fromLocation))) {
       return;
     }
 
-    // Reset game type to survival if user is ony the gameTypeReset list for all other levels.
-    if (player instanceof ServerPlayer serverPlayer && gameTypeReset.contains(serverPlayer)) {
+    // Reset game type to survival if user is on the gameTypeReset list or comes from the lobby
+    // dimensions.
+    if (player instanceof ServerPlayer serverPlayer && (gameTypeReset.contains(serverPlayer)
+        || !fromLocation.isEmpty() && lobbyDimension.equals(fromLocation))) {
       changeGameType(serverPlayer, GameType.SURVIVAL);
       gameTypeReset.remove(serverPlayer);
     }
   }
 
-  @SubscribeEvent(priority = EventPriority.HIGH)
+  @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handleEntityJoinWorldEvent(EntityJoinWorldEvent event) {
 
     // Ignore client side and everything which is not the mining dimension.
@@ -178,12 +188,12 @@ public class DimensionManager {
     }
   }
 
-  @SubscribeEvent(priority = EventPriority.HIGH)
+  @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handleLivingCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event) {
     handleSpawnEvent(event);
   }
 
-  @SubscribeEvent(priority = EventPriority.HIGH)
+  @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handleLivingSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn event) {
     handleSpawnEvent(event);
   }
@@ -282,7 +292,12 @@ public class DimensionManager {
         player.changeDimension(getLobbyDimension(), new DimensionTeleporter());
       }
     }
-    changeGameType(player, GameType.ADVENTURE);
+    if (!lobbyBuilderList.isEmpty() && lobbyBuilderList.contains(player.getName().getString())) {
+      log.info("Give builder {} creative mode for lobby.", player.getName().getString());
+      changeGameType(player, GameType.CREATIVE);
+    } else {
+      changeGameType(player, GameType.ADVENTURE);
+    }
     if (!isSameDimension) {
       player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_lobby"),
           Util.NIL_UUID);
@@ -324,20 +339,23 @@ public class DimensionManager {
   }
 
   public static void changeGameType(ServerPlayer serverPlayer, GameType gameType) {
-    if (serverPlayer.gameMode.getGameModeForPlayer() != gameType) {
+    GameType currentGameType = serverPlayer.gameMode.getGameModeForPlayer();
+    if (currentGameType != gameType) {
       // Add player to reset list of the game mode if game type is not survival to avoid cheating.
       if (gameType != GameType.SURVIVAL) {
         gameTypeReset.add(serverPlayer);
       }
+      log.debug("Changing players {} game type from {} to {}", serverPlayer, currentGameType,
+          gameType);
       serverPlayer.setGameMode(gameType);
     }
   }
 
   private static void handleSpawnEvent(LivingSpawnEvent event) {
 
-    // Ignore client side and if mob spawning is allowed.
+    // Ignore client side.
     LevelAccessor level = event.getWorld();
-    if (level.isClientSide() || !miningDisableMobSpawning) {
+    if (level.isClientSide()) {
       return;
     }
 
@@ -347,10 +365,21 @@ public class DimensionManager {
       return;
     }
 
-    // Restrict spawn control to mining dimension
+    // Restrict spawn control to mining dimension.
     String dimensionLocation = entity.getLevel().dimension().location().toString();
     if (!miningDimension.equals(dimensionLocation)) {
       return;
+    }
+
+    // Removing spawners as soon they try to spawn something.
+    if (miningRemoveSpawner && event instanceof LivingSpawnEvent.CheckSpawn checkSpawn
+        && checkSpawn.getSpawner() != null) {
+      BaseSpawner spawner = checkSpawn.getSpawner();
+      BlockPos blockPos = spawner.getSpawnerBlockEntity().getBlockPos();
+      if (blockPos != null) {
+        log.debug("Removing spawner {} at {}", spawner, blockPos);
+        level.removeBlock(blockPos, true);
+      }
     }
 
     // Allow/deny bat spawning for better cave experience
@@ -358,7 +387,14 @@ public class DimensionManager {
       return;
     }
 
-    event.setResult(Event.Result.DENY);
+    // Allow/deny Minecart Chest spawning
+    if (!miningDisableMinecartChestSpawning && entity instanceof MinecartChest) {
+      return;
+    }
+
+    if (miningDisableMobSpawning) {
+      event.setResult(Event.Result.DENY);
+    }
   }
 
 }

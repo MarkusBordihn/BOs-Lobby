@@ -26,9 +26,12 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -40,8 +43,8 @@ public class LobbyData extends SavedData {
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String LOBBY_FILE_ID = Constants.MOD_ID;
-  private static MinecraftServer server;
-  private static LobbyData data;
+  private static MinecraftServer server = null;
+  private static LobbyData data = null;
 
   private boolean lobbyDimensionLoaded = false;
   private boolean miningDimensionLoaded = false;
@@ -49,6 +52,13 @@ public class LobbyData extends SavedData {
 
   public LobbyData() {
     this.setDirty();
+  }
+
+  @SubscribeEvent
+  public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
+    // Reset data and server for the integrated server.
+    data = null;
+    server = null;
   }
 
   public static LobbyData get() {
@@ -64,11 +74,12 @@ public class LobbyData extends SavedData {
       return;
     }
 
-    log.info("{} preparing data for {}", Constants.LOG_NAME, server);
     LobbyData.server = server;
+    ServerLevel serverLevel = server.getLevel(Level.OVERWORLD);
+    log.info("{} preparing data for {} and {}", Constants.LOG_NAME, server, serverLevel);
 
     // Using a global approach and storing relevant data in the overworld only!
-    LobbyData.data = server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(
+    LobbyData.data = serverLevel.getDataStorage().computeIfAbsent(
         LobbyData::load, LobbyData::new, LobbyData.getFileId());
   }
 

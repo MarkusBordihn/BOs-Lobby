@@ -19,6 +19,10 @@
 
 package de.markusbordihn.lobby.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,11 +67,13 @@ public final class CommonConfig {
     public final ForgeConfigSpec.IntValue lobbySpawnPointX;
     public final ForgeConfigSpec.IntValue lobbySpawnPointY;
     public final ForgeConfigSpec.IntValue lobbySpawnPointZ;
+    public final ForgeConfigSpec.ConfigValue<List<String>> lobbyBuilderList;
 
     public final ForgeConfigSpec.ConfigValue<String> miningDimension;
     public final ForgeConfigSpec.BooleanValue miningDisableBatSpawning;
     public final ForgeConfigSpec.BooleanValue miningDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue miningDisableMinecartChestSpawning;
+    public final ForgeConfigSpec.BooleanValue miningRemoveSpawner;
     public final ForgeConfigSpec.BooleanValue miningUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue miningSpawnPointX;
     public final ForgeConfigSpec.IntValue miningSpawnPointY;
@@ -91,14 +97,18 @@ public final class CommonConfig {
       lobbySpawnPointX = builder.defineInRange("lobbySpawnPointX", 0, -1000, 1000);
       lobbySpawnPointY = builder.defineInRange("lobbySpawnPointY", 11, -1000, 1000);
       lobbySpawnPointZ = builder.defineInRange("lobbySpawnPointZ", 0, -1000, 1000);
+      lobbyBuilderList = builder.comment(
+          "List of builders which are automatically switched to the creative mode inside the lobby dimension.")
+          .define("lobbyBuilderList", new ArrayList<String>(Arrays.asList("")));
       builder.pop();
 
       builder.push("Mining Dimension");
       miningDimension = builder.define("miningDimension", "lobby:mining_dimension");
-      miningDisableBatSpawning = builder.define("miningDisableBatSpawning", true);
       miningDisableMobSpawning = builder.define("miningDisableMobSpawning", true);
+      miningDisableBatSpawning = builder.define("miningDisableBatSpawning", true);
       miningDisableMinecartChestSpawning =
           builder.define("miningDisableMinecartChestSpawning", true);
+      miningRemoveSpawner = builder.define("miningRemoveSpawner", true);
       miningUseCustomSpawnPoint = builder.define("miningUseCustomSpawnPoint", true);
       miningSpawnPointX = builder.defineInRange("miningSpawnPointX", 200, -1000, 1000);
       miningSpawnPointY = builder.defineInRange("miningSpawnPointY", 11, -1000, 1000);

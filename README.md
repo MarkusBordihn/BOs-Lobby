@@ -8,7 +8,7 @@ Provides a easy to use lobby and optimized mining dimension for you and your fri
 ## Features ⭐
 
 - Easy to use, no extra setup needed.
-- Optimized mining dimension (configurable: without mobs, bats or minecart chest).
+- Optimized mining dimension (configurable: without spawner, mobs, bats or minecart chest).
 - Provides /lobby, /mining and /spawn commands for the players.
 - Changed automatically the user game mode depending on the dimension.
 - Customization over the config file and data files, if needed.
@@ -75,7 +75,6 @@ The optimization are parts of the code, you can use the following data files for
 ### How can I remove all entities from the dimension from other Mods?
 
 Just use the following admin command: `/execute in lobby:mining_dimension run kill @e[type=!player,distance=0..]`
-
 
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
