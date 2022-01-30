@@ -38,14 +38,14 @@ public class DataPackHandler {
   public static void prepareDataPackOnce(ServerLevel level) {
     if (level == DimensionManager.getLobbyDimension()) {
       if (LobbyData.get().isLobbyDimensionLoaded()) {
-        log.info("Data Pack for lobby dimension {} was already loaded!", level);
+        log.info("Skip Data Pack for lobby dimension {} because it was already loaded!", level);
       } else {
         prepareDataPack(level);
         LobbyData.get().setLobbyDimensionLoaded(true);
       }
     } else if (level == DimensionManager.getMiningDimension()) {
       if (LobbyData.get().isMiningDimensionLoaded()) {
-        log.info("Data Pack for mining dimension {} was already loaded!", level);
+        log.info("Skip Data Pack for mining dimension {} because it was already loaded!", level);
       } else {
         prepareDataPack(level);
         LobbyData.get().setMiningDimensionLoaded(true);
@@ -59,7 +59,7 @@ public class DataPackHandler {
     String dimensionLocation = level.dimension().location().toString();
     String dataPackFunction =
         dimensionLocation.split(":")[0] + ":" + dimensionLocation.split(":")[1] + "_load";
-    log.info("Prepare data pack with {} for level {} ...", dataPackFunction, level);
+    log.info("Loading data pack with {} for level {} ...", dataPackFunction, level);
     CommandManager.executeServerFunction(dataPackFunction, level);
   }
 }

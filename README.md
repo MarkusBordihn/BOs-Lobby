@@ -70,11 +70,43 @@ The optimization are parts of the code, you can use the following data files for
 
 **Note:** The `mining_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
+## Version Status Overview 🛠️
+
+| Version        | Status                |
+| -------------- | --------------------- |
+| Fabric Version | ❌ Not planned        |
+| Forge 1.16.5   | ❌ Not planned        |
+| Forge 1.17.1   | ❌ Not planned        |
+| Forge 1.18.1   | ✔️ Active development |
+
 ## FAQ
 
-### How can I remove all entities from the dimension from other Mods?
+### How can I remove all entities from the mining dimension from other Mods?
 
 Just use the following admin command: `/execute in lobby:mining_dimension run kill @e[type=!player,distance=0..]`
 
+### Will there are 1.16.5 version ?
+
+There are already a lot of dimension mods for 1.16.5 which are covering similar functionality like:
+
+- https://www.curseforge.com/minecraft/mc-mods/advanced-mining-dimension
+- https://www.curseforge.com/minecraft/mc-mods/rftools-dimensions
+- https://www.curseforge.com/minecraft/mc-mods/rftools
+- https://www.curseforge.com/minecraft/mc-mods/aroma1997s-dimensional-world
+- https://www.curseforge.com/minecraft/mc-mods/dimensionaldoors
+- https://www.curseforge.com/minecraft/mc-mods/hunting-dimension
+- https://www.curseforge.com/minecraft/mc-mods/ftb-team-islands-forge
+
+I see not really any reason why there should be "another" dimension mod for 1.16.5, which only provides the basic functionality.
+
+## Note
+
+Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:
+
+🏝 [Lobby and Mining Dimension][mod_page]
+
+If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
+
+[mod_page]: https://www.curseforge.com/minecraft/mc-mods/fire-extinguisher
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png

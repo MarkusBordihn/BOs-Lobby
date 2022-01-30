@@ -2,6 +2,7 @@
   "block.placeholder.text": "Template placeholder do not remove!",
   "item.placeholder.text": "Template placeholder do not remove!",
 
-  "text.lobby.welcome_to_lobby": "Welcome to the lobby, please use /spawn or /mining command to change to a different dimension.",
-  "text.lobby.welcome_to_mining": "Welcome to the minining dimension, please use /spawn or /lobby command to change to a different dimension."
+  "text.lobby.welcome_to_debaulf": "Welcome to the default dimension, please use the /lobby or /mining command to change to a different dimension.",
+  "text.lobby.welcome_to_lobby": "Welcome to the lobby, please use the /spawn or /mining command to change to a different dimension.",
+  "text.lobby.welcome_to_mining": "Welcome to the minining dimension, please use the /spawn or /lobby command to change to a different dimension."
 }

@@ -26,9 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,6 +58,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.datapack.DataPackHandler;
+import de.markusbordihn.lobby.teleporter.TeleporterManager;
 
 @EventBusSubscriber
 public class DimensionManager {
@@ -69,16 +68,8 @@ public class DimensionManager {
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   private static String defaultDimension = COMMON.defaultDimension.get();
-  private static boolean defaultUseCustomSpawnPoint = COMMON.defaultUseCustomSpawnPoint.get();
-  private static int defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
-  private static int defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
-  private static int defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
 
   private static String lobbyDimension = COMMON.lobbyDimension.get();
-  private static boolean lobbyUseCustomSpawnPoint = COMMON.lobbyUseCustomSpawnPoint.get();
-  private static int lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
-  private static int lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
-  private static int lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
   private static List<String> lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
   private static String miningDimension = COMMON.miningDimension.get();
@@ -87,10 +78,6 @@ public class DimensionManager {
   private static boolean miningDisableMinecartChestSpawning =
       COMMON.miningDisableMinecartChestSpawning.get();
   private static boolean miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
-  private static boolean miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
-  private static int miningSpawnPointX = COMMON.miningSpawnPointX.get();
-  private static int miningSpawnPointY = COMMON.miningSpawnPointY.get();
-  private static int miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
 
   private static Set<ServerPlayer> gameTypeReset = ConcurrentHashMap.newKeySet();
 
@@ -109,16 +96,8 @@ public class DimensionManager {
 
     // Make sure we have the current config settings.
     defaultDimension = COMMON.defaultDimension.get();
-    defaultUseCustomSpawnPoint = COMMON.defaultUseCustomSpawnPoint.get();
-    defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
-    defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
-    defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
 
     lobbyDimension = COMMON.lobbyDimension.get();
-    lobbyUseCustomSpawnPoint = COMMON.lobbyUseCustomSpawnPoint.get();
-    lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
-    lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
-    lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
     lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
     miningDimension = COMMON.miningDimension.get();
@@ -126,10 +105,6 @@ public class DimensionManager {
     miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
     miningDisableMinecartChestSpawning = COMMON.miningDisableMinecartChestSpawning.get();
     miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
-    miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
-    miningSpawnPointX = COMMON.miningSpawnPointX.get();
-    miningSpawnPointY = COMMON.miningSpawnPointY.get();
-    miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
   }
 
   @SubscribeEvent
@@ -213,11 +188,11 @@ public class DimensionManager {
       } else if (lobbyLevel == null && dimensionLocation.equals(lobbyDimension)) {
         log.info("Found lobby dimension with name {}: {}", lobbyDimension, serverLevel);
         lobbyLevel = serverLevel;
-        DataPackHandler.prepareDataPackOnce(serverLevel);
+        DataPackHandler.prepareDataPackOnce(lobbyLevel);
       } else if (miningLevel == null && dimensionLocation.equals(miningDimension)) {
         log.info("Found mining dimension with name {}: {}", miningDimension, serverLevel);
         miningLevel = serverLevel;
-        DataPackHandler.prepareDataPackOnce(serverLevel);
+        DataPackHandler.prepareDataPackOnce(miningLevel);
       }
     }
 
@@ -254,81 +229,26 @@ public class DimensionManager {
     return defaultLevel;
   }
 
-  public static void teleportToDefault(Player player) {
-    if (player.getLevel().isClientSide() || getLobbyDimension() == null) {
-      return;
-    }
-
-    // Only teleport players from different dimensions.
-    if (player.level != getDefaultDimension()) {
-      if (defaultUseCustomSpawnPoint) {
-        player.changeDimension(getDefaultDimension(),
-            new DimensionTeleporter(defaultSpawnPointX, defaultSpawnPointY, defaultSpawnPointZ));
-      } else {
-        player.changeDimension(getDefaultDimension(), new DimensionTeleporter());
-      }
+  public static void teleportToDefault(ServerPlayer player) {
+    if (TeleporterManager.teleportToDefaultDimension(player)) {
       changeGameType(player, GameType.SURVIVAL);
     }
   }
 
-  public static void teleportToLobby(Player player) {
-    // Ignore client side levels and if lobby dimension was not found.
-    if (player.getLevel().isClientSide() || getLobbyDimension() == null) {
-      return;
-    }
-    boolean isSameDimension = player.level == getLobbyDimension();
-    if (isSameDimension) {
-      if (lobbyUseCustomSpawnPoint) {
-        player.teleportTo(lobbySpawnPointX, lobbySpawnPointY, lobbySpawnPointZ);
+  public static void teleportToLobby(ServerPlayer player) {
+    if (TeleporterManager.teleportToLobbyDimension(player)) {
+      if (!lobbyBuilderList.isEmpty() && lobbyBuilderList.contains(player.getName().getString())) {
+        log.info("Give builder {} creative mode for lobby.", player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
       } else {
-        BlockPos blockPos = lobbyLevel.getSharedSpawnPos();
-        player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        changeGameType(player, GameType.ADVENTURE);
       }
-    } else {
-      if (lobbyUseCustomSpawnPoint) {
-        player.changeDimension(getLobbyDimension(),
-            new DimensionTeleporter(lobbySpawnPointX, lobbySpawnPointY, lobbySpawnPointZ));
-      } else {
-        player.changeDimension(getLobbyDimension(), new DimensionTeleporter());
-      }
-    }
-    if (!lobbyBuilderList.isEmpty() && lobbyBuilderList.contains(player.getName().getString())) {
-      log.info("Give builder {} creative mode for lobby.", player.getName().getString());
-      changeGameType(player, GameType.CREATIVE);
-    } else {
-      changeGameType(player, GameType.ADVENTURE);
-    }
-    if (!isSameDimension) {
-      player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_lobby"),
-          Util.NIL_UUID);
     }
   }
 
-  public static void teleportToMining(Player player) {
-    // Ignore client side levels and if mining dimension was not found.
-    if (player.getLevel().isClientSide() || getMiningDimension() == null) {
-      return;
-    }
-    boolean isSameDimension = player.level == getMiningDimension();
-    if (isSameDimension) {
-      if (miningUseCustomSpawnPoint) {
-        player.teleportTo(miningSpawnPointX, miningSpawnPointY, miningSpawnPointZ);
-      } else {
-        BlockPos blockPos = miningLevel.getSharedSpawnPos();
-        player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-      }
-    } else {
-      if (miningUseCustomSpawnPoint) {
-        player.changeDimension(getMiningDimension(),
-            new DimensionTeleporter(miningSpawnPointX, miningSpawnPointY, miningSpawnPointZ));
-      } else {
-        player.changeDimension(getMiningDimension(), new DimensionTeleporter());
-      }
-    }
-    changeGameType(player, GameType.SURVIVAL);
-    if (!isSameDimension) {
-      player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_mining"),
-          Util.NIL_UUID);
+  public static void teleportToMining(ServerPlayer player) {
+    if (TeleporterManager.teleportToMiningDimension(player)) {
+      changeGameType(player, GameType.SURVIVAL);
     }
   }
 
