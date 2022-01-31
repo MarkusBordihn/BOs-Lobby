@@ -26,7 +26,9 @@ import net.minecraft.server.level.ServerLevel;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.commands.CommandManager;
+import de.markusbordihn.lobby.data.FishingData;
 import de.markusbordihn.lobby.data.LobbyData;
+import de.markusbordihn.lobby.data.MiningData;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
 public class DataPackHandler {
@@ -37,18 +39,25 @@ public class DataPackHandler {
 
   public static void prepareDataPackOnce(ServerLevel level) {
     if (level == DimensionManager.getLobbyDimension()) {
-      if (LobbyData.get().isLobbyDimensionLoaded()) {
+      if (LobbyData.get().getDimensionLoaded()) {
         log.info("Skip Data Pack for lobby dimension {} because it was already loaded!", level);
       } else {
         prepareDataPack(level);
-        LobbyData.get().setLobbyDimensionLoaded(true);
+        LobbyData.get().setDimensionLoaded(true);
       }
     } else if (level == DimensionManager.getMiningDimension()) {
-      if (LobbyData.get().isMiningDimensionLoaded()) {
+      if (MiningData.get().getDimensionLoaded()) {
         log.info("Skip Data Pack for mining dimension {} because it was already loaded!", level);
       } else {
         prepareDataPack(level);
-        LobbyData.get().setMiningDimensionLoaded(true);
+        MiningData.get().setDimensionLoaded(true);
+      }
+    } else if (level == DimensionManager.getFishingDimension()) {
+      if (FishingData.get().getDimensionLoaded()) {
+        log.info("Skip Data Pack for fishing dimension {} because it was already loaded!", level);
+      } else {
+        prepareDataPack(level);
+        FishingData.get().setDimensionLoaded(true);
       }
     } else {
       log.warn("Unable to get status for level {} to confirm data pack load status!", level);

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:overworld",
+  "type": "lobby:mining_dimension",
   "generator": {
     "type": "minecraft:noise",
     "seed": 53285197,

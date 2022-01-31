@@ -38,19 +38,19 @@ import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
 @EventBusSubscriber
-public class LobbyData extends SavedData {
+public class FishingData extends SavedData {
 
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String FILE_ID = Constants.MOD_ID;
   private static MinecraftServer server = null;
-  private static LobbyData data = null;
+  private static FishingData data = null;
   private static ServerLevel level = null;
 
   private boolean dimensionLoaded = false;
   private long lastUpdate;
 
-  public LobbyData() {
+  public FishingData() {
     this.setDirty();
   }
 
@@ -62,30 +62,28 @@ public class LobbyData extends SavedData {
     server = null;
   }
 
-  public static LobbyData get() {
-    if (LobbyData.data == null || LobbyData.level == null) {
+  public static FishingData get() {
+    if (FishingData.data == null || FishingData.level == null) {
       prepare(ServerLifecycleHooks.getCurrentServer());
     }
-    return LobbyData.data;
+    return FishingData.data;
   }
 
   public static void prepare(MinecraftServer server) {
     // Make sure we preparing the data only once for the same server!
-    if (server == LobbyData.server && LobbyData.data != null && LobbyData.level != null) {
+    if (server == FishingData.server && FishingData.data != null && FishingData.level != null) {
       return;
     }
 
-    LobbyData.server = server;
-    LobbyData.level = DimensionManager.getLobbyDimension();
-    if (LobbyData.level != null) {
-      log.info("{} preparing data for {} and {}", Constants.LOG_NAME,
-          LobbyData.server, LobbyData.level);
-
-      // Using a global approach and storing relevant data in the overworld only!
-      LobbyData.data = LobbyData.level.getDataStorage().computeIfAbsent(LobbyData::load, LobbyData::new,
-          LobbyData.getFileId());
+    FishingData.server = server;
+    FishingData.level = DimensionManager.getFishingDimension();
+    if (FishingData.level != null) {
+      log.info("{} preparing data for {} and {}", Constants.LOG_NAME, FishingData.server,
+          FishingData.level);
+      FishingData.data = FishingData.level.getDataStorage().computeIfAbsent(FishingData::load,
+          FishingData::new, FishingData.getFileId());
     } else {
-      log.error("Unable to preparing data for {} and {}", LobbyData.server, LobbyData.level);
+      log.error("Unable to preparing data for {} and {}", FishingData.server, FishingData.level);
     }
   }
 
@@ -109,17 +107,17 @@ public class LobbyData extends SavedData {
     this.dimensionLoaded = loaded;
   }
 
-  public static LobbyData load(CompoundTag compoundTag) {
-    LobbyData lobbyData = new LobbyData();
-    log.info("{} loading lobby data ... {}", Constants.LOG_NAME, compoundTag);
-    lobbyData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
-    lobbyData.lastUpdate = compoundTag.getLong("LastUpdate");
-    return lobbyData;
+  public static FishingData load(CompoundTag compoundTag) {
+    FishingData fishingData = new FishingData();
+    log.info("{} loading fishing data ... {}", Constants.LOG_NAME, compoundTag);
+    fishingData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
+    fishingData.lastUpdate = compoundTag.getLong("LastUpdate");
+    return fishingData;
   }
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving lobby data ... {}", Constants.LOG_NAME, this);
+    log.info("{} saving fishing data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
     return compoundTag;

@@ -1,5 +1,17 @@
 buildscript {
   repositories {
+    maven {
+      url = 'http://revy:49161/repository/MinecraftForge/'
+      allowInsecureProtocol = true
+    }
+    maven {
+      url = 'http://revy:49161/repository/maven-central/'
+      allowInsecureProtocol = true
+    }
+    maven {
+      url = 'http://revy:49161/repository/jcenter/'
+      allowInsecureProtocol = true
+    }
     maven { url = 'https://maven.minecraftforge.net' }
     mavenCentral()
     jcenter()
@@ -130,6 +142,7 @@ dependencies {
   minecraft 'net.minecraftforge:forge:1.18.1-39.0.64'
 
   // Additional helpful Mods for development (dev depenedency)
+  runtimeOnly fg.deobf("curse.maven:worldedit-225608:3559499")
   runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
   runtimeOnly fg.deobf("curse.maven:jade-324717:3614180")

@@ -69,6 +69,8 @@ public class DimensionManager {
 
   private static String defaultDimension = COMMON.defaultDimension.get();
 
+  private static String fishingDimension = COMMON.fishingDimension.get();
+
   private static String lobbyDimension = COMMON.lobbyDimension.get();
   private static List<String> lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
@@ -82,6 +84,7 @@ public class DimensionManager {
   private static Set<ServerPlayer> gameTypeReset = ConcurrentHashMap.newKeySet();
 
   private static ServerLevel defaultLevel = null;
+  private static ServerLevel fishingLevel = null;
   private static ServerLevel lobbyLevel = null;
   private static ServerLevel miningLevel = null;
 
@@ -91,11 +94,14 @@ public class DimensionManager {
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     // Reset mapping to avoid issues.
     defaultLevel = null;
+    fishingLevel = null;
     lobbyLevel = null;
     miningLevel = null;
 
     // Make sure we have the current config settings.
     defaultDimension = COMMON.defaultDimension.get();
+
+    fishingDimension = COMMON.fishingDimension.get();
 
     lobbyDimension = COMMON.lobbyDimension.get();
     lobbyBuilderList = COMMON.lobbyBuilderList.get();
@@ -121,15 +127,17 @@ public class DimensionManager {
 
     // Ignore known dimension which automatically changing the game type or if the from dimension
     // is not from the lobby.
-    if (toLocation.equals(lobbyDimension) || toLocation.equals(miningDimension)
-        || (!fromLocation.isEmpty() && !lobbyDimension.equals(fromLocation))) {
+    if (toLocation.equals(fishingDimension) || toLocation.equals(lobbyDimension)
+        || toLocation.equals(miningDimension) || (!fromLocation.isEmpty()
+            && !fromLocation.equals(fishingDimension) && !fromLocation.equals(lobbyDimension))) {
       return;
     }
 
-    // Reset game type to survival if user is on the gameTypeReset list or comes from the lobby
-    // dimensions.
-    if (player instanceof ServerPlayer serverPlayer && (gameTypeReset.contains(serverPlayer)
-        || !fromLocation.isEmpty() && lobbyDimension.equals(fromLocation))) {
+    // Reset game type to survival if user is on the gameTypeReset list or comes from the fishing or
+    // lobby dimensions.
+    if (player instanceof ServerPlayer serverPlayer
+        && (gameTypeReset.contains(serverPlayer) || (!fromLocation.isEmpty()
+            && (fromLocation.equals(lobbyDimension) || fromLocation.equals(fishingDimension))))) {
       changeGameType(serverPlayer, GameType.SURVIVAL);
       gameTypeReset.remove(serverPlayer);
     }
@@ -193,12 +201,19 @@ public class DimensionManager {
         log.info("Found mining dimension with name {}: {}", miningDimension, serverLevel);
         miningLevel = serverLevel;
         DataPackHandler.prepareDataPackOnce(miningLevel);
+      } else if (fishingLevel == null && dimensionLocation.equals(fishingDimension)) {
+        log.info("Found fishing dimension with name {}: {}", fishingDimension, serverLevel);
+        fishingLevel = serverLevel;
+        DataPackHandler.prepareDataPackOnce(fishingLevel);
       }
     }
 
     // Give error messages, if we are unable to match any dimension.
     if (defaultLevel == null) {
       log.error("Unable to found default dimension named {}!", defaultDimension);
+    }
+    if (fishingLevel == null) {
+      log.error("Unable to found fishing dimension named {}!", fishingDimension);
     }
     if (lobbyLevel == null) {
       log.error("Unable to found lobby dimension named {}!", lobbyDimension);
@@ -213,6 +228,13 @@ public class DimensionManager {
       mapServerLevel(ServerLifecycleHooks.getCurrentServer());
     }
     return lobbyLevel;
+  }
+
+  public static ServerLevel getFishingDimension() {
+    if (fishingLevel == null) {
+      mapServerLevel(ServerLifecycleHooks.getCurrentServer());
+    }
+    return fishingLevel;
   }
 
   public static ServerLevel getMiningDimension() {
@@ -232,6 +254,12 @@ public class DimensionManager {
   public static void teleportToDefault(ServerPlayer player) {
     if (TeleporterManager.teleportToDefaultDimension(player)) {
       changeGameType(player, GameType.SURVIVAL);
+    }
+  }
+
+  public static void teleportToFishing(ServerPlayer player) {
+    if (TeleporterManager.teleportToFishingDimension(player)) {
+      changeGameType(player, GameType.ADVENTURE);
     }
   }
 

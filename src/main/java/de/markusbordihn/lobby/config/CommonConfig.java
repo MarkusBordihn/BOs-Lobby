@@ -79,6 +79,11 @@ public final class CommonConfig {
     public final ForgeConfigSpec.IntValue miningSpawnPointY;
     public final ForgeConfigSpec.IntValue miningSpawnPointZ;
 
+    public final ForgeConfigSpec.ConfigValue<String> fishingDimension;
+    public final ForgeConfigSpec.BooleanValue fishingUseCustomSpawnPoint;
+    public final ForgeConfigSpec.IntValue fishingSpawnPointX;
+    public final ForgeConfigSpec.IntValue fishingSpawnPointY;
+    public final ForgeConfigSpec.IntValue fishingSpawnPointZ;
 
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment(Constants.MOD_NAME);
@@ -93,10 +98,10 @@ public final class CommonConfig {
 
       builder.push("Lobby Dimension");
       lobbyDimension = builder.define("lobbyDimension", "lobby:lobby_dimension");
-      lobbyUseCustomSpawnPoint = builder.define("lobbyUseCustomSpawnPoint", true);
-      lobbySpawnPointX = builder.defineInRange("lobbySpawnPointX", 0, -1000, 1000);
-      lobbySpawnPointY = builder.defineInRange("lobbySpawnPointY", 11, -1000, 1000);
-      lobbySpawnPointZ = builder.defineInRange("lobbySpawnPointZ", 0, -1000, 1000);
+      lobbyUseCustomSpawnPoint = builder.define("lobbyUseCustomSpawnPoint", false);
+      lobbySpawnPointX = builder.defineInRange("lobbySpawnPointX", 9, -1000, 1000);
+      lobbySpawnPointY = builder.defineInRange("lobbySpawnPointY", 9, -1000, 1000);
+      lobbySpawnPointZ = builder.defineInRange("lobbySpawnPointZ", 9, -1000, 1000);
       lobbyBuilderList = builder.comment(
           "List of builders which are automatically switched to the creative mode inside the lobby dimension.")
           .define("lobbyBuilderList", new ArrayList<String>(Arrays.asList("")));
@@ -109,10 +114,18 @@ public final class CommonConfig {
       miningDisableMinecartChestSpawning =
           builder.define("miningDisableMinecartChestSpawning", true);
       miningRemoveSpawner = builder.define("miningRemoveSpawner", true);
-      miningUseCustomSpawnPoint = builder.define("miningUseCustomSpawnPoint", true);
+      miningUseCustomSpawnPoint = builder.define("miningUseCustomSpawnPoint", false);
       miningSpawnPointX = builder.defineInRange("miningSpawnPointX", 200, -1000, 1000);
       miningSpawnPointY = builder.defineInRange("miningSpawnPointY", 11, -1000, 1000);
       miningSpawnPointZ = builder.defineInRange("miningSpawnPointZ", 558, -1000, 1000);
+      builder.pop();
+
+      builder.push("Fishing Dimension");
+      fishingDimension = builder.define("fishingDimension", "lobby:fishing_dimension");
+      fishingUseCustomSpawnPoint = builder.define("fishingUseCustomSpawnPoint", false);
+      fishingSpawnPointX = builder.defineInRange("fishingSpawnPointX", 8, -1000, 1000);
+      fishingSpawnPointY = builder.defineInRange("fishingSpawnPointY", 53, -1000, 1000);
+      fishingSpawnPointZ = builder.defineInRange("fishingSpawnPointZ", 8, -1000, 1000);
       builder.pop();
 
     }

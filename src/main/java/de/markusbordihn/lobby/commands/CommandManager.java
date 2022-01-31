@@ -46,6 +46,7 @@ public class CommandManager {
   public static void handleRegisterCommandsEvent(RegisterCommandsEvent event) {
     log.info("Registering commands for {} ...", Constants.MOD_NAME);
     CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
+    FishingCommand.register(commandDispatcher);
     LobbyCommand.register(commandDispatcher);
     MiningCommand.register(commandDispatcher);
     SpawnCommand.register(commandDispatcher);

@@ -1,0 +1,54 @@
+{
+  "type": "lobby:fishing_dimension",
+  "generator": {
+    "type": "minecraft:flat",
+    "seed": 599282705,
+    "settings": {
+      "biome": "lobby:biome_fishing",
+      "disable_mob_generation": false,
+      "noodle_caves_enabled": false,
+      "ore_veins_enabled": false,
+      "aquifers_enabled": true,
+      "legacy_random_source": false,
+      "noise_caves_enabled": false,
+      "bedrock_roof_position": -10,
+      "bedrock_floor_position": 0,
+      "lakes": false,
+      "features": true,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 2
+        },
+        {
+          "block": "minecraft:stone",
+          "height": 6
+        },
+        {
+          "block": "minecraft:dirt",
+          "height": 2
+        },
+        {
+          "block": "minecraft:sand",
+          "height": 8
+        },
+        {
+          "block": "minecraft:water",
+          "height": 32
+        }
+      ],
+      "default_block": {
+        "Name": "minecraft:stone"
+      },
+      "default_fluid": {
+        "Name": "minecraft:water",
+        "Properties": {
+          "level": "0"
+        }
+      },
+      "structures": {
+        "structures": {}
+      }
+    }
+  }
+}

@@ -41,6 +41,11 @@ public class TeleporterManager {
   private static int defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
   private static int defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
 
+  private static boolean fishingUseCustomSpawnPoint = COMMON.fishingUseCustomSpawnPoint.get();
+  private static int fishingSpawnPointX = COMMON.fishingSpawnPointX.get();
+  private static int fishingSpawnPointY = COMMON.fishingSpawnPointY.get();
+  private static int fishingSpawnPointZ = COMMON.fishingSpawnPointZ.get();
+
   private static boolean lobbyUseCustomSpawnPoint = COMMON.lobbyUseCustomSpawnPoint.get();
   private static int lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
   private static int lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
@@ -50,6 +55,11 @@ public class TeleporterManager {
   private static int miningSpawnPointX = COMMON.miningSpawnPointX.get();
   private static int miningSpawnPointY = COMMON.miningSpawnPointY.get();
   private static int miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
+
+  // Default spawn points for the default structures
+  private static BlockPos defaultFishingSpawnPoint = new BlockPos(8, 53, 8);
+  private static BlockPos defaultMiningSpawnPoint = new BlockPos(200, 11, 558);
+  private static BlockPos defaultLobbySpawnPoint = new BlockPos(9, 9, 9);
 
   protected TeleporterManager() {}
 
@@ -61,6 +71,11 @@ public class TeleporterManager {
     defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
     defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
     defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
+
+    fishingUseCustomSpawnPoint = COMMON.fishingUseCustomSpawnPoint.get();
+    fishingSpawnPointX = COMMON.fishingSpawnPointX.get();
+    fishingSpawnPointY = COMMON.fishingSpawnPointY.get();
+    fishingSpawnPointZ = COMMON.fishingSpawnPointZ.get();
 
     lobbyUseCustomSpawnPoint = COMMON.lobbyUseCustomSpawnPoint.get();
     lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
@@ -90,6 +105,25 @@ public class TeleporterManager {
     return successfullyTeleported;
   }
 
+  public static boolean teleportToFishingDimension(ServerPlayer player) {
+    ServerLevel fishingDimension = DimensionManager.getFishingDimension();
+    boolean isSameDimension = player.level == fishingDimension;
+    boolean successfullyTeleported = false;
+    if (fishingUseCustomSpawnPoint) {
+      successfullyTeleported = teleportPlayer(player, fishingDimension, fishingSpawnPointX,
+          fishingSpawnPointY, fishingSpawnPointZ);
+    } else {
+      successfullyTeleported =
+          teleportPlayer(player, fishingDimension, defaultFishingSpawnPoint.getX(),
+              defaultFishingSpawnPoint.getY(), defaultFishingSpawnPoint.getZ());
+    }
+    if (successfullyTeleported && !isSameDimension) {
+      player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_fishing"),
+          Util.NIL_UUID);
+    }
+    return successfullyTeleported;
+  }
+
   public static boolean teleportToLobbyDimension(ServerPlayer player) {
     ServerLevel lobbyDimension = DimensionManager.getLobbyDimension();
     boolean isSameDimension = player.level == lobbyDimension;
@@ -98,7 +132,8 @@ public class TeleporterManager {
       successfullyTeleported = teleportPlayer(player, lobbyDimension, lobbySpawnPointX,
           lobbySpawnPointY, lobbySpawnPointZ);
     } else {
-      successfullyTeleported = teleportPlayer(player, lobbyDimension);
+      successfullyTeleported = teleportPlayer(player, lobbyDimension, defaultLobbySpawnPoint.getX(),
+          defaultLobbySpawnPoint.getY(), defaultLobbySpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
       player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_lobby"),
@@ -115,7 +150,9 @@ public class TeleporterManager {
       successfullyTeleported = teleportPlayer(player, miningDimension, miningSpawnPointX,
           miningSpawnPointY, miningSpawnPointZ);
     } else {
-      successfullyTeleported = teleportPlayer(player, miningDimension);
+      successfullyTeleported =
+          teleportPlayer(player, miningDimension, defaultMiningSpawnPoint.getX(),
+              defaultMiningSpawnPoint.getY(), defaultMiningSpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
       player.sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_mining"),
