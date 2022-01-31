@@ -12,7 +12,7 @@ Provides a easy to use lobby and optimized mining dimension for you and your fri
 - Provides /lobby, /mining and /spawn commands for the players.
 - Changed automatically the user game mode depending on the dimension.
 - Customization over the config file and data files, if needed.
-- Default lobby will be automatically expand with additional features.
+- Default lobby will be automatically expand with additional features
 
 ## Lobby Dimension
 
@@ -38,6 +38,7 @@ To return to the mining base just use the `/mining` command.
 
 ## User Commands
 
+- **/fishing** teleports you to the fishing dimension
 - **/lobby** teleports you to the lobby
 - **/mining** teleports you to the mining dimension
 - **/spawn** teleports you to the overworld
@@ -68,6 +69,16 @@ The optimization are parts of the code, you can use the following data files for
 - data/lobby/dimension_type/mining_dimension.json
 - data/lobby/functions/mining_dimension_load.mcfunction
 
+### Fishing Customization
+
+The fishing dimension will be automatically in the game mode adventure.
+Use the following data files to customize the lobby:
+
+- data/lobby/dimension/fishing_dimension.json
+- data/lobby/dimension_type/fishing_dimension.json
+- data/lobby/functions/fishing_dimension_load.mcfunction
+- data/worldgen/biome/biome_fishing.json
+
 **Note:** The `mining_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
 ## Version Status Overview 🛠️
@@ -81,7 +92,27 @@ The optimization are parts of the code, you can use the following data files for
 
 ## FAQ
 
-### How can I remove all entities from the mining dimension from other Mods?
+### How can I reset a dimension ?
+
+Just delete the dimension and the starting bases will be automatically regenerated after the server restart.
+
+Relevant folders:
+
+- dimensions/lobby/fishing_dimension
+- dimensions/lobby/lobby_dimension
+- dimensions/lobby/mining_dimension
+
+### How can I reset the default bases like the mining base, fishing base or the spawn without resetting the dimension ?
+
+Teleport to the corresponding dimension and run the corresponding functions like:
+
+- `/function lobby:fishing_dimension_load`
+- `/function lobby:lobby_dimension_load`
+- `/function lobby:mining_dimension_load`
+
+**Note: This will overwrite any existing block, but no entities.**
+
+### How can I remove all entities from the mining dimension from other Mods ?
 
 Just use the following admin command: `/execute in lobby:mining_dimension run kill @e[type=!player,distance=0..]`
 
