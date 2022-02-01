@@ -124,6 +124,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 // Curse Maven
 repositories {
   maven {
+    url "http://revy:49161/repository/CurseMaven/"
+    allowInsecureProtocol = true
+  }
+  maven {
     url "https://www.cursemaven.com"
     content {
       includeGroup "curse.maven"
@@ -142,11 +146,12 @@ dependencies {
   minecraft 'net.minecraftforge:forge:1.18.1-39.0.64'
 
   // Additional helpful Mods for development (dev depenedency)
-  runtimeOnly fg.deobf("curse.maven:worldedit-225608:3559499")
-  runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
   runtimeOnly fg.deobf("curse.maven:jade-324717:3614180")
   runtimeOnly fg.deobf("curse.maven:jei-238222:3599262")
+  runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
+  runtimeOnly fg.deobf("curse.maven:worldedit-225608:3559499")
+  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3613287")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
