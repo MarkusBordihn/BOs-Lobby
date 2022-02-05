@@ -138,6 +138,6 @@ Please only download the mod from the official CurseForge page or with the offic
 
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
 
-[mod_page]: https://www.curseforge.com/minecraft/mc-mods/fire-extinguisher
+[mod_page]: https://www.curseforge.com/minecraft/mc-mods/lobby
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
