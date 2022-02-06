@@ -57,7 +57,7 @@ public class TeleporterManager {
   private static int miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
 
   // Default spawn points for the default structures
-  private static BlockPos defaultFishingSpawnPoint = new BlockPos(8, 53, 8);
+  private static BlockPos defaultFishingSpawnPoint = new BlockPos(42, 51, 12);
   private static BlockPos defaultMiningSpawnPoint = new BlockPos(203, 9, 560);
   private static BlockPos defaultLobbySpawnPoint = new BlockPos(9, 9, 9);
 

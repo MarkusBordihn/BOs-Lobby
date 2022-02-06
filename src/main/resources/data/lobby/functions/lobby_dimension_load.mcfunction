@@ -14,6 +14,12 @@ forceload add -32 -32 32 32
 setblock -16 2 -16 minecraft:structure_block{mode:"LOAD",name:"lobby:lobby_base"} replace
 setblock -16 3 -16 minecraft:redstone_block
 
+setblock -16 2 -64 minecraft:structure_block{mode:"LOAD",name:"lobby:lobby_base_2"} replace
+setblock -16 3 -64 minecraft:redstone_block
+
+setblock -16 2 31 minecraft:structure_block{mode:"LOAD",name:"lobby:lobby_base_3"} replace
+setblock -16 3 31 minecraft:redstone_block
+
 # Remove force loaded chunks
 forceload remove all
 

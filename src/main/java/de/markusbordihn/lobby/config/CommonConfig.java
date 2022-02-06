@@ -150,9 +150,9 @@ public final class CommonConfig {
       builder.push("Fishing Dimension");
       fishingDimension = builder.define("fishingDimension", "lobby:fishing_dimension");
       fishingUseCustomSpawnPoint = builder.define("fishingUseCustomSpawnPoint", false);
-      fishingSpawnPointX = builder.defineInRange("fishingSpawnPointX", 8, -1000, 1000);
-      fishingSpawnPointY = builder.defineInRange("fishingSpawnPointY", 53, -1000, 1000);
-      fishingSpawnPointZ = builder.defineInRange("fishingSpawnPointZ", 8, -1000, 1000);
+      fishingSpawnPointX = builder.defineInRange("fishingSpawnPointX", 42, -1000, 1000);
+      fishingSpawnPointY = builder.defineInRange("fishingSpawnPointY", 51, -1000, 1000);
+      fishingSpawnPointZ = builder.defineInRange("fishingSpawnPointZ", 12, -1000, 1000);
       builder.pop();
 
     }
