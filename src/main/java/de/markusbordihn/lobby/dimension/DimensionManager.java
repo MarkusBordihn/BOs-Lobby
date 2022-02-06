@@ -183,7 +183,7 @@ public class DimensionManager {
 
   private static void mapServerLevel(MinecraftServer server) {
     // Skip search if we already found all dimensions.
-    if (defaultLevel != null && lobbyLevel != null && miningLevel != null) {
+    if (defaultLevel != null && lobbyLevel != null && miningLevel != null && fishingLevel != null) {
       return;
     }
 
@@ -191,20 +191,27 @@ public class DimensionManager {
     for (ServerLevel serverLevel : server.getAllLevels()) {
       String dimensionLocation = serverLevel.dimension().location().toString();
       if (defaultLevel == null && dimensionLocation.equals(defaultDimension)) {
-        log.info("Found default dimension with name {}: {}", defaultDimension, serverLevel);
+        log.info("{} Found default dimension with name {}: {}",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension, serverLevel);
         defaultLevel = serverLevel;
       } else if (lobbyLevel == null && dimensionLocation.equals(lobbyDimension)) {
-        log.info("Found lobby dimension with name {}: {}", lobbyDimension, serverLevel);
+        log.info("{} Found lobby dimension with name {}: {}",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension, serverLevel);
         lobbyLevel = serverLevel;
         DataPackHandler.prepareDataPackOnce(lobbyLevel);
       } else if (miningLevel == null && dimensionLocation.equals(miningDimension)) {
-        log.info("Found mining dimension with name {}: {}", miningDimension, serverLevel);
+        log.info("{} Found mining dimension with name {}: {}",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension, serverLevel);
         miningLevel = serverLevel;
         DataPackHandler.prepareDataPackOnce(miningLevel);
       } else if (fishingLevel == null && dimensionLocation.equals(fishingDimension)) {
-        log.info("Found fishing dimension with name {}: {}", fishingDimension, serverLevel);
+        log.info("{} Found fishing dimension with name {}: {}",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension, serverLevel);
         fishingLevel = serverLevel;
         DataPackHandler.prepareDataPackOnce(fishingLevel);
+      } else {
+        log.info("{} Skip dimension {}: {}", Constants.LOG_DIMENSION_MANAGER_PREFIX,
+            dimensionLocation, serverLevel);
       }
     }
 
@@ -230,11 +237,20 @@ public class DimensionManager {
     return lobbyLevel;
   }
 
+  public static String getLobbyDimensionName() {
+    return lobbyDimension;
+  }
+
+
   public static ServerLevel getFishingDimension() {
     if (fishingLevel == null) {
       mapServerLevel(ServerLifecycleHooks.getCurrentServer());
     }
     return fishingLevel;
+  }
+
+  public static String getFishingDimensionName() {
+    return fishingDimension;
   }
 
   public static ServerLevel getMiningDimension() {
@@ -244,11 +260,20 @@ public class DimensionManager {
     return miningLevel;
   }
 
+  public static String getMiningDimensionName() {
+    return miningDimension;
+  }
+
+
   public static ServerLevel getDefaultDimension() {
     if (defaultLevel == null) {
       mapServerLevel(ServerLifecycleHooks.getCurrentServer());
     }
     return defaultLevel;
+  }
+
+  public static String getDefaultDimensionName() {
+    return defaultDimension;
   }
 
   public static void teleportToDefault(ServerPlayer player) {

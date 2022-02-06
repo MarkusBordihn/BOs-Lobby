@@ -19,21 +19,46 @@
 
 package de.markusbordihn.lobby.commands;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import de.markusbordihn.lobby.Constants;
+import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
+@EventBusSubscriber
 public class FishingCommand extends CustomCommand {
 
   public static final String NAME = "fishing";
+  public static final String DIMENSION_NAME = "Fishing";
+
+  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static boolean fishingRestrictCommand = COMMON.fishingRestrictCommand.get();
+  private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+
+  private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
   private static final FishingCommand command = new FishingCommand();
+
+  @SubscribeEvent
+  public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
+    fishingRestrictCommand = COMMON.fishingRestrictCommand.get();
+    generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+  }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
     dispatcher
@@ -42,12 +67,31 @@ public class FishingCommand extends CustomCommand {
 
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-    if (DimensionManager.getFishingDimension() == null) {
-      sendFeedback(context, "Unable to teleport to fishing, fishing dimension is not loaded!");
+    ServerPlayer player = context.getSource().getPlayerOrException();
+
+    // Handle cool-down time of command to avoid command misusage.
+    Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
+    Long currentTimer = java.time.Instant.now().getEpochSecond();
+    if (coolDownTimer != null && coolDownTimer > currentTimer) {
+      sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
+          DIMENSION_NAME, coolDownTimer - currentTimer));
+      return 0;
     } else {
-      ServerPlayer player = context.getSource().getPlayerOrException();
-      sendFeedback(context, "Teleport to fishing dimension, please stand still!");
+      coolDownPlayerMap.put(player, currentTimer + generalCommandCoolDown);
+    }
+
+    // Provide feedback to the player for their teleporter request.
+    if (DimensionManager.getFishingDimension() == null) {
+      sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
+          DIMENSION_NAME, DimensionManager.getFishingDimensionName()));
+    } else if (!fishingRestrictCommand
+        || player.getLevel() != DimensionManager.getFishingDimension()) {
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
       DimensionManager.teleportToFishing(player);
+    } else {
+      sendFeedback(context, new TranslatableComponent(
+          Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
     }
     return 0;
   }

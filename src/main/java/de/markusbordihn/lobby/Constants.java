@@ -21,16 +21,24 @@ package de.markusbordihn.lobby;
 
 public final class Constants {
 
-  protected Constants() {
-  }
+  protected Constants() {}
 
   // General Mod definitions
   public static final String LOG_NAME = "Lobby";
   public static final String LOG_REGISTER_PREFIX = "Register " + LOG_NAME;
+  public static final String LOG_DIMENSION_MANAGER_PREFIX = "[Lobby Dimension Manager]";
   public static final String MOD_COMMAND = "lobby";
   public static final String MOD_ID = "lobby";
   public static final String MOD_NAME = "Lobby";
 
   // Prefixes
   public static final String TEXT_PREFIX = "text.lobby.";
+
+  // Messages
+  public static final String UNABLE_TO_TELEPORT_MESSAGE =
+      Constants.TEXT_PREFIX + "unable_to_teleport";
+  public static final String TELEPORT_TO_MESSAGE = Constants.TEXT_PREFIX + "teleport_to";
+  public static final String TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE =
+      Constants.TEXT_PREFIX + "failed_already_in_dimension";
+  public static final String TELEPORT_FAILED_COOLDOWN = Constants.TEXT_PREFIX + "failed_cooldown";
 }

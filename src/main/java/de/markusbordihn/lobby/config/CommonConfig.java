@@ -56,13 +56,17 @@ public final class CommonConfig {
 
   public static class Config {
 
+    public final ForgeConfigSpec.IntValue generalCommandCoolDown;
+
     public final ForgeConfigSpec.ConfigValue<String> defaultDimension;
+    public final ForgeConfigSpec.BooleanValue defaultRestrictCommand;
     public final ForgeConfigSpec.BooleanValue defaultUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue defaultSpawnPointX;
     public final ForgeConfigSpec.IntValue defaultSpawnPointY;
     public final ForgeConfigSpec.IntValue defaultSpawnPointZ;
 
     public final ForgeConfigSpec.ConfigValue<String> lobbyDimension;
+    public final ForgeConfigSpec.BooleanValue lobbyRestrictCommand;
     public final ForgeConfigSpec.BooleanValue lobbyUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue lobbySpawnPointX;
     public final ForgeConfigSpec.IntValue lobbySpawnPointY;
@@ -70,6 +74,7 @@ public final class CommonConfig {
     public final ForgeConfigSpec.ConfigValue<List<String>> lobbyBuilderList;
 
     public final ForgeConfigSpec.ConfigValue<String> miningDimension;
+    public final ForgeConfigSpec.BooleanValue miningRestrictCommand;
     public final ForgeConfigSpec.BooleanValue miningDisableBatSpawning;
     public final ForgeConfigSpec.BooleanValue miningDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue miningDisableMinecartChestSpawning;
@@ -80,6 +85,7 @@ public final class CommonConfig {
     public final ForgeConfigSpec.IntValue miningSpawnPointZ;
 
     public final ForgeConfigSpec.ConfigValue<String> fishingDimension;
+    public final ForgeConfigSpec.BooleanValue fishingRestrictCommand;
     public final ForgeConfigSpec.BooleanValue fishingUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue fishingSpawnPointX;
     public final ForgeConfigSpec.IntValue fishingSpawnPointY;
@@ -87,6 +93,27 @@ public final class CommonConfig {
 
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment(Constants.MOD_NAME);
+
+      builder.push("Commands");
+      generalCommandCoolDown =
+          builder.comment("Delay in seconds before a teleport command could be used again!")
+              .defineInRange("generalCommandCoolDown", 30, 1, 300);
+      builder.pop();
+
+      builder.push("Commands");
+      defaultRestrictCommand = builder.comment(
+          "If enabled the teleport command could not be used if the user is already in the default dimension.")
+          .define("defaultRestrictCommand", false);
+      lobbyRestrictCommand = builder.comment(
+          "If enabled the teleport command could not be used if the user is already in the lobby dimension.")
+          .define("lobbyRestrictCommand", false);
+      miningRestrictCommand = builder.comment(
+          "If enabled the teleport command could not be used if the user is already in the mining dimension.")
+          .define("miningRestrictCommand", false);
+      fishingRestrictCommand = builder.comment(
+          "If enabled the teleport command could not be used if the user is already in the fishing dimension.")
+          .define("fishingRestrictCommand", false);
+      builder.pop();
 
       builder.push("Default Dimension");
       defaultDimension = builder.define("defaultDimension", "minecraft:overworld");
