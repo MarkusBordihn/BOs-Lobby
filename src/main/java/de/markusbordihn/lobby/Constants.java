@@ -27,9 +27,12 @@ public final class Constants {
   public static final String LOG_NAME = "Lobby";
   public static final String LOG_REGISTER_PREFIX = "Register " + LOG_NAME;
   public static final String LOG_DIMENSION_MANAGER_PREFIX = "[Lobby Dimension Manager]";
+  public static final String LOG_TELEPORT_MANAGER_PREFIX = "[Lobby Teleport Manager]";
+  public static final String LOG_PLAYER_MANAGER_PREFIX = "[Lobby Player Manager]";
   public static final String MOD_COMMAND = "lobby";
   public static final String MOD_ID = "lobby";
   public static final String MOD_NAME = "Lobby";
+  public static final String ISSUE_REPORT = "https://github.com/MarkusBordihn/BOs-Lobby/issues";
 
   // Prefixes
   public static final String TEXT_PREFIX = "text.lobby.";

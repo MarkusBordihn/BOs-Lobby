@@ -166,6 +166,7 @@ public class DimensionManager {
       event.setResult(Event.Result.DENY);
     }
 
+    // Allow/deny Mob spawning
     if (miningDisableMobSpawning) {
       event.setResult(Event.Result.DENY);
     }
@@ -190,25 +191,33 @@ public class DimensionManager {
     // Mapping names to server level for easier access.
     for (ServerLevel serverLevel : server.getAllLevels()) {
       String dimensionLocation = serverLevel.dimension().location().toString();
-      if (defaultLevel == null && dimensionLocation.equals(defaultDimension)) {
-        log.info("{} Found default dimension with name {}: {}",
-            Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension, serverLevel);
-        defaultLevel = serverLevel;
-      } else if (lobbyLevel == null && dimensionLocation.equals(lobbyDimension)) {
-        log.info("{} Found lobby dimension with name {}: {}",
-            Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension, serverLevel);
-        lobbyLevel = serverLevel;
-        DataPackHandler.prepareDataPackOnce(lobbyLevel);
-      } else if (miningLevel == null && dimensionLocation.equals(miningDimension)) {
-        log.info("{} Found mining dimension with name {}: {}",
-            Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension, serverLevel);
-        miningLevel = serverLevel;
-        DataPackHandler.prepareDataPackOnce(miningLevel);
-      } else if (fishingLevel == null && dimensionLocation.equals(fishingDimension)) {
-        log.info("{} Found fishing dimension with name {}: {}",
-            Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension, serverLevel);
-        fishingLevel = serverLevel;
-        DataPackHandler.prepareDataPackOnce(fishingLevel);
+      if (dimensionLocation.equals(defaultDimension)) {
+        if (defaultLevel == null) {
+          log.info("{} Found default dimension with name {}: {}",
+              Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension, serverLevel);
+          defaultLevel = serverLevel;
+        }
+      } else if (dimensionLocation.equals(lobbyDimension)) {
+        if (lobbyLevel == null) {
+          log.info("{} Found lobby dimension with name {}: {}",
+              Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension, serverLevel);
+          lobbyLevel = serverLevel;
+          DataPackHandler.prepareDataPackOnce(lobbyLevel);
+        }
+      } else if (dimensionLocation.equals(miningDimension)) {
+        if (miningLevel == null) {
+          log.info("{} Found mining dimension with name {}: {}",
+              Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension, serverLevel);
+          miningLevel = serverLevel;
+          DataPackHandler.prepareDataPackOnce(miningLevel);
+        }
+      } else if (dimensionLocation.equals(fishingDimension)) {
+        if (fishingLevel == null) {
+          log.info("{} Found fishing dimension with name {}: {}",
+              Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension, serverLevel);
+          fishingLevel = serverLevel;
+          DataPackHandler.prepareDataPackOnce(fishingLevel);
+        }
       } else {
         log.info("{} Skip dimension {}: {}", Constants.LOG_DIMENSION_MANAGER_PREFIX,
             dimensionLocation, serverLevel);

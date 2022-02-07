@@ -2,13 +2,14 @@
   "block.placeholder.text": "Template placeholder do not remove!",
   "item.placeholder.text": "Template placeholder do not remove!",
 
-  "text.lobby.welcome_to_debaulf": "Welcome to the default dimension, please use the /lobby or /mining command to change to a different dimension.",
+  "text.lobby.welcome_to_default": "Welcome to the default dimension, please use the /lobby or /mining command to change to a different dimension.",
   "text.lobby.welcome_to_lobby": "Welcome to the lobby, please use the /spawn or /mining command to change to a different dimension.",
   "text.lobby.welcome_to_mining": "Welcome to the minining dimension, please use the /spawn or /lobby command to change to a different dimension.",
   "text.lobby.welcome_to_fishing": "Welcome to the fishing dimension, please use the /spawn, /lobby or /mining command to change to a different dimension.",
 
-  "text.lobby.unable_to_teleport": "Unable to teleport to %1$s, because %2$s dimension is not loaded!",
-  "text.lobby.teleport_to": "Teleporting to %1$s, please stand still!",
   "text.lobby.failed_already_in_dimension": "Failed to teleport, because you are already in the %1$s dimension!",
-  "text.lobby.failed_cooldown": "Failed to teleport to %1$s, you can use the teleport command again in %2$s secs!"
+  "text.lobby.failed_cooldown": "Failed to teleport to %1$s, you can use the teleport command again in %2$s secs!",
+  "text.lobby.teleport_to": "Teleporting to %1$s, please stand still!",
+  "text.lobby.transfer_to_lobby": "Please wait, you will be automatically transported to the lobby!",
+  "text.lobby.unable_to_teleport": "Unable to teleport to %1$s, because %2$s dimension is not loaded!"
 }

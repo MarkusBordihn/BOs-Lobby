@@ -193,7 +193,7 @@ curseforge {
   project {
     id = "${curseforge_project_id}"
     changelog = file("CHANGELOG.md")
-    releaseType = 'release'
+    releaseType = 'alpha'
     addGameVersion("1.18.1")
     addGameVersion("Forge")
   }

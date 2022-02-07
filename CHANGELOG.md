@@ -5,6 +5,20 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.02.07
+
+- Released 2.0.0 alpha version for testing. Use it on your own risk.
+- Added option to transfer player directly to spawn after login.
+- Added finishing base structure.
+- Added new lobby base structure.
+- Adjusted spawn points and setup scripts.
+
+### 2022.02.06
+
+- Added command cool down for teleport to avoid server spam.
+- Move text to translatable component to support other languages.
+- Improved logging for dimension manager to get a list of all possible dimension in the log for easier troubleshooting of reported issue like #4.
+
 ### 2022.01.30
 
 - Replaced custom dimension teleporter with built-in version to avoid errors with other mods which are using mixin's and not consider the custom teleporter.

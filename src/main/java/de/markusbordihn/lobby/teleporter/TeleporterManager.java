@@ -19,6 +19,9 @@
 
 package de.markusbordihn.lobby.teleporter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -27,15 +30,20 @@ import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
+@EventBusSubscriber
 public class TeleporterManager {
+
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
+  // Custom spawn definitions
   private static boolean defaultUseCustomSpawnPoint = COMMON.defaultUseCustomSpawnPoint.get();
   private static int defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
   private static int defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
@@ -65,9 +73,7 @@ public class TeleporterManager {
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-
     // Make sure we have the current config settings.
-    defaultUseCustomSpawnPoint = COMMON.defaultUseCustomSpawnPoint.get();
     defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
     defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
     defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
@@ -86,6 +92,27 @@ public class TeleporterManager {
     miningSpawnPointX = COMMON.miningSpawnPointX.get();
     miningSpawnPointY = COMMON.miningSpawnPointY.get();
     miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
+
+    if (defaultUseCustomSpawnPoint) {
+      log.info("{} Using custom spawn point {} {} {} for default dimension",
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, defaultSpawnPointX, defaultSpawnPointY,
+          defaultSpawnPointZ);
+    }
+    if (fishingUseCustomSpawnPoint) {
+      log.info("{} Using custom spawn point {} {} {} for fishing dimension",
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, fishingSpawnPointX, fishingSpawnPointY,
+          fishingSpawnPointZ);
+    }
+    if (lobbyUseCustomSpawnPoint) {
+      log.info("{} Using custom spawn point {} {} {} for lobby dimension",
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, lobbySpawnPointX, lobbySpawnPointY,
+          lobbySpawnPointZ);
+    }
+    if (miningUseCustomSpawnPoint) {
+      log.info("{} Using custom spawn point {} {} {} for mining dimension",
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, miningSpawnPointX, miningSpawnPointY,
+          miningSpawnPointZ);
+    }
   }
 
   public static boolean teleportToDefaultDimension(ServerPlayer player) {
