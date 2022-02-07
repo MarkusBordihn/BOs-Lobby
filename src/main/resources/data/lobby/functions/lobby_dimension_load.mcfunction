@@ -8,7 +8,7 @@
 tellraw @p {"text":"Lobby dimension data pack will been re-initialized!", "color":"gold", "bold":true}
 
 # Force load chunks for the structures
-forceload add -16 80 32 -64
+forceload add -64 -64 32 32
 
 # Add Lobby Base
 setblock -16 2 -16 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_garden"} replace
@@ -20,11 +20,37 @@ setblock -16 3 -64 minecraft:redstone_block
 setblock -16 2 31 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_blossom_tree"} replace
 setblock -16 3 31 minecraft:redstone_block
 
+setblock 32 2 31 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_flower"} replace
+setblock 32 3 31 minecraft:redstone_block
+
+setblock 32 2 -17 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_flower_2"} replace
+setblock 32 3 -17 minecraft:redstone_block
+
+setblock 32 2 -64 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_flower_3"} replace
+setblock 32 3 -64 minecraft:redstone_block
+
+setblock -64 2 31 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_bergw"} replace
+setblock -64 3 31 minecraft:redstone_block
+
+setblock -64 2 -17 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_forest_mid"} replace
+setblock -64 3 -17 minecraft:redstone_block
+
+setblock -64 2 -64 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_forest"} replace
+setblock -64 3 -64 minecraft:redstone_block
+
 # Add NPCs without AI
-summon wandering_trader 6 9 -43 {Rotation: [-90f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
+summon wandering_trader 6 10 -43 {Rotation: [-90f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
+summon villager 20 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: cartographer}}
+summon villager 28 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: fletcher}}
+summon villager 25 10 -16 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: shepherd}}
+summon villager 16 10 -16 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: toolsmith}}
+summon villager -7 10 -56 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: mason}}
+summon villager 19 10 -37 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: farmer}}
+summon villager 1 10 -34 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: toolsmith}}
+summon villager 19 10 -51 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: farmer}}
 
 # Add decoration mobs
-summon tropical_fish 15 7 59 {PersistenceRequired: 1b, Invulnerable: 1b}
+summon tropical_fish 15 8 59 {PersistenceRequired: 1b, Invulnerable: 1b}
 summon tropical_fish 7 8 48 {PersistenceRequired: 1b, Invulnerable: 1b}
 
 # Remove force loaded chunks
