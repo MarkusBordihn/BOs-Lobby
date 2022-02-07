@@ -91,6 +91,7 @@ public final class CommonConfig {
     public final ForgeConfigSpec.IntValue fishingSpawnPointX;
     public final ForgeConfigSpec.IntValue fishingSpawnPointY;
     public final ForgeConfigSpec.IntValue fishingSpawnPointZ;
+    public final ForgeConfigSpec.ConfigValue<List<String>> fishingBuilderList;
 
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment(Constants.MOD_NAME);
@@ -157,6 +158,9 @@ public final class CommonConfig {
       fishingSpawnPointX = builder.defineInRange("fishingSpawnPointX", 42, -1000, 1000);
       fishingSpawnPointY = builder.defineInRange("fishingSpawnPointY", 51, -1000, 1000);
       fishingSpawnPointZ = builder.defineInRange("fishingSpawnPointZ", 12, -1000, 1000);
+      fishingBuilderList = builder.comment(
+          "List of builders which are automatically switched to the creative mode inside the fishing dimension.")
+          .define("fishingBuilderList", new ArrayList<String>(Arrays.asList("")));
       builder.pop();
 
     }

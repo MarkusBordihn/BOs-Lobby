@@ -42,7 +42,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
-import de.markusbordihn.lobby.teleporter.TeleporterManager;
 
 @EventBusSubscriber
 public class PlayerManager {
@@ -202,7 +201,7 @@ public class PlayerManager {
     if (!playerTeleportList.contains(player)) {
       log.info("{} Transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
           player, player.level);
-      TeleporterManager.teleportToLobbyDimension(player);
+      DimensionManager.teleportToLobby(player);
     }
     playerTeleportList.add(player);
   }

@@ -5,6 +5,14 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.02.08
+
+- Released 2.0.1 stable version.
+NOTE: Please delete the existing config file and reset the dimensions (mining, fishing and lobby) to get the latest updates.
+
+- Finalized structures and fixed spawn points.
+- Added creative option for fishing dimension.
+
 ### 2022.02.07
 
 - Released 2.0.0 alpha version for testing. Use it on your own risk.

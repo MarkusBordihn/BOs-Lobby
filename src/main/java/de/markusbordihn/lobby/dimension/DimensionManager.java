@@ -70,6 +70,7 @@ public class DimensionManager {
   private static String defaultDimension = COMMON.defaultDimension.get();
 
   private static String fishingDimension = COMMON.fishingDimension.get();
+  private static List<String> fishingBuilderList = COMMON.fishingBuilderList.get();
 
   private static String lobbyDimension = COMMON.lobbyDimension.get();
   private static List<String> lobbyBuilderList = COMMON.lobbyBuilderList.get();
@@ -82,6 +83,7 @@ public class DimensionManager {
   private static boolean miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
 
   private static Set<ServerPlayer> gameTypeReset = ConcurrentHashMap.newKeySet();
+  private static Set<String> ignoredDimension = ConcurrentHashMap.newKeySet();
 
   private static ServerLevel defaultLevel = null;
   private static ServerLevel fishingLevel = null;
@@ -102,6 +104,7 @@ public class DimensionManager {
     defaultDimension = COMMON.defaultDimension.get();
 
     fishingDimension = COMMON.fishingDimension.get();
+    fishingBuilderList = COMMON.fishingBuilderList.get();
 
     lobbyDimension = COMMON.lobbyDimension.get();
     lobbyBuilderList = COMMON.lobbyBuilderList.get();
@@ -125,11 +128,36 @@ public class DimensionManager {
     String fromLocation = event.getFrom().location().toString();
     String toLocation = event.getTo().location().toString();
 
-    // Ignore known dimension which automatically changing the game type or if the from dimension
-    // is not from the lobby.
-    if (toLocation.equals(fishingDimension) || toLocation.equals(lobbyDimension)
-        || toLocation.equals(miningDimension) || (!fromLocation.isEmpty()
-            && !fromLocation.equals(fishingDimension) && !fromLocation.equals(lobbyDimension))) {
+    // Make sure normal users are in Adventure mode for the fishing dimension even if they are using
+    // tp or similar commands.
+    if (toLocation.equals(fishingDimension)) {
+      if (!fishingBuilderList.isEmpty()
+          && fishingBuilderList.contains(player.getName().getString())) {
+        log.info("Give builder {} creative mode for fishing dimension.",
+            player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      } else {
+        changeGameType(player, GameType.ADVENTURE);
+      }
+      return;
+    }
+
+    // Make sure normal users are in Adventure mode for the lobby dimension even if they are using
+    // tp or similar commands.
+    if (toLocation.equals(lobbyDimension)) {
+      if (!lobbyBuilderList.isEmpty() && lobbyBuilderList.contains(player.getName().getString())) {
+        log.info("Give builder {} creative mode for lobby.", player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      } else {
+        changeGameType(player, GameType.ADVENTURE);
+      }
+      return;
+    }
+
+    // Make sure normal users are in survival mode for the mining dimension even if they are using
+    // tp or similar commands.
+    if (toLocation.equals(miningDimension)) {
+      changeGameType(player, GameType.SURVIVAL);
       return;
     }
 
@@ -183,7 +211,7 @@ public class DimensionManager {
   }
 
   private static void mapServerLevel(MinecraftServer server) {
-    // Skip search if we already found all dimensions.
+    // Skip search if we already found all relevant dimensions.
     if (defaultLevel != null && lobbyLevel != null && miningLevel != null && fishingLevel != null) {
       return;
     }
@@ -219,8 +247,12 @@ public class DimensionManager {
           DataPackHandler.prepareDataPackOnce(fishingLevel);
         }
       } else {
-        log.info("{} Skip dimension {}: {}", Constants.LOG_DIMENSION_MANAGER_PREFIX,
-            dimensionLocation, serverLevel);
+        if (ignoredDimension.isEmpty() || !ignoredDimension.contains(dimensionLocation)) {
+          log.info("{} Ignore dimension {}: {}", Constants.LOG_DIMENSION_MANAGER_PREFIX,
+              dimensionLocation, serverLevel);
+        } else {
+          ignoredDimension.add(dimensionLocation);
+        }
       }
     }
 
@@ -293,7 +325,14 @@ public class DimensionManager {
 
   public static void teleportToFishing(ServerPlayer player) {
     if (TeleporterManager.teleportToFishingDimension(player)) {
-      changeGameType(player, GameType.ADVENTURE);
+      if (!fishingBuilderList.isEmpty()
+          && fishingBuilderList.contains(player.getName().getString())) {
+        log.info("Give builder {} creative mode for fishing dimension.",
+            player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      } else {
+        changeGameType(player, GameType.ADVENTURE);
+      }
     }
   }
 

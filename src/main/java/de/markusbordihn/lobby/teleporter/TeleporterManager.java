@@ -67,7 +67,7 @@ public class TeleporterManager {
   // Default spawn points for the default structures
   private static BlockPos defaultFishingSpawnPoint = new BlockPos(42, 51, 12);
   private static BlockPos defaultMiningSpawnPoint = new BlockPos(203, 9, 560);
-  private static BlockPos defaultLobbySpawnPoint = new BlockPos(9, 9, 9);
+  private static BlockPos defaultLobbySpawnPoint = new BlockPos(9, 11, 9);
 
   protected TeleporterManager() {}
 

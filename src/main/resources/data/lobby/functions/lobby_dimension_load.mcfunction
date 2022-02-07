@@ -1,7 +1,7 @@
 # Mining Dimension Setup Script
 # by Markus Bordihn
 #
-# Spawn Point: 9 9 9
+# Spawn Point: 9 11 9
 # Structure Block: -17 8 -17 (1 1 1 relative)
 # Structure Block Corner: 16 23 16
 #
@@ -40,18 +40,21 @@ setblock -64 3 -64 minecraft:redstone_block
 
 # Add NPCs without AI
 summon wandering_trader 6 10 -43 {Rotation: [-90f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
-summon villager 20 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: cartographer}}
-summon villager 28 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: fletcher}}
-summon villager 25 10 -16 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: shepherd}}
-summon villager 16 10 -16 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: toolsmith}}
-summon villager -7 10 -56 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: mason}}
-summon villager 19 10 -37 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: farmer}}
-summon villager 1 10 -34 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: toolsmith}}
-summon villager 19 10 -51 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: farmer}}
+summon villager 20 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "cartographer"}}
+summon villager 28 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "fletcher"}}
+summon villager 25 10 -16 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "shepherd"}}
+summon villager 16 10 -16 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}}
+summon villager -7 10 -56 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "mason"}}
+summon villager 19 10 -37 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer"}}
+summon villager 1 10 -34 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}}
+summon villager 19 10 -51 {Rotation: [180f, 10f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer"}}
 
 # Add decoration mobs
 summon tropical_fish 15 8 59 {PersistenceRequired: 1b, Invulnerable: 1b}
-summon tropical_fish 7 8 48 {PersistenceRequired: 1b, Invulnerable: 1b}
+summon tropical_fish -13 14 47 {PersistenceRequired: 1b, Invulnerable: 1b}
+summon horse 16 10 -59 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
+summon cow 56 10 -23 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
+summon sheep 63 10 30 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
 
 # Remove force loaded chunks
 forceload remove all
