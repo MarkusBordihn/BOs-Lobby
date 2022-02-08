@@ -7,6 +7,7 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2022.02.08
 
+- Released 2.1.0 stable version with improved default teleport to lobby options.
 - Released 2.0.1 stable version.
 NOTE: Please delete the existing config file and reset the dimensions (mining, fishing and lobby) to get the latest updates.
 

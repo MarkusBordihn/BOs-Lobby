@@ -58,6 +58,7 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.IntValue generalCommandCoolDown;
     public final ForgeConfigSpec.BooleanValue generalDefaultToLobby;
+    public final ForgeConfigSpec.BooleanValue generalDefaultToLobbyAlways;
 
     public final ForgeConfigSpec.ConfigValue<String> defaultDimension;
     public final ForgeConfigSpec.BooleanValue defaultRestrictCommand;
@@ -100,9 +101,11 @@ public final class CommonConfig {
       generalCommandCoolDown =
           builder.comment("Delay in seconds before a teleport command could be used again!")
               .defineInRange("generalCommandCoolDown", 30, 1, 300);
-      generalDefaultToLobby =
-          builder.comment("Teleport player first to the lobby after first connect and server restart! (dev)")
-              .define("generalDefaultToLobby", true);
+      generalDefaultToLobby = builder.comment(
+          "Only teleport player to the lobby for their first connect or after a server restart!")
+          .define("generalDefaultToLobby", true);
+      generalDefaultToLobbyAlways = builder.comment("Always teleport player to the lobby!")
+          .define("generalDefaultToLobbyAlways", false);
       builder.pop();
 
       builder.push("Commands");
