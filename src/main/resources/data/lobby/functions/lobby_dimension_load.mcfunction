@@ -50,8 +50,8 @@ summon villager 1 10 -34 {Rotation: [-45f, 0f], NoAI: 1b, PersistenceRequired: 1
 summon villager 19 10 -51 {Rotation: [180f, 10f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer"}}
 
 # Add decoration mobs
-summon tropical_fish 15 8 59 {PersistenceRequired: 1b, Invulnerable: 1b}
-summon tropical_fish -13 14 47 {PersistenceRequired: 1b, Invulnerable: 1b}
+summon tropical_fish 15 8 59 {PersistenceRequired: 1b, Invulnerable: 1b, Variant: 65536}
+summon tropical_fish -13 14 47 {PersistenceRequired: 1b, Invulnerable: 1b, Variant: 65536}
 summon horse 16 10 -59 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
 summon cow 56 10 -23 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
 summon sheep 63 10 30 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}

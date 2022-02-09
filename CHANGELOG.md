@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.02.09
+
+- Added mob control config options for fishing and lobby dimension
+- Added additional decoration mobs for the fishing dimension
+
 ### 2022.02.08
 
 - Released 2.1.0 stable version with improved default teleport to lobby options.

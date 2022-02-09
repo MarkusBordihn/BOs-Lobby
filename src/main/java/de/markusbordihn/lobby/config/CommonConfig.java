@@ -69,6 +69,7 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.ConfigValue<String> lobbyDimension;
     public final ForgeConfigSpec.BooleanValue lobbyRestrictCommand;
+    public final ForgeConfigSpec.BooleanValue lobbyDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue lobbyUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue lobbySpawnPointX;
     public final ForgeConfigSpec.IntValue lobbySpawnPointY;
@@ -88,6 +89,7 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.ConfigValue<String> fishingDimension;
     public final ForgeConfigSpec.BooleanValue fishingRestrictCommand;
+    public final ForgeConfigSpec.BooleanValue fishingDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue fishingUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue fishingSpawnPointX;
     public final ForgeConfigSpec.IntValue fishingSpawnPointY;
@@ -133,6 +135,7 @@ public final class CommonConfig {
 
       builder.push("Lobby Dimension");
       lobbyDimension = builder.define("lobbyDimension", "lobby:lobby_dimension");
+      lobbyDisableMobSpawning = builder.define("lobbyDisableMobSpawning", true);
       lobbyUseCustomSpawnPoint = builder.define("lobbyUseCustomSpawnPoint", false);
       lobbySpawnPointX = builder.defineInRange("lobbySpawnPointX", 9, -1000, 1000);
       lobbySpawnPointY = builder.defineInRange("lobbySpawnPointY", 9, -1000, 1000);
@@ -157,6 +160,7 @@ public final class CommonConfig {
 
       builder.push("Fishing Dimension");
       fishingDimension = builder.define("fishingDimension", "lobby:fishing_dimension");
+      fishingDisableMobSpawning = builder.define("fishingDisableMobSpawning", true);
       fishingUseCustomSpawnPoint = builder.define("fishingUseCustomSpawnPoint", false);
       fishingSpawnPointX = builder.defineInRange("fishingSpawnPointX", 42, -1000, 1000);
       fishingSpawnPointY = builder.defineInRange("fishingSpawnPointY", 51, -1000, 1000);

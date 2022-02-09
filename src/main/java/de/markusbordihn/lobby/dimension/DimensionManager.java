@@ -70,9 +70,11 @@ public class DimensionManager {
   private static String defaultDimension = COMMON.defaultDimension.get();
 
   private static String fishingDimension = COMMON.fishingDimension.get();
+  private static boolean fishingDisableMobSpawning = COMMON.fishingDisableMobSpawning.get();
   private static List<String> fishingBuilderList = COMMON.fishingBuilderList.get();
 
   private static String lobbyDimension = COMMON.lobbyDimension.get();
+  private static boolean lobbyDisableMobSpawning = COMMON.lobbyDisableMobSpawning.get();
   private static List<String> lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
   private static String miningDimension = COMMON.miningDimension.get();
@@ -104,9 +106,11 @@ public class DimensionManager {
     defaultDimension = COMMON.defaultDimension.get();
 
     fishingDimension = COMMON.fishingDimension.get();
+    fishingDisableMobSpawning = COMMON.fishingDisableMobSpawning.get();
     fishingBuilderList = COMMON.fishingBuilderList.get();
 
     lobbyDimension = COMMON.lobbyDimension.get();
+    lobbyDisableMobSpawning = COMMON.lobbyDisableMobSpawning.get();
     lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
     miningDimension = COMMON.miningDimension.get();
@@ -120,6 +124,27 @@ public class DimensionManager {
   public static void handleServerStartedEvent(ServerStartedEvent event) {
     // Map dimension and init dimension structure if needed.
     mapServerLevel(event.getServer());
+
+    if (fishingDisableMobSpawning) {
+      log.info("{} Disable Mob Spawning for fishing dimension.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
+    if (lobbyDisableMobSpawning) {
+      log.info("{} Disable mob spawning for lobby dimension.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
+    if (miningDisableBatSpawning) {
+      log.info("{} Disable bat spawning for mining dimension.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
+    if (miningDisableMinecartChestSpawning) {
+      log.info("{} Disable minecraft chest spawning for mining dimension.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
+    if (miningDisableMobSpawning) {
+      log.info("{} Disable mob spawning for mining dimension.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
   }
 
   @SubscribeEvent
@@ -386,12 +411,32 @@ public class DimensionManager {
       return;
     }
 
-    // Restrict spawn control to mining dimension.
+    // Control spawns depending on the dimension.
     String dimensionLocation = entity.getLevel().dimension().location().toString();
-    if (!miningDimension.equals(dimensionLocation)) {
-      return;
+    if (fishingDisableMobSpawning && fishingDimension.equals(dimensionLocation)) {
+      handleSpawnEventFishing(event);
+    } else if (lobbyDisableMobSpawning && lobbyDimension.equals(dimensionLocation)) {
+      handleSpawnEventLobby(event);
+    } else if ((miningDisableBatSpawning || miningDisableMinecartChestSpawning
+        || miningDisableMobSpawning) && miningDimension.equals(dimensionLocation)) {
+      handleSpawnEventMining(level, entity, event);
     }
+  }
 
+  private static void handleSpawnEventFishing(LivingSpawnEvent event) {
+    if (fishingDisableMobSpawning) {
+      event.setResult(Event.Result.DENY);
+    }
+  }
+
+  private static void handleSpawnEventLobby(LivingSpawnEvent event) {
+    if (lobbyDisableMobSpawning) {
+      event.setResult(Event.Result.DENY);
+    }
+  }
+
+  private static void handleSpawnEventMining(LevelAccessor level, Entity entity,
+      LivingSpawnEvent event) {
     // Removing spawners as soon they try to spawn something.
     if (miningRemoveSpawner && event instanceof LivingSpawnEvent.CheckSpawn checkSpawn
         && checkSpawn.getSpawner() != null) {
@@ -404,12 +449,18 @@ public class DimensionManager {
     }
 
     // Allow/deny bat spawning for better cave experience
-    if (!miningDisableBatSpawning && entity instanceof Bat) {
+    if (entity instanceof Bat) {
+      if (miningDisableBatSpawning) {
+        event.setResult(Event.Result.DENY);
+      }
       return;
     }
 
     // Allow/deny Minecart Chest spawning
-    if (!miningDisableMinecartChestSpawning && entity instanceof MinecartChest) {
+    if (entity instanceof MinecartChest) {
+      if (miningDisableMinecartChestSpawning) {
+        event.setResult(Event.Result.DENY);
+      }
       return;
     }
 
