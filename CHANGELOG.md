@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.03.04
+
+- Refactored code and released test version for 1.18.2
+
 ### 2022.02.09
 
 - Added mob control config options for fishing and lobby dimension
