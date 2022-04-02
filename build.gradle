@@ -3,18 +3,6 @@ buildscript {
     maven { url = 'https://maven.minecraftforge.net' }
     mavenCentral()
     jcenter()
-    maven {
-      url = 'http://revy:49161/repository/MinecraftForge/'
-      allowInsecureProtocol = true
-    }
-    maven {
-      url = 'http://revy:49161/repository/maven-central/'
-      allowInsecureProtocol = true
-    }
-    maven {
-      url = 'http://revy:49161/repository/jcenter/'
-      allowInsecureProtocol = true
-    }
   }
   dependencies {
     classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
@@ -123,10 +111,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // Curse Maven
 repositories {
-  maven {
-    url "http://revy:49161/repository/CurseMaven/"
-    allowInsecureProtocol = true
-  }
   maven {
     url "https://www.cursemaven.com"
     content {
