@@ -63,6 +63,9 @@ public final class CommonConfig {
     public final ForgeConfigSpec.ConfigValue<String> defaultDimension;
     public final ForgeConfigSpec.BooleanValue defaultRestrictCommand;
     public final ForgeConfigSpec.BooleanValue defaultUseCustomSpawnPoint;
+    public final ForgeConfigSpec.IntValue defaultFireProtection;
+    public final ForgeConfigSpec.IntValue defaultFallProtection;
+    public final ForgeConfigSpec.IntValue defaultHeal;
     public final ForgeConfigSpec.IntValue defaultSpawnPointX;
     public final ForgeConfigSpec.IntValue defaultSpawnPointY;
     public final ForgeConfigSpec.IntValue defaultSpawnPointZ;
@@ -128,6 +131,15 @@ public final class CommonConfig {
       builder.push("Default Dimension");
       defaultDimension = builder.define("defaultDimension", "minecraft:overworld");
       defaultUseCustomSpawnPoint = builder.define("defaultUseCustomSpawnPoint", false);
+      defaultFallProtection =
+          builder.comment("Defines the amount of ticks how long the fall protection is enabled.")
+              .defineInRange("defaultFallProtection", 400, 0, 1200);
+      defaultFireProtection =
+          builder.comment("Defines the amount of ticks how long the fire protection is enabled.")
+              .defineInRange("defaultFireProtection", 400, 0, 1200);
+      defaultHeal =
+          builder.comment("Defines the amount of ticks how long the heal is enabled.")
+              .defineInRange("defaultHeal", 0, 0, 1200);
       defaultSpawnPointX = builder.defineInRange("defaultSpawnPointX", 68, -1000, 1000);
       defaultSpawnPointY = builder.defineInRange("defaultSpawnPointY", 65, -1000, 1000);
       defaultSpawnPointZ = builder.defineInRange("defaultSpawnPointZ", -89, -1000, 1000);

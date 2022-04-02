@@ -10,10 +10,11 @@ Provides a easy to use lobby, fishing and optimized mining dimension for you and
 - Easy to use, no extra setup needed.
 - Optimized mining dimension (configurable: without spawner, mobs, bats or minecart chest).
 - Provides /lobby, /mining, /fishing and /spawn commands for the players.
-- Changed automatically the user game mode depending on the dimension.
+- Changed automatically the user game mode depending on the dimension (excluding ops).
 - Customization over the config file and data files, if needed.
 - Default lobby will be automatically expand with additional features.
 - Automatically transfer users to the lobby on first join or after server restart.
+- Fall damage and fire damage protection for wrongly set default world spawn point.
 
 **Note: Please make sure to create regular backups of your dimensions, before installing or updating this mod.**
 

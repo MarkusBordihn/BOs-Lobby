@@ -1,5 +1,8 @@
 buildscript {
   repositories {
+    maven { url = 'https://maven.minecraftforge.net' }
+    mavenCentral()
+    jcenter()
     maven {
       url = 'http://revy:49161/repository/MinecraftForge/'
       allowInsecureProtocol = true
@@ -12,9 +15,6 @@ buildscript {
       url = 'http://revy:49161/repository/jcenter/'
       allowInsecureProtocol = true
     }
-    maven { url = 'https://maven.minecraftforge.net' }
-    mavenCentral()
-    jcenter()
   }
   dependencies {
     classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true

@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.04.02
+
+- Added fall and fire protection for the /spawn command to avoid issues with wrongly set world spawn point (adjustable over the config).
+- Excluded op players from specific checks so that they keep flying between dimensions.
+- Allows villagers to progress, but without moving around. (Set `NoAI: 1b` in the .mcfunction scripts to disable)
+
 ### 2022.02.09
 
 - Added mob control config options for fishing and lobby dimension
@@ -14,7 +20,7 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 - Released 2.1.0 stable version with improved default teleport to lobby options.
 - Released 2.0.1 stable version.
-NOTE: Please delete the existing config file and reset the dimensions (mining, fishing and lobby) to get the latest updates.
+  NOTE: Please delete the existing config file and reset the dimensions (mining, fishing and lobby) to get the latest updates.
 
 - Finalized structures and fixed spawn points.
 - Added creative option for fishing dimension.

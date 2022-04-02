@@ -30,6 +30,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LightningBolt;
@@ -68,6 +70,9 @@ public class DimensionManager {
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   private static String defaultDimension = COMMON.defaultDimension.get();
+  private static int defaultFallProtection = COMMON.defaultFallProtection.get();
+  private static int defaultFireProtection = COMMON.defaultFireProtection.get();
+  private static int defaultHeal = COMMON.defaultHeal.get();
 
   private static String fishingDimension = COMMON.fishingDimension.get();
   private static boolean fishingDisableMobSpawning = COMMON.fishingDisableMobSpawning.get();
@@ -104,6 +109,9 @@ public class DimensionManager {
 
     // Make sure we have the current config settings.
     defaultDimension = COMMON.defaultDimension.get();
+    defaultFallProtection = COMMON.defaultFallProtection.get();
+    defaultFireProtection = COMMON.defaultFireProtection.get();
+    defaultHeal = COMMON.defaultHeal.get();
 
     fishingDimension = COMMON.fishingDimension.get();
     fishingDisableMobSpawning = COMMON.fishingDisableMobSpawning.get();
@@ -124,6 +132,27 @@ public class DimensionManager {
   public static void handleServerStartedEvent(ServerStartedEvent event) {
     // Map dimension and init dimension structure if needed.
     mapServerLevel(event.getServer());
+
+    if (defaultFallProtection > 0) {
+      log.info("{} Enable fall protection for default dimension for {} ticks.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultFallProtection);
+    } else {
+      log.warn("{} Disable fall protection for default dimension!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
+
+    if (defaultFireProtection > 0) {
+      log.info("{} Enable fire protection for default dimension for {} ticks.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultFallProtection);
+    } else {
+      log.warn("{} Disable fire protection for default dimension!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
+    }
+
+    if (defaultHeal > 0) {
+      log.info("{} Enable heal for default dimension for {} ticks.",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultHeal);
+    }
 
     if (fishingDisableMobSpawning) {
       log.info("{} Disable Mob Spawning for fishing dimension.",
@@ -158,8 +187,8 @@ public class DimensionManager {
     if (toLocation.equals(fishingDimension)) {
       if (!fishingBuilderList.isEmpty()
           && fishingBuilderList.contains(player.getName().getString())) {
-        log.info("Give builder {} creative mode for fishing dimension.",
-            player.getName().getString());
+        log.info("{} Give builder {} creative mode for fishing dimension.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
         changeGameType(player, GameType.CREATIVE);
       } else {
         changeGameType(player, GameType.ADVENTURE);
@@ -171,7 +200,8 @@ public class DimensionManager {
     // tp or similar commands.
     if (toLocation.equals(lobbyDimension)) {
       if (!lobbyBuilderList.isEmpty() && lobbyBuilderList.contains(player.getName().getString())) {
-        log.info("Give builder {} creative mode for lobby.", player.getName().getString());
+        log.info("{} Give builder {} creative mode for lobby.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
         changeGameType(player, GameType.CREATIVE);
       } else {
         changeGameType(player, GameType.ADVENTURE);
@@ -191,8 +221,26 @@ public class DimensionManager {
     if (player instanceof ServerPlayer serverPlayer
         && (gameTypeReset.contains(serverPlayer) || (!fromLocation.isEmpty()
             && (fromLocation.equals(lobbyDimension) || fromLocation.equals(fishingDimension))))) {
+
+      // Add fall and fire protection for the player, if enabled.
+      if (defaultFallProtection > 0) {
+        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, defaultFallProtection));
+        player.resetFallDistance();
+      }
+      if (defaultFireProtection > 0) {
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, defaultFireProtection));
+      }
+      if (defaultHeal > 0) {
+        player.addEffect(new MobEffectInstance(MobEffects.HEAL, defaultHeal));
+      }
+
+      // Change Game Type
       changeGameType(serverPlayer, GameType.SURVIVAL);
-      gameTypeReset.remove(serverPlayer);
+
+      // Remove user from reset list
+      if (gameTypeReset.contains(serverPlayer)) {
+        gameTypeReset.remove(serverPlayer);
+      }
     }
   }
 
@@ -283,16 +331,20 @@ public class DimensionManager {
 
     // Give error messages, if we are unable to match any dimension.
     if (defaultLevel == null) {
-      log.error("Unable to found default dimension named {}!", defaultDimension);
+      log.error("{} Unable to found default dimension named {}!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension);
     }
     if (fishingLevel == null) {
-      log.error("Unable to found fishing dimension named {}!", fishingDimension);
+      log.error("{} Unable to found fishing dimension named {}!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension);
     }
     if (lobbyLevel == null) {
-      log.error("Unable to found lobby dimension named {}!", lobbyDimension);
+      log.error("{} Unable to found lobby dimension named {}!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension);
     }
     if (miningLevel == null) {
-      log.error("Unable to found mining dimension named {}!", miningDimension);
+      log.error("{} Unable to found mining dimension named {}!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension);
     }
   }
 
@@ -352,8 +404,8 @@ public class DimensionManager {
     if (TeleporterManager.teleportToFishingDimension(player)) {
       if (!fishingBuilderList.isEmpty()
           && fishingBuilderList.contains(player.getName().getString())) {
-        log.info("Give builder {} creative mode for fishing dimension.",
-            player.getName().getString());
+        log.info("{} Give builder {} creative mode for fishing dimension.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
         changeGameType(player, GameType.CREATIVE);
       } else {
         changeGameType(player, GameType.ADVENTURE);
@@ -364,7 +416,8 @@ public class DimensionManager {
   public static void teleportToLobby(ServerPlayer player) {
     if (TeleporterManager.teleportToLobbyDimension(player)) {
       if (!lobbyBuilderList.isEmpty() && lobbyBuilderList.contains(player.getName().getString())) {
-        log.info("Give builder {} creative mode for lobby.", player.getName().getString());
+        log.info("{} Give builder {} creative mode for lobby.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
         changeGameType(player, GameType.CREATIVE);
       } else {
         changeGameType(player, GameType.ADVENTURE);
@@ -386,15 +439,19 @@ public class DimensionManager {
 
   public static void changeGameType(ServerPlayer serverPlayer, GameType gameType) {
     GameType currentGameType = serverPlayer.gameMode.getGameModeForPlayer();
-    if (currentGameType != gameType) {
+    if (currentGameType != gameType && shouldChangeGameType(serverPlayer)) {
       // Add player to reset list of the game mode if game type is not survival to avoid cheating.
       if (gameType != GameType.SURVIVAL) {
         gameTypeReset.add(serverPlayer);
       }
-      log.debug("Changing players {} game type from {} to {}", serverPlayer, currentGameType,
-          gameType);
+      log.debug("{} Changing players {} game type from {} to {}", serverPlayer, currentGameType,
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, gameType);
       serverPlayer.setGameMode(gameType);
     }
+  }
+
+  private static boolean shouldChangeGameType(Player player) {
+    return !(player.isSpectator() || (player.hasPermissions(2) && player.isCreative()));
   }
 
   private static void handleSpawnEvent(LivingSpawnEvent event) {
@@ -443,7 +500,8 @@ public class DimensionManager {
       BaseSpawner spawner = checkSpawn.getSpawner();
       BlockPos blockPos = spawner.getSpawnerBlockEntity().getBlockPos();
       if (blockPos != null) {
-        log.debug("Removing spawner {} at {}", spawner, blockPos);
+        log.debug("{} Removing spawner {} at {}", Constants.LOG_DIMENSION_MANAGER_PREFIX, spawner,
+            blockPos);
         level.removeBlock(blockPos, true);
       }
     }
