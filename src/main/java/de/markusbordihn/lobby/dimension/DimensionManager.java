@@ -224,14 +224,17 @@ public class DimensionManager {
 
       // Add fall and fire protection for the player, if enabled.
       if (defaultFallProtection > 0) {
-        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, defaultFallProtection));
+        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, defaultFallProtection, 0,
+            false, true, false));
         player.resetFallDistance();
       }
       if (defaultFireProtection > 0) {
-        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, defaultFireProtection));
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, defaultFireProtection, 0,
+            false, true, false));
       }
       if (defaultHeal > 0) {
-        player.addEffect(new MobEffectInstance(MobEffects.HEAL, defaultHeal));
+        player
+            .addEffect(new MobEffectInstance(MobEffects.HEAL, defaultHeal, 0, false, true, false));
       }
 
       // Change Game Type
@@ -294,27 +297,27 @@ public class DimensionManager {
       String dimensionLocation = serverLevel.dimension().location().toString();
       if (dimensionLocation.equals(defaultDimension)) {
         if (defaultLevel == null) {
-          log.info("{} Found default dimension with name {}: {}",
+          log.info("{} ✔️ Found default dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension, serverLevel);
           defaultLevel = serverLevel;
         }
       } else if (dimensionLocation.equals(lobbyDimension)) {
         if (lobbyLevel == null) {
-          log.info("{} Found lobby dimension with name {}: {}",
+          log.info("{} ✔️ Found lobby dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension, serverLevel);
           lobbyLevel = serverLevel;
           DataPackHandler.prepareDataPackOnce(lobbyLevel);
         }
       } else if (dimensionLocation.equals(miningDimension)) {
         if (miningLevel == null) {
-          log.info("{} Found mining dimension with name {}: {}",
+          log.info("{} ✔️ Found mining dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension, serverLevel);
           miningLevel = serverLevel;
           DataPackHandler.prepareDataPackOnce(miningLevel);
         }
       } else if (dimensionLocation.equals(fishingDimension)) {
         if (fishingLevel == null) {
-          log.info("{} Found fishing dimension with name {}: {}",
+          log.info("{} ✔️ Found fishing dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension, serverLevel);
           fishingLevel = serverLevel;
           DataPackHandler.prepareDataPackOnce(fishingLevel);
@@ -331,20 +334,26 @@ public class DimensionManager {
 
     // Give error messages, if we are unable to match any dimension.
     if (defaultLevel == null) {
-      log.error("{} Unable to found default dimension named {}!",
+      log.error("{} ⚠️ Unable to find default dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension);
     }
     if (fishingLevel == null) {
-      log.error("{} Unable to found fishing dimension named {}!",
+      log.error("{} ⚠️ Unable to find fishing dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension);
     }
     if (lobbyLevel == null) {
-      log.error("{} Unable to found lobby dimension named {}!",
+      log.error("{} ⚠️ Unable to find lobby dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension);
     }
     if (miningLevel == null) {
-      log.error("{} Unable to found mining dimension named {}!",
+      log.error("{} ⚠️ Unable to find mining dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension);
+    }
+
+    if (defaultLevel != null && fishingLevel == null && lobbyLevel == null && miningLevel == null) {
+      log.error("{} ⚠️ Unable to find the needed custom dimensions!\n"
+          + "If this is the first time you see this message or if you just started a new world, try to restart your server to generate them automatically!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX);
     }
   }
 

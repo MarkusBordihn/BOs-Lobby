@@ -14,7 +14,7 @@ forceload add 178 571 217 547
 setblock 179 8 548 minecraft:structure_block{mode: "LOAD", name: "lobby:mining/mining_base"} replace
 setblock 179 9 548 minecraft:redstone_block
 
-# Add NPCs without AI
+# Add NPC with AI
 summon villager 195 9 554 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer", type: "savanna"}}
 
 # Remove force loaded chunks

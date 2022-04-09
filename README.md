@@ -151,7 +151,8 @@ Unfortunately I have no time to work on a separate fabric version.
 | Fabric Version | ❌ Not planned        |
 | Forge 1.16.5   | ❌ Not planned        |
 | Forge 1.17.1   | ❌ Not planned        |
-| Forge 1.18.1   | ✔️ Active development |
+| Forge 1.18.1   | ⚠️ Maintenance only   |
+| Forge 1.18.2   | ✔️ Active development |
 
 ## Note
 
