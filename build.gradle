@@ -1,17 +1,5 @@
 buildscript {
   repositories {
-    maven {
-      url = 'http://revy:49161/repository/MinecraftForge/'
-      allowInsecureProtocol = true
-    }
-    maven {
-      url = 'http://revy:49161/repository/maven-central/'
-      allowInsecureProtocol = true
-    }
-    maven {
-      url = 'http://revy:49161/repository/jcenter/'
-      allowInsecureProtocol = true
-    }
     maven { url = 'https://maven.minecraftforge.net' }
     mavenCentral()
     jcenter()
@@ -124,10 +112,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 // Curse Maven
 repositories {
   maven {
-    url "http://revy:49161/repository/CurseMaven/"
-    allowInsecureProtocol = true
-  }
-  maven {
     url "https://www.cursemaven.com"
     content {
       includeGroup "curse.maven"
@@ -143,15 +127,7 @@ dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft 'net.minecraftforge:forge:1.18.2-40.0.2'
-
-  // Additional helpful Mods for development (dev depenedency)
-  // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
-  // runtimeOnly fg.deobf("curse.maven:jade-324717:3614180")
-  // runtimeOnly fg.deobf("curse.maven:jei-238222:3599262")
-  // runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
-  // runtimeOnly fg.deobf("curse.maven:worldedit-225608:3559499")
-  // runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3613287")
+  minecraft 'net.minecraftforge:forge:1.18.2-40.0.44'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

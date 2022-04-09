@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.04.09
+
+- Added fall and fire protection for the /spawn command to avoid issues with wrongly set world spawn point (adjustable over the config).
+- Excluded op players from specific checks so that they keep flying between dimensions.
+- Allows villagers to progress, but without moving around. (Set `NoAI: 1b` in the .mcfunction scripts to disable)
+
 ### 2022.03.04
 
 - Refactored code and released test version for 1.18.2

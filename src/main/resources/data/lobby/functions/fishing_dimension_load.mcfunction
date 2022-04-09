@@ -17,16 +17,18 @@ setblock 0 40 -17 minecraft:redstone_block
 setblock 32 43 -17 minecraft:structure_block{mode: "LOAD", name: "lobby:fishing/fishing_base_taverne"} replace
 setblock 32 44 -17 minecraft:redstone_block
 
-# Add NPCs without AI
-summon villager 47 52 1 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "fisherman", type: "swamp"}}
+# Add NPCs with AI but without movement
+summon villager 47 52 1 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "fisherman", type: "swamp"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 
-# Add decoration mobs like parrots and cats
+# Add decoration mobs like parrots
 summon parrot 44 56 24 {Rotation: [180f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 1b, Variant: 0}
 summon parrot 22 66 19 {Rotation: [90f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 1b, Variant: 1}
 summon parrot 14 61 27 {Rotation: [90f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 1b, Variant: 2}
 summon parrot 28 60 -7 {Rotation: [225f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 1b, Variant: 3}
 summon parrot 24 56 5 {Rotation: [0f, 45f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 1b, Variant: 4}
-summon cat 45 60 2 {Rotation: [0f, 0f], NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 1b}
+
+# Add moving mobs like cats
+summon cat 45 60 2 {Rotation: [0f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, Sitting: 0b}
 
 # Add some additional fish for decoration
 summon tropical_fish 25 48 0 {PersistenceRequired: 1b, Invulnerable: 1b, Variant: 65536}
@@ -41,6 +43,3 @@ summon cod 28 47 9 {PersistenceRequired: 1b, Invulnerable: 1b}
 
 # Remove force loaded chunks
 forceload remove all
-
-# Force load chunk for the spawn point
-forceload add 42 12
