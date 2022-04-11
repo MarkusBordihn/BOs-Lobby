@@ -44,12 +44,14 @@ summon wandering_trader 6 10 -43 {Rotation: [-90f, 0f], NoAI: 0b, PersistenceReq
 # Add NPCs with AI (to allow progressing) but without moving
 summon villager 20 10 -26 {Rotation: [0f, 0f], NoAI: 0b, PersistenceRequired: 0b, Invulnerable: 1b, VillagerData: {profession: "cartographer"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager 28 10 -26 {Rotation: [0f, 0f], NoAI: 0b, PersistenceRequired: 0b, Invulnerable: 1b, VillagerData: {profession: "fletcher"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
-summon villager 25 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "shepherd"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
-summon villager 16 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
-summon villager -7 10 -56 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "mason"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
+summon villager 24 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "shepherd"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
+summon villager 18 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
+summon villager -8 10 -56 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "mason"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager 19 10 -37 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
-summon villager 1 10 -34 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
-summon villager 19 10 -51 {Rotation: [180f, 10f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
+summon villager 1 10 -33 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
+
+# Add NPCs with AI, but without job.
+summon villager 19 10 -51 {Rotation: [180f, 10f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b}
 
 # Add decoration mobs
 summon tropical_fish 15 8 59 {PersistenceRequired: 1b, Invulnerable: 1b, Variant: 65536}
