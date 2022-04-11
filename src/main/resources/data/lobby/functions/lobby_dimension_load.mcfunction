@@ -29,7 +29,7 @@ setblock 32 3 -17 minecraft:redstone_block
 setblock 32 2 -64 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_flower_3"} replace
 setblock 32 3 -64 minecraft:redstone_block
 
-setblock -64 2 31 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_bergw"} replace
+setblock -64 2 31 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_berg"} replace
 setblock -64 3 31 minecraft:redstone_block
 
 setblock -64 2 -17 minecraft:structure_block{mode: "LOAD", name: "lobby:lobby/lobby_base_forest_mid"} replace
@@ -45,7 +45,7 @@ summon wandering_trader 6 10 -43 {Rotation: [-90f, 0f], NoAI: 0b, PersistenceReq
 summon villager 20 10 -26 {Rotation: [0f, 0f], NoAI: 0b, PersistenceRequired: 0b, Invulnerable: 1b, VillagerData: {profession: "cartographer"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager 28 10 -26 {Rotation: [0f, 0f], NoAI: 0b, PersistenceRequired: 0b, Invulnerable: 1b, VillagerData: {profession: "fletcher"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager 24 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "shepherd"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
-summon villager 18 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
+summon villager 17 10 -16 {Rotation: [180f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager -8 10 -56 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "mason"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager 19 10 -37 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "farmer"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
 summon villager 1 10 -33 {Rotation: [-45f, 0f], NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b, VillagerData: {profession: "toolsmith"}, Attributes: [{Name: "generic.movement_speed", Base: 0d}]}
