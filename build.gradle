@@ -180,5 +180,10 @@ curseforge {
     releaseType = 'release'
     addGameVersion("1.18.1")
     addGameVersion("Forge")
+    mainArtifact(jar) {
+      relations {
+        optionalDependency 'shutup-experimental-settings'
+      }
+    }
   }
 }

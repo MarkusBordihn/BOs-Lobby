@@ -3,7 +3,7 @@
 
 # 🏝 Lobby, Fishing and Mining Dimension
 
-Provides a easy to use lobby, fishing and optimized mining dimension for you and your friends.
+Provides a easy to use lobby (with an underground maze), fishing and optimized mining dimension for you and your friends.
 
 ## Features ⭐
 
@@ -12,7 +12,7 @@ Provides a easy to use lobby, fishing and optimized mining dimension for you and
 - Provides /lobby, /mining, /fishing and /spawn commands for the players.
 - Changed automatically the user game mode depending on the dimension (excluding ops).
 - Customization over the config file and data files, if needed.
-- Default lobby will be automatically expand with additional features.
+- Default lobby will be automatically expand with additional features like hidden places.
 - Automatically transfer users to the lobby on first join or after server restart.
 - Fall damage and fire damage protection for wrongly set default world spawn point.
 
@@ -125,6 +125,7 @@ Just use the following admin command: `/execute in lobby:mining_dimension run ki
 
 Unfortunately to avoid any side effects with other mods, the user needs first to join the overworld so that all mods are able to sync their data.
 As soon these data are synced the user could be transferred to the lobby dimension without any issues.
+The transfer could be disabled in the related config file.
 
 ### Will there are 1.16.5 version ?
 
@@ -139,6 +140,17 @@ There are already a lot of dimension mods for 1.16.5 which are covering similar 
 - <https://www.curseforge.com/minecraft/mc-mods/ftb-team-islands-forge>
 
 I see not really any reason why there should be "another" dimension mod for 1.16.5, which only provides the basic functionality.
+
+### I get the message "Worlds using Experimental Settings are not supported"?
+
+This message is expected for all "custom" dimension, because the mod is using separate custom dimensions you will see this message with this mod.
+The message could be disabled with mods like [Shutup Experimental Settings!][shutup-experimental-settings].
+
+### I installed the mod, but it is not working?
+
+There are some mods which blocking the custom dimension creation until they have created their custom dimensions.
+If this happens other mods are not able to create their customer dimension on the first start.
+Normally the issue is fixed by just restarting the server, you will additionally see a message in the log if this is needed.
 
 ### Will there are fabric version ?
 
@@ -166,3 +178,5 @@ If you are downloading this mod from other sources we could not make sure that i
 [fishing_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/fishing_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
+
+[shutup-experimental-settings]: https://www.curseforge.com/minecraft/mc-mods/shutup-experimental-settings

@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.04.11
+
+- Added larger lobby update with additional buildings and hidden dungeon maze.
+- Prepared latest major update for 1.18.1 version.
+
 ### 2022.04.09
 
 - Added fall and fire protection for the /spawn command to avoid issues with wrongly set world spawn point (adjustable over the config).

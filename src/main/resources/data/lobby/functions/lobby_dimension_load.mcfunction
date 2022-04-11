@@ -57,8 +57,9 @@ summon villager 19 10 -51 {Rotation: [180f, 10f], NoAI: 0b, PersistenceRequired:
 summon tropical_fish 15 8 59 {PersistenceRequired: 1b, Invulnerable: 1b, Variant: 65536}
 summon tropical_fish -13 14 47 {PersistenceRequired: 1b, Invulnerable: 1b, Variant: 65536}
 summon horse 16 10 -59 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
-summon cow 56 10 -23 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
+summon cow 53 10 -26 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
 summon sheep 63 10 30 {NoAI: 1b, PersistenceRequired: 1b, Invulnerable: 1b}
+summon bat 63 15 55 {NoAI: 0b, PersistenceRequired: 1b, Invulnerable: 1b}
 
 # Remove force loaded chunks
 forceload remove all
