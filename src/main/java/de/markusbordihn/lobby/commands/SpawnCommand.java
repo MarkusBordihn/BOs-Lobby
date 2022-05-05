@@ -43,8 +43,8 @@ import de.markusbordihn.lobby.dimension.DimensionManager;
 @EventBusSubscriber
 public class SpawnCommand extends CustomCommand {
 
-  public static final String NAME = "spawn";
   public static final String DIMENSION_NAME = "Spawn";
+  public static final int PERMISSION_LEVEL = 0;
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean defaultRestrictCommand = COMMON.defaultRestrictCommand.get();
@@ -61,8 +61,12 @@ public class SpawnCommand extends CustomCommand {
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-    dispatcher
-        .register(Commands.literal(NAME).requires(cs -> cs.hasPermission(0)).executes(command));
+    if (Boolean.FALSE.equals(COMMON.defaultEnabled.get())) {
+      return;
+    }
+    registerCommand(COMMON.defaultCommandName.get(), DIMENSION_NAME, PERMISSION_LEVEL);
+    dispatcher.register(Commands.literal(COMMON.defaultCommandName.get())
+        .requires(cs -> cs.hasPermission(PERMISSION_LEVEL)).executes(command));
   }
 
   @Override

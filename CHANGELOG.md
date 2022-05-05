@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.05
+
+- Added additional optional dimension gaming and void for more customization.
+
 ### 2022.04.11
 
 - Migrated changes from 1.18.1 to 1.18.2

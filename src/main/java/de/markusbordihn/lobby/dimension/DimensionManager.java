@@ -74,14 +74,22 @@ public class DimensionManager {
   private static int defaultFireProtection = COMMON.defaultFireProtection.get();
   private static int defaultHeal = COMMON.defaultHeal.get();
 
+  private static boolean fishingEnabled = COMMON.fishingEnabled.get();
   private static String fishingDimension = COMMON.fishingDimension.get();
   private static boolean fishingDisableMobSpawning = COMMON.fishingDisableMobSpawning.get();
   private static List<String> fishingBuilderList = COMMON.fishingBuilderList.get();
 
+  private static boolean gamingEnabled = COMMON.gamingEnabled.get();
+  private static String gamingDimension = COMMON.gamingDimension.get();
+  private static boolean gamingDisableMobSpawning = COMMON.gamingDisableMobSpawning.get();
+  private static List<String> gamingBuilderList = COMMON.gamingBuilderList.get();
+
+  private static boolean lobbyEnabled = COMMON.lobbyEnabled.get();
   private static String lobbyDimension = COMMON.lobbyDimension.get();
   private static boolean lobbyDisableMobSpawning = COMMON.lobbyDisableMobSpawning.get();
   private static List<String> lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
+  private static boolean miningEnabled = COMMON.miningEnabled.get();
   private static String miningDimension = COMMON.miningDimension.get();
   private static boolean miningDisableBatSpawning = COMMON.miningDisableBatSpawning.get();
   private static boolean miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
@@ -89,13 +97,20 @@ public class DimensionManager {
       COMMON.miningDisableMinecartChestSpawning.get();
   private static boolean miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
 
+  private static boolean voidEnabled = COMMON.voidEnabled.get();
+  private static String voidDimension = COMMON.voidDimension.get();
+  private static boolean voidDisableMobSpawning = COMMON.voidDisableMobSpawning.get();
+  private static List<String> voidBuilderList = COMMON.voidBuilderList.get();
+
   private static Set<ServerPlayer> gameTypeReset = ConcurrentHashMap.newKeySet();
   private static Set<String> ignoredDimension = ConcurrentHashMap.newKeySet();
 
   private static ServerLevel defaultLevel = null;
   private static ServerLevel fishingLevel = null;
+  private static ServerLevel gamingLevel = null;
   private static ServerLevel lobbyLevel = null;
   private static ServerLevel miningLevel = null;
+  private static ServerLevel voidLevel = null;
 
   protected DimensionManager() {}
 
@@ -113,19 +128,32 @@ public class DimensionManager {
     defaultFireProtection = COMMON.defaultFireProtection.get();
     defaultHeal = COMMON.defaultHeal.get();
 
+    fishingEnabled = COMMON.fishingEnabled.get();
     fishingDimension = COMMON.fishingDimension.get();
     fishingDisableMobSpawning = COMMON.fishingDisableMobSpawning.get();
     fishingBuilderList = COMMON.fishingBuilderList.get();
 
+    gamingEnabled = COMMON.gamingEnabled.get();
+    gamingDimension = COMMON.gamingDimension.get();
+    gamingDisableMobSpawning = COMMON.gamingDisableMobSpawning.get();
+    gamingBuilderList = COMMON.gamingBuilderList.get();
+
+    lobbyEnabled = COMMON.lobbyEnabled.get();
     lobbyDimension = COMMON.lobbyDimension.get();
     lobbyDisableMobSpawning = COMMON.lobbyDisableMobSpawning.get();
     lobbyBuilderList = COMMON.lobbyBuilderList.get();
 
+    miningEnabled = COMMON.miningEnabled.get();
     miningDimension = COMMON.miningDimension.get();
     miningDisableBatSpawning = COMMON.miningDisableBatSpawning.get();
     miningDisableMobSpawning = COMMON.miningDisableMobSpawning.get();
     miningDisableMinecartChestSpawning = COMMON.miningDisableMinecartChestSpawning.get();
     miningRemoveSpawner = COMMON.miningRemoveSpawner.get();
+
+    voidEnabled = COMMON.voidEnabled.get();
+    voidDimension = COMMON.voidDimension.get();
+    voidDisableMobSpawning = COMMON.voidDisableMobSpawning.get();
+    voidBuilderList = COMMON.voidBuilderList.get();
   }
 
   @SubscribeEvent
@@ -301,26 +329,40 @@ public class DimensionManager {
               Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension, serverLevel);
           defaultLevel = serverLevel;
         }
-      } else if (dimensionLocation.equals(lobbyDimension)) {
+      } else if (lobbyEnabled && dimensionLocation.equals(lobbyDimension)) {
         if (lobbyLevel == null) {
           log.info("{} ✔️ Found lobby dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension, serverLevel);
           lobbyLevel = serverLevel;
           DataPackHandler.prepareDataPackOnce(lobbyLevel);
         }
-      } else if (dimensionLocation.equals(miningDimension)) {
+      } else if (miningEnabled && dimensionLocation.equals(miningDimension)) {
         if (miningLevel == null) {
           log.info("{} ✔️ Found mining dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension, serverLevel);
           miningLevel = serverLevel;
           DataPackHandler.prepareDataPackOnce(miningLevel);
         }
-      } else if (dimensionLocation.equals(fishingDimension)) {
+      } else if (fishingEnabled && dimensionLocation.equals(fishingDimension)) {
         if (fishingLevel == null) {
           log.info("{} ✔️ Found fishing dimension with name {}: {}",
               Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension, serverLevel);
           fishingLevel = serverLevel;
           DataPackHandler.prepareDataPackOnce(fishingLevel);
+        }
+      } else if (gamingEnabled && dimensionLocation.equals(gamingDimension)) {
+        if (gamingLevel == null) {
+          log.info("{} ✔️ Found gaming dimension with name {}: {}",
+              Constants.LOG_DIMENSION_MANAGER_PREFIX, gamingDimension, serverLevel);
+          gamingLevel = serverLevel;
+          DataPackHandler.prepareDataPackOnce(gamingLevel);
+        }
+      } else if (voidEnabled && dimensionLocation.equals(voidDimension)) {
+        if (voidLevel == null) {
+          log.info("{} ✔️ Found void dimension with name {}: {}",
+              Constants.LOG_DIMENSION_MANAGER_PREFIX, voidDimension, serverLevel);
+          voidLevel = serverLevel;
+          DataPackHandler.prepareDataPackOnce(voidLevel);
         }
       } else {
         if (ignoredDimension.isEmpty() || !ignoredDimension.contains(dimensionLocation)) {
@@ -337,17 +379,25 @@ public class DimensionManager {
       log.error("{} ⚠️ Unable to find default dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, defaultDimension);
     }
-    if (fishingLevel == null) {
+    if (fishingLevel == null && fishingEnabled) {
       log.error("{} ⚠️ Unable to find fishing dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, fishingDimension);
     }
-    if (lobbyLevel == null) {
+    if (gamingLevel == null && gamingEnabled) {
+      log.error("{} ⚠️ Unable to find gaming dimension named {}!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, gamingDimension);
+    }
+    if (lobbyLevel == null && lobbyEnabled) {
       log.error("{} ⚠️ Unable to find lobby dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, lobbyDimension);
     }
-    if (miningLevel == null) {
+    if (miningLevel == null && miningEnabled) {
       log.error("{} ⚠️ Unable to find mining dimension named {}!",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, miningDimension);
+    }
+    if (voidLevel == null && voidEnabled) {
+      log.error("{} ⚠️ Unable to find void dimension named {}!",
+          Constants.LOG_DIMENSION_MANAGER_PREFIX, voidDimension);
     }
 
     if (defaultLevel != null && fishingLevel == null && lobbyLevel == null && miningLevel == null) {
@@ -380,6 +430,17 @@ public class DimensionManager {
     return fishingDimension;
   }
 
+  public static ServerLevel getGamingDimension() {
+    if (gamingLevel == null) {
+      mapServerLevel(ServerLifecycleHooks.getCurrentServer());
+    }
+    return gamingLevel;
+  }
+
+  public static String getGamingDimensionName() {
+    return gamingDimension;
+  }
+
   public static ServerLevel getMiningDimension() {
     if (miningLevel == null) {
       mapServerLevel(ServerLifecycleHooks.getCurrentServer());
@@ -403,6 +464,17 @@ public class DimensionManager {
     return defaultDimension;
   }
 
+  public static ServerLevel getVoidDimension() {
+    if (voidLevel == null) {
+      mapServerLevel(ServerLifecycleHooks.getCurrentServer());
+    }
+    return voidLevel;
+  }
+
+  public static String getVoidDimensionName() {
+    return voidDimension;
+  }
+
   public static void teleportToDefault(ServerPlayer player) {
     if (TeleporterManager.teleportToDefaultDimension(player)) {
       changeGameType(player, GameType.SURVIVAL);
@@ -414,6 +486,18 @@ public class DimensionManager {
       if (!fishingBuilderList.isEmpty()
           && fishingBuilderList.contains(player.getName().getString())) {
         log.info("{} Give builder {} creative mode for fishing dimension.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      } else {
+        changeGameType(player, GameType.ADVENTURE);
+      }
+    }
+  }
+
+  public static void teleportToGaming(ServerPlayer player) {
+    if (TeleporterManager.teleportToGamingDimension(player)) {
+      if (!gamingBuilderList.isEmpty() && gamingBuilderList.contains(player.getName().getString())) {
+        log.info("{} Give builder {} creative mode for gaming.",
             Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
         changeGameType(player, GameType.CREATIVE);
       } else {
@@ -436,6 +520,12 @@ public class DimensionManager {
 
   public static void teleportToMining(ServerPlayer player) {
     if (TeleporterManager.teleportToMiningDimension(player)) {
+      changeGameType(player, GameType.SURVIVAL);
+    }
+  }
+
+  public static void teleportToVoid(ServerPlayer player) {
+    if (TeleporterManager.teleportToVoidDimension(player)) {
       changeGameType(player, GameType.SURVIVAL);
     }
   }

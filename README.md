@@ -48,12 +48,24 @@ All players are automatically in the adventure game mode in the fishing dimensio
 
 ![Screenshot of the fishing dimension][fishing_dimension]
 
+## Gaming Dimension
+
+The optional gaming dimension could be enabled over the config file and could be used as based for your gaming dimension.
+
+## Void Dimension
+
+The optional void dimension could be enabled over the config file and could be used for anything else like mob farm or PVP area.
+
 ## User Commands
 
 - **/fishing** teleports you to the fishing dimension
 - **/lobby** teleports you to the lobby
 - **/mining** teleports you to the mining dimension
 - **/spawn** teleports you to the overworld
+- **/gaming** teleports you to the overworld
+- **/void** teleports you to the overworld
+
+Note: The command names could be adjusted over the config file.
 
 ## Customization
 
@@ -66,10 +78,10 @@ You can customize the fishing, lobby and mining dimension over data files or by 
 The lobby will be automatically in the game mode adventure.
 Use the following data files to customize the lobby:
 
-- data/lobby/dimension/lobby_dimension.json
-- data/lobby/dimension_type/lobby_dimension.json
-- data/lobby/functions/lobby_dimension_load.mcfunction
-- data/worldgen/biome/biome_lobby.json
+- `data/lobby/dimension/lobby_dimension.json`
+- `data/lobby/dimension_type/lobby_dimension.json`
+- `data/lobby/functions/lobby_dimension_load.mcfunction`
+- `data/worldgen/biome/biome_lobby.json`
 
 **Note:** The `lobby_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
@@ -77,9 +89,9 @@ Use the following data files to customize the lobby:
 
 The optimization are parts of the code, you can use the following data files for customization:
 
-- data/lobby/dimension/mining_dimension.json
-- data/lobby/dimension_type/mining_dimension.json
-- data/lobby/functions/mining_dimension_load.mcfunction
+- `data/lobby/dimension/mining_dimension.json`
+- `data/lobby/dimension_type/mining_dimension.json`
+- `data/lobby/functions/mining_dimension_load.mcfunction`
 
 **Note:** The `mining_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
@@ -88,10 +100,10 @@ The optimization are parts of the code, you can use the following data files for
 The fishing dimension will be automatically in the game mode adventure.
 Use the following data files to customize the lobby:
 
-- data/lobby/dimension/fishing_dimension.json
-- data/lobby/dimension_type/fishing_dimension.json
-- data/lobby/functions/fishing_dimension_load.mcfunction
-- data/worldgen/biome/biome_fishing.json
+- `data/lobby/dimension/fishing_dimension.json`
+- `data/lobby/dimension_type/fishing_dimension.json`
+- `data/lobby/functions/fishing_dimension_load.mcfunction`
+- `data/worldgen/biome/biome_fishing.json`
 
 **Note:** The `fishing_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
@@ -103,9 +115,9 @@ Just delete the dimension and the starting bases will be automatically regenerat
 
 Relevant folders:
 
-- dimensions/lobby/fishing_dimension
-- dimensions/lobby/lobby_dimension
-- dimensions/lobby/mining_dimension
+- `dimensions/lobby/fishing_dimension`
+- `dimensions/lobby/lobby_dimension`
+- `dimensions/lobby/mining_dimension`
 
 ### How can I reset the default bases like the mining base, fishing base or the spawn without resetting the dimension ?
 

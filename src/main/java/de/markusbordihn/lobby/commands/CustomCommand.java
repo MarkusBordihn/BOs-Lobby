@@ -19,6 +19,9 @@
 
 package de.markusbordihn.lobby.commands;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 
@@ -26,7 +29,11 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
+import de.markusbordihn.lobby.Constants;
+
 public abstract class CustomCommand implements Command<CommandSourceStack> {
+
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected CustomCommand() {}
 
@@ -35,8 +42,14 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
     commandSource.sendSuccess(new TextComponent(feedback), false);
   }
 
-  public static void sendFeedback(CommandContext<CommandSourceStack> context, TranslatableComponent feedback) {
+  public static void sendFeedback(CommandContext<CommandSourceStack> context,
+      TranslatableComponent feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(feedback, false);
+  }
+
+  public static void registerCommand(String commandName, String dimensionName, int permission) {
+    log.info("# Register teleport command {} for dimension {} with permission level {} ...",
+        commandName, dimensionName, permission);
   }
 }

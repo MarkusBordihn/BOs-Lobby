@@ -41,31 +41,31 @@ import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
 @EventBusSubscriber
-public class LobbyCommand extends CustomCommand {
+public class GamingCommand extends CustomCommand {
 
-  public static final String DIMENSION_NAME = "Lobby";
+  public static final String DIMENSION_NAME = "Gaming";
   public static final int PERMISSION_LEVEL = 0;
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static boolean lobbyRestrictCommand = COMMON.lobbyRestrictCommand.get();
+  private static boolean gamingRestrictCommand = COMMON.gamingRestrictCommand.get();
   private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
-  private static final LobbyCommand command = new LobbyCommand();
+  private static final GamingCommand command = new GamingCommand();
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    lobbyRestrictCommand = COMMON.lobbyRestrictCommand.get();
+    gamingRestrictCommand = COMMON.gamingRestrictCommand.get();
     generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-    if (Boolean.FALSE.equals(COMMON.lobbyEnabled.get())) {
+    if (Boolean.FALSE.equals(COMMON.gamingEnabled.get())) {
       return;
     }
-    registerCommand(COMMON.lobbyCommandName.get(), DIMENSION_NAME, PERMISSION_LEVEL);
-    dispatcher.register(Commands.literal(COMMON.lobbyCommandName.get())
+    registerCommand(COMMON.gamingCommandName.get(), DIMENSION_NAME, PERMISSION_LEVEL);
+    dispatcher.register(Commands.literal(COMMON.gamingCommandName.get())
         .requires(cs -> cs.hasPermission(PERMISSION_LEVEL)).executes(command));
   }
 
@@ -85,13 +85,14 @@ public class LobbyCommand extends CustomCommand {
     }
 
     // Provide feedback to the player for their teleporter request.
-    if (DimensionManager.getLobbyDimension() == null) {
+    if (DimensionManager.getGamingDimension() == null) {
       sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getLobbyDimensionName()));
-    } else if (!lobbyRestrictCommand || player.getLevel() != DimensionManager.getLobbyDimension()) {
+          DIMENSION_NAME, DimensionManager.getGamingDimensionName()));
+    } else if (!gamingRestrictCommand
+        || player.getLevel() != DimensionManager.getGamingDimension()) {
       sendFeedback(context,
           new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
-      DimensionManager.teleportToLobby(player);
+      DimensionManager.teleportToGaming(player);
     } else {
       sendFeedback(context, new TranslatableComponent(
           Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
