@@ -224,6 +224,20 @@ public class DimensionManager {
       return;
     }
 
+    // Make sure normal users are in Adventure mode for the gaming dimension even if they are using
+    // tp or similar commands.
+    if (toLocation.equals(gamingDimension)) {
+      if (!gamingBuilderList.isEmpty()
+          && gamingBuilderList.contains(player.getName().getString())) {
+        log.info("{} Give builder {} creative mode for gaming dimension.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      } else {
+        changeGameType(player, GameType.ADVENTURE);
+      }
+      return;
+    }
+
     // Make sure normal users are in Adventure mode for the lobby dimension even if they are using
     // tp or similar commands.
     if (toLocation.equals(lobbyDimension)) {
@@ -244,11 +258,23 @@ public class DimensionManager {
       return;
     }
 
-    // Reset game type to survival if user is on the gameTypeReset list or comes from the fishing or
-    // lobby dimensions.
+    // Make sure builders are in creative mode for the void dimension even if they are using
+    // tp or similar commands.
+    if (toLocation.equals(voidDimension)) {
+      if (!voidBuilderList.isEmpty() && voidBuilderList.contains(player.getName().getString())) {
+        log.info("{} Give builder {} creative mode for void.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      }
+      return;
+    }
+
+    // Reset game type to survival if user is on the gameTypeReset list or comes from the fishing,
+    // gaming, lobby or void dimensions.
     if (player instanceof ServerPlayer serverPlayer
         && (gameTypeReset.contains(serverPlayer) || (!fromLocation.isEmpty()
-            && (fromLocation.equals(lobbyDimension) || fromLocation.equals(fishingDimension))))) {
+            && (fromLocation.equals(lobbyDimension) || fromLocation.equals(fishingDimension)
+                || fromLocation.equals(gamingDimension) || fromLocation.equals(voidDimension))))) {
 
       // Add fall and fire protection for the player, if enabled.
       if (defaultFallProtection > 0) {
@@ -496,7 +522,8 @@ public class DimensionManager {
 
   public static void teleportToGaming(ServerPlayer player) {
     if (TeleporterManager.teleportToGamingDimension(player)) {
-      if (!gamingBuilderList.isEmpty() && gamingBuilderList.contains(player.getName().getString())) {
+      if (!gamingBuilderList.isEmpty()
+          && gamingBuilderList.contains(player.getName().getString())) {
         log.info("{} Give builder {} creative mode for gaming.",
             Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
         changeGameType(player, GameType.CREATIVE);
@@ -526,7 +553,13 @@ public class DimensionManager {
 
   public static void teleportToVoid(ServerPlayer player) {
     if (TeleporterManager.teleportToVoidDimension(player)) {
-      changeGameType(player, GameType.SURVIVAL);
+      if (!voidBuilderList.isEmpty() && voidBuilderList.contains(player.getName().getString())) {
+        log.info("{} Give builder {} creative mode for void.",
+            Constants.LOG_DIMENSION_MANAGER_PREFIX, player.getName().getString());
+        changeGameType(player, GameType.CREATIVE);
+      } else {
+        changeGameType(player, GameType.ADVENTURE);
+      }
     }
   }
 
@@ -573,14 +606,24 @@ public class DimensionManager {
       handleSpawnEventFishing(event);
     } else if (lobbyDisableMobSpawning && lobbyDimension.equals(dimensionLocation)) {
       handleSpawnEventLobby(event);
+    } else if (gamingDisableMobSpawning && gamingDimension.equals(dimensionLocation)) {
+      handleSpawnEventGaming(event);
     } else if ((miningDisableBatSpawning || miningDisableMinecartChestSpawning
         || miningDisableMobSpawning) && miningDimension.equals(dimensionLocation)) {
       handleSpawnEventMining(level, entity, event);
+    } else if (voidDisableMobSpawning && voidDimension.equals(dimensionLocation)) {
+      handleSpawnEventVoid(event);
     }
   }
 
   private static void handleSpawnEventFishing(LivingSpawnEvent event) {
     if (fishingDisableMobSpawning) {
+      event.setResult(Event.Result.DENY);
+    }
+  }
+
+  private static void handleSpawnEventGaming(LivingSpawnEvent event) {
+    if (gamingDisableMobSpawning) {
       event.setResult(Event.Result.DENY);
     }
   }
@@ -622,6 +665,12 @@ public class DimensionManager {
     }
 
     if (miningDisableMobSpawning) {
+      event.setResult(Event.Result.DENY);
+    }
+  }
+
+  private static void handleSpawnEventVoid(LivingSpawnEvent event) {
+    if (voidDisableMobSpawning) {
       event.setResult(Event.Result.DENY);
     }
   }

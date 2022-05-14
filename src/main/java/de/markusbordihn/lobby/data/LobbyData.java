@@ -111,7 +111,7 @@ public class LobbyData extends SavedData {
 
   public static LobbyData load(CompoundTag compoundTag) {
     LobbyData lobbyData = new LobbyData();
-    log.info("{} loading lobby data ... {}", Constants.LOG_NAME, compoundTag);
+    log.info("{} loading lobby dimension data ... {}", Constants.LOG_NAME, compoundTag);
     lobbyData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
     lobbyData.lastUpdate = compoundTag.getLong("LastUpdate");
     return lobbyData;
@@ -119,7 +119,7 @@ public class LobbyData extends SavedData {
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving lobby data ... {}", Constants.LOG_NAME, this);
+    log.info("{} saving lobby dimension data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
     return compoundTag;

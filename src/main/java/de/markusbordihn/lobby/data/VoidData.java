@@ -109,7 +109,7 @@ public class VoidData extends SavedData {
 
   public static VoidData load(CompoundTag compoundTag) {
     VoidData voidData = new VoidData();
-    log.info("{} loading void data ... {}", Constants.LOG_NAME, compoundTag);
+    log.info("{} loading void dimension data ... {}", Constants.LOG_NAME, compoundTag);
     voidData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
     voidData.lastUpdate = compoundTag.getLong("LastUpdate");
     return voidData;
@@ -117,7 +117,7 @@ public class VoidData extends SavedData {
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving void data ... {}", Constants.LOG_NAME, this);
+    log.info("{} saving void dimension data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
     return compoundTag;

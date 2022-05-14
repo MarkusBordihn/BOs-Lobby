@@ -109,7 +109,7 @@ public class GamingData extends SavedData {
 
   public static GamingData load(CompoundTag compoundTag) {
     GamingData gamingData = new GamingData();
-    log.info("{} loading gaming data ... {}", Constants.LOG_NAME, compoundTag);
+    log.info("{} loading gaming dimension data ... {}", Constants.LOG_NAME, compoundTag);
     gamingData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
     gamingData.lastUpdate = compoundTag.getLong("LastUpdate");
     return gamingData;
@@ -117,7 +117,7 @@ public class GamingData extends SavedData {
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving gaming data ... {}", Constants.LOG_NAME, this);
+    log.info("{} saving gaming dimension data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
     return compoundTag;

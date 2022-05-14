@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.15
+
+- Added possibility to enable/disable specific dimension and to adjust teleport command name.
+Note: The dimensions are still created because of the data files, but without any additional structure.
+
 ### 2022.05.05
 
 - Added additional optional dimension gaming and void for more customization.

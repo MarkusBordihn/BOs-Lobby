@@ -69,7 +69,7 @@ Note: The command names could be adjusted over the config file.
 
 ## Customization
 
-You can customize the fishing, lobby and mining dimension over data files or by changing to creative mode.
+You can customize the fishing, gaming, lobby, mining and void dimension over data files or by changing to creative mode.
 
 **Please make sure to create regular backups for your lobby and/or customized mining dimension.**
 
@@ -107,25 +107,43 @@ Use the following data files to customize the lobby:
 
 **Note:** The `fishing_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
+## Translations / Messages
+
+The messages and text could be adjusted over the translation file [en_us.json][en_us.json].
+You can use the following placeholders inside each of the messages:
+
+- `%1$s` Teleport command for fishing dimension
+- `%2$s` Teleport command for gaming dimension
+- `%3$s` Teleport command for lobby dimension
+- `%4$s` Teleport command for mining dimension
+- `%5$s` Teleport command for default dimension
+- `%6$s` Teleport command for void dimension
+
+Example: `Welcome to the default dimension, please use the %1$s, %3$s or %4$s command to change to a different dimension.`
+
 ## FAQ
 
 ### How can I reset a dimension ?
 
-Just delete the dimension and the starting bases will be automatically regenerated after the server restart.
+Just delete the dimension and the basic structures will be automatically regenerated after the server restart.
 
 Relevant folders:
 
 - `dimensions/lobby/fishing_dimension`
+- `dimensions/lobby/gaming_dimension`
 - `dimensions/lobby/lobby_dimension`
 - `dimensions/lobby/mining_dimension`
+- `dimensions/lobby/void_dimension`
 
 ### How can I reset the default bases like the mining base, fishing base or the spawn without resetting the dimension ?
 
 Teleport to the corresponding dimension and run the corresponding functions like:
 
 - `/function lobby:fishing_dimension_load`
+- `/function lobby:gaming_dimension_load`
 - `/function lobby:lobby_dimension_load`
 - `/function lobby:mining_dimension_load`
+- `/function lobby:void_dimension_load`
 
 **Note: This will overwrite any existing block, but no entities see <https://bugs.mojang.com/browse/MC-102430>.**
 
@@ -190,5 +208,5 @@ If you are downloading this mod from other sources we could not make sure that i
 [fishing_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/fishing_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
-
 [shutup-experimental-settings]: https://www.curseforge.com/minecraft/mc-mods/shutup-experimental-settings
+[en_us.json]: src/main/resources/assets/lobby/lang/en_us.json

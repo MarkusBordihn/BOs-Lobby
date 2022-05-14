@@ -2,10 +2,12 @@
   "block.placeholder.text": "Template placeholder do not remove!",
   "item.placeholder.text": "Template placeholder do not remove!",
 
-  "text.lobby.welcome_to_default": "Welcome to the default dimension, please use the %2$s, %1$s or %3$s command to change to a different dimension.",
-  "text.lobby.welcome_to_lobby": "Welcome to the lobby, please use the %4$s, %1$s or %3$s command to change to a different dimension.",
-  "text.lobby.welcome_to_mining": "Welcome to the minining dimension, please use the %4$s, %1$s or %2$s command to change to a different dimension.",
-  "text.lobby.welcome_to_fishing": "Welcome to the fishing dimension, please use the %4$s, %2$s or %3$s command to change to a different dimension.",
+  "text.lobby.welcome_to_default": "Welcome to the default dimension, please use the %1$s, %3$s or %4$s command to change to a different dimension.",
+  "text.lobby.welcome_to_fishing": "Welcome to the fishing dimension, please use the %3$s, %4$s or %5$s command to change to a different dimension.",
+  "text.lobby.welcome_to_gaming": "Welcome to the gaming dimension, please use the %1$s, %3$s or %5$s command to change to a different dimension.",
+  "text.lobby.welcome_to_lobby": "Welcome to the lobby, please use the %1$s, %4$s or %5$s command to change to a different dimension.",
+  "text.lobby.welcome_to_mining": "Welcome to the minining dimension, please use the %1$s, %3$s or %5$s command to change to a different dimension.",
+  "text.lobby.welcome_to_void": "Welcome to the void dimension, please use the %1$s, %3$s or %5$s command to change to a different dimension.",
 
   "text.lobby.failed_already_in_dimension": "Failed to teleport, because you are already in the %1$s dimension!",
   "text.lobby.failed_cooldown": "Failed to teleport to %1$s, you can use the teleport command again in %2$s secs!",

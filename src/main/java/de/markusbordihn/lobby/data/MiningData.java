@@ -109,7 +109,7 @@ public class MiningData extends SavedData {
 
   public static MiningData load(CompoundTag compoundTag) {
     MiningData miningData = new MiningData();
-    log.info("{} loading mining data ... {}", Constants.LOG_NAME, compoundTag);
+    log.info("{} loading mining dimension data ... {}", Constants.LOG_NAME, compoundTag);
     miningData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
     miningData.lastUpdate = compoundTag.getLong("LastUpdate");
     return miningData;
@@ -117,7 +117,7 @@ public class MiningData extends SavedData {
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving mining data ... {}", Constants.LOG_NAME, this);
+    log.info("{} saving mining dimension data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
     return compoundTag;

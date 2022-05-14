@@ -109,7 +109,7 @@ public class FishingData extends SavedData {
 
   public static FishingData load(CompoundTag compoundTag) {
     FishingData fishingData = new FishingData();
-    log.info("{} loading fishing data ... {}", Constants.LOG_NAME, compoundTag);
+    log.info("{} loading fishing dimension data ... {}", Constants.LOG_NAME, compoundTag);
     fishingData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
     fishingData.lastUpdate = compoundTag.getLong("LastUpdate");
     return fishingData;
@@ -117,7 +117,7 @@ public class FishingData extends SavedData {
 
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
-    log.info("{} saving fishing data ... {}", Constants.LOG_NAME, this);
+    log.info("{} saving fishing dimension data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
     return compoundTag;
