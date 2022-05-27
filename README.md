@@ -11,9 +11,9 @@ Provides a easy to use lobby (with an underground maze), fishing and optimized m
 - Optimized mining dimension (configurable: without spawner, mobs, bats or minecart chest).
 - Provides /lobby, /mining, /fishing and /spawn commands for the players.
 - Changed automatically the user game mode depending on the dimension (excluding ops).
-- Customization over the config file and data files, if needed.
+- Customization over the config file, data files and resource packs.
 - Default lobby will be automatically expand with additional features like hidden places.
-- Automatically transfer users to the lobby on first join or after server restart.
+- Automatically transfer users to the lobby on first join and/or after server restart or always.
 - Fall damage and fire damage protection for wrongly set default world spawn point.
 
 **Note: Please make sure to create regular backups of your dimensions, before installing or updating this mod.**
@@ -109,7 +109,7 @@ Use the following data files to customize the lobby:
 
 ## Translations / Messages
 
-The messages and text could be adjusted over the translation file [en_us.json][en_us.json].
+The messages and text could be adjusted over the translation file [en_us.json][en_us.json] in a resource pack.
 You can use the following placeholders inside each of the messages:
 
 - `%1$s` Teleport command for fishing dimension
@@ -120,6 +120,8 @@ You can use the following placeholders inside each of the messages:
 - `%6$s` Teleport command for void dimension
 
 Example: `Welcome to the default dimension, please use the %1$s, %3$s or %4$s command to change to a different dimension.`
+
+A resource pack example is available at [customization/resourecepacks/](customization/resourecepacks/).
 
 ## FAQ
 

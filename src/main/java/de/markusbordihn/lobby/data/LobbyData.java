@@ -20,11 +20,16 @@
 package de.markusbordihn.lobby.data;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -43,9 +48,13 @@ public class LobbyData extends SavedData {
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String FILE_ID = Constants.MOD_ID;
-  private static MinecraftServer server = null;
   private static LobbyData data = null;
+  private static MinecraftServer server = null;
   private static ServerLevel level = null;
+  private static Set<UUID> playerTeleportList = ConcurrentHashMap.newKeySet();
+
+  public static final String PLAYER_TELEPORT_LIST_TAG = "PlayerTeleportList";
+  public static final String PLAYER_UUID_TAG = "UUID";
 
   private boolean dimensionLoaded = false;
   private long lastUpdate;
@@ -78,12 +87,12 @@ public class LobbyData extends SavedData {
     LobbyData.server = server;
     LobbyData.level = DimensionManager.getLobbyDimension();
     if (LobbyData.level != null) {
-      log.info("{} preparing data for {} and {}", Constants.LOG_NAME,
-          LobbyData.server, LobbyData.level);
+      log.info("{} preparing data for {} and {}", Constants.LOG_NAME, LobbyData.server,
+          LobbyData.level);
 
       // Using a global approach and storing relevant data in the overworld only!
-      LobbyData.data = LobbyData.level.getDataStorage().computeIfAbsent(LobbyData::load, LobbyData::new,
-          LobbyData.getFileId());
+      LobbyData.data = LobbyData.level.getDataStorage().computeIfAbsent(LobbyData::load,
+          LobbyData::new, LobbyData.getFileId());
     } else {
       log.error("Unable to preparing data for {} and {}", LobbyData.server, LobbyData.level);
     }
@@ -109,11 +118,31 @@ public class LobbyData extends SavedData {
     this.dimensionLoaded = loaded;
   }
 
+  public Set<UUID> getPlayerTeleportList() {
+    return playerTeleportList;
+  }
+
+  public static void setPlayerTeleportList(Set<UUID> newPlayerTeleportList) {
+    playerTeleportList = newPlayerTeleportList;
+  }
+
   public static LobbyData load(CompoundTag compoundTag) {
     LobbyData lobbyData = new LobbyData();
     log.info("{} loading lobby dimension data ... {}", Constants.LOG_NAME, compoundTag);
     lobbyData.dimensionLoaded = compoundTag.getBoolean("DimensionLoaded");
     lobbyData.lastUpdate = compoundTag.getLong("LastUpdate");
+
+    // Restoring Player Teleport List
+    if (compoundTag.contains(PLAYER_TELEPORT_LIST_TAG)) {
+      ListTag playerTeleportListTag = compoundTag.getList(PLAYER_TELEPORT_LIST_TAG, 10);
+      for (int i = 0; i < playerTeleportListTag.size(); ++i) {
+        UUID playerTeleportListUUID = playerTeleportListTag.getCompound(i).getUUID(PLAYER_UUID_TAG);
+        if (playerTeleportListUUID != null) {
+          playerTeleportList.add(playerTeleportListUUID);
+        }
+      }
+    }
+
     return lobbyData;
   }
 
@@ -122,6 +151,20 @@ public class LobbyData extends SavedData {
     log.info("{} saving lobby dimension data ... {}", Constants.LOG_NAME, this);
     compoundTag.putBoolean("DimensionLoaded", this.dimensionLoaded);
     compoundTag.putLong("LastUpdate", new Date().getTime());
+
+    // Store Player Teleport List
+    ListTag playerTeleportListTag = new ListTag();
+    Iterator<UUID> playerTeleportListIterator = playerTeleportList.iterator();
+    while (playerTeleportListIterator.hasNext()) {
+      UUID playerTeleportListUUID = playerTeleportListIterator.next();
+      if (playerTeleportListUUID != null) {
+        CompoundTag playerTeleportListCompoundTag = new CompoundTag();
+        playerTeleportListCompoundTag.putUUID(PLAYER_UUID_TAG, playerTeleportListUUID);
+        playerTeleportListTag.add(playerTeleportListCompoundTag);
+      }
+    }
+    compoundTag.put(PLAYER_TELEPORT_LIST_TAG, playerTeleportListTag);
+
     return compoundTag;
   }
 

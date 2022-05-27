@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.27
+
+- Added option to transfers player only once per life-time to the lobby.
+- Fixed existing translations and added German translation file.
+
 ### 2022.05.15
 
 - Added possibility to enable/disable specific dimension and to adjust teleport command name.

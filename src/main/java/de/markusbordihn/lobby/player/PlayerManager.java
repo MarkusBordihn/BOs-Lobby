@@ -46,6 +46,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
+import de.markusbordihn.lobby.data.LobbyData;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
 @EventBusSubscriber
@@ -54,7 +55,9 @@ public class PlayerManager {
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static boolean lobbyEnabled = COMMON.lobbyEnabled.get();
   private static boolean generalDefaultToLobby = COMMON.generalDefaultToLobby.get();
+  private static boolean generalDefaultToLobbyOnce = COMMON.generalDefaultToLobbyOnce.get();
   private static boolean generalDefaultToLobbyAlways = COMMON.generalDefaultToLobbyAlways.get();
 
   private static Set<UUID> playerTeleportList = ConcurrentHashMap.newKeySet();
@@ -76,25 +79,44 @@ public class PlayerManager {
     playerTeleportList = ConcurrentHashMap.newKeySet();
     playerValidationList = ConcurrentHashMap.newKeySet();
 
+    lobbyEnabled = COMMON.lobbyEnabled.get();
     generalDefaultToLobby = COMMON.generalDefaultToLobby.get();
+    generalDefaultToLobbyOnce = COMMON.generalDefaultToLobbyOnce.get();
     generalDefaultToLobbyAlways = COMMON.generalDefaultToLobbyAlways.get();
   }
 
   @SubscribeEvent
   public static void handleServerStartingEvent(ServerStartingEvent event) {
-    if (generalDefaultToLobbyAlways || generalDefaultToLobby) {
+    if (automaticTransferIsEnabled()) {
       if (DimensionManager.getLobbyDimension() == null) {
         log.error("{} Unable to find lobby dimension {}, transfer to lobby will be disabled!",
             Constants.LOG_PLAYER_MANAGER_PREFIX, DimensionManager.getLobbyDimensionName());
         generalDefaultToLobby = false;
+        generalDefaultToLobbyOnce = false;
+        generalDefaultToLobbyAlways = false;
+      } else if (!lobbyEnabled) {
+        log.error("{} lobby dimension is disabled {}, transfer to lobby will be disabled!",
+            Constants.LOG_PLAYER_MANAGER_PREFIX, DimensionManager.getLobbyDimensionName());
+        generalDefaultToLobby = false;
+        generalDefaultToLobbyOnce = false;
         generalDefaultToLobbyAlways = false;
       } else {
-        if (generalDefaultToLobbyAlways) {
+        if (generalDefaultToLobbyOnce) {
+          log.info("{} Only teleports the player once to the lobby with their first connect!",
+              Constants.LOG_TELEPORT_MANAGER_PREFIX);
+          Set<UUID> storedPlayerTeleportList = LobbyData.get().getPlayerTeleportList();
+          if (!storedPlayerTeleportList.isEmpty()) {
+            log.info(
+                "{} Using stored Player Teleport List to limiting automatic transfers to lobby: {}",
+                Constants.LOG_TELEPORT_MANAGER_PREFIX, storedPlayerTeleportList);
+            playerTeleportList = storedPlayerTeleportList;
+          }
+        } else if (generalDefaultToLobbyAlways) {
           log.info("{} Always teleport players to lobby on their server join!",
               Constants.LOG_TELEPORT_MANAGER_PREFIX);
         } else {
           log.info(
-              "{} Only teleport player to the lobby for their first connect or after a server restart.",
+              "{} Teleports the player to the lobby for their first connect or after a server restart!.",
               Constants.LOG_TELEPORT_MANAGER_PREFIX);
         }
       }
@@ -103,7 +125,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-    if (!generalDefaultToLobbyAlways && !generalDefaultToLobby) {
+    if (!automaticTransferIsEnabled()) {
       return;
     }
     String username = event.getPlayer().getName().getString();
@@ -131,7 +153,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handlePlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-    if (!generalDefaultToLobbyAlways && !generalDefaultToLobby) {
+    if (!automaticTransferIsEnabled()) {
       return;
     }
     String username = event.getPlayer().getName().getString();
@@ -143,8 +165,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handleServerTickEvent(TickEvent.ServerTickEvent event) {
-    if (event.phase == TickEvent.Phase.END || ticker++ < 40
-        || (!generalDefaultToLobbyAlways && !generalDefaultToLobby)) {
+    if (event.phase == TickEvent.Phase.END || ticker++ < 40 || !automaticTransferIsEnabled()) {
       return;
     }
 
@@ -175,6 +196,10 @@ public class PlayerManager {
       }
     }
     ticker = 0;
+  }
+
+  private static boolean automaticTransferIsEnabled() {
+    return generalDefaultToLobby || generalDefaultToLobbyOnce || generalDefaultToLobbyAlways;
   }
 
   private static void addPlayer(String username) {
@@ -217,18 +242,28 @@ public class PlayerManager {
     if (player == null || player.level == DimensionManager.getLobbyDimension()) {
       return;
     }
-    if (generalDefaultToLobbyAlways
-        || (generalDefaultToLobby && !playerTeleportList.contains(player.getUUID()))) {
+    if (generalDefaultToLobbyAlways || ((generalDefaultToLobbyOnce || generalDefaultToLobby)
+        && !playerTeleportList.contains(player.getUUID()))) {
       if (!generalDefaultToLobbyAlways && playerTeleportList.contains(player.getUUID())) {
         log.info("{} Skip transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
             player, player.level);
       } else {
-        log.info("{} Transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
-            player, player.level);
+        if (generalDefaultToLobbyOnce) {
+          log.info("{} Transferring {} ({}) for the first time and only once to lobby ...",
+              Constants.LOG_TELEPORT_MANAGER_PREFIX, player, player.level);
+        } else {
+          log.info("{} Transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
+              player, player.level);
+        }
         DimensionManager.teleportToLobby(player);
       }
     }
     playerTeleportList.add(player.getUUID());
+
+    // Store Player Teleport List, if user should be only transferred once!
+    if (generalDefaultToLobbyOnce) {
+      LobbyData.setPlayerTeleportList(playerTeleportList);
+    }
   }
 
 }

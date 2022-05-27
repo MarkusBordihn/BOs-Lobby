@@ -58,6 +58,7 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.IntValue generalCommandCoolDown;
     public final ForgeConfigSpec.BooleanValue generalDefaultToLobby;
+    public final ForgeConfigSpec.BooleanValue generalDefaultToLobbyOnce;
     public final ForgeConfigSpec.BooleanValue generalDefaultToLobbyAlways;
 
     public final ForgeConfigSpec.BooleanValue defaultEnabled;
@@ -137,8 +138,11 @@ public final class CommonConfig {
           builder.comment("Delay in seconds before a teleport command could be used again!")
               .defineInRange("generalCommandCoolDown", 30, 1, 300);
       generalDefaultToLobby = builder.comment(
-          "Only teleport player to the lobby for their first connect or after a server restart!")
+          "Teleports the player to the lobby for their first connect or after a server restart!")
           .define("generalDefaultToLobby", true);
+      generalDefaultToLobbyOnce =
+          builder.comment("Only teleports the player once to the lobby with their first connect!")
+              .define("generalDefaultToLobbyOnce", false);
       generalDefaultToLobbyAlways = builder.comment("Always teleport player to the lobby!")
           .define("generalDefaultToLobbyAlways", false);
       builder.pop();
@@ -155,10 +159,10 @@ public final class CommonConfig {
       defaultUseCustomSpawnPoint = builder.define("defaultUseCustomSpawnPoint", false);
       defaultFallProtection =
           builder.comment("Defines the amount of ticks how long the fall protection is enabled.")
-              .defineInRange("defaultFallProtection", 400, 0, 1200);
+              .defineInRange("defaultFallProtection", 200, 0, 1200);
       defaultFireProtection =
           builder.comment("Defines the amount of ticks how long the fire protection is enabled.")
-              .defineInRange("defaultFireProtection", 400, 0, 1200);
+              .defineInRange("defaultFireProtection", 200, 0, 1200);
       defaultHeal = builder.comment("Defines the amount of ticks how long the heal is enabled.")
           .defineInRange("defaultHeal", 0, 0, 1200);
       defaultSpawnPointX = builder.defineInRange("defaultSpawnPointX", 68, -1000, 1000);
