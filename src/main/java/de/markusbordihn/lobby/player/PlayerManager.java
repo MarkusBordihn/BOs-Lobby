@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ClickEvent;
@@ -109,7 +110,7 @@ public class PlayerManager {
             log.info(
                 "{} Using stored Player Teleport List to limiting automatic transfers to lobby: {}",
                 Constants.LOG_TELEPORT_MANAGER_PREFIX, storedPlayerTeleportList);
-            playerTeleportList = storedPlayerTeleportList;
+            playerTeleportList.addAll(storedPlayerTeleportList);
           }
         } else if (generalDefaultToLobbyAlways) {
           log.info("{} Always teleport players to lobby on their server join!",
@@ -262,7 +263,7 @@ public class PlayerManager {
 
     // Store Player Teleport List, if user should be only transferred once!
     if (generalDefaultToLobbyOnce) {
-      LobbyData.setPlayerTeleportList(playerTeleportList);
+      LobbyData.get().setPlayerTeleportList(playerTeleportList);
     }
   }
 

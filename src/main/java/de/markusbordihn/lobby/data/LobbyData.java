@@ -51,11 +51,11 @@ public class LobbyData extends SavedData {
   private static LobbyData data = null;
   private static MinecraftServer server = null;
   private static ServerLevel level = null;
-  private static Set<UUID> playerTeleportList = ConcurrentHashMap.newKeySet();
 
   public static final String PLAYER_TELEPORT_LIST_TAG = "PlayerTeleportList";
   public static final String PLAYER_UUID_TAG = "UUID";
 
+  private Set<UUID> playerTeleportList = ConcurrentHashMap.newKeySet();
   private boolean dimensionLoaded = false;
   private long lastUpdate;
 
@@ -103,7 +103,7 @@ public class LobbyData extends SavedData {
   }
 
   public long getLastUpdate() {
-    return lastUpdate;
+    return this.lastUpdate;
   }
 
   public void setLastUpdate(long lastUpdate) {
@@ -119,11 +119,12 @@ public class LobbyData extends SavedData {
   }
 
   public Set<UUID> getPlayerTeleportList() {
-    return playerTeleportList;
+    return this.playerTeleportList;
   }
 
-  public static void setPlayerTeleportList(Set<UUID> newPlayerTeleportList) {
-    playerTeleportList = newPlayerTeleportList;
+  public void setPlayerTeleportList(Set<UUID> playerTeleportList) {
+    this.playerTeleportList = playerTeleportList;
+    this.setDirty();
   }
 
   public static LobbyData load(CompoundTag compoundTag) {
@@ -138,7 +139,7 @@ public class LobbyData extends SavedData {
       for (int i = 0; i < playerTeleportListTag.size(); ++i) {
         UUID playerTeleportListUUID = playerTeleportListTag.getCompound(i).getUUID(PLAYER_UUID_TAG);
         if (playerTeleportListUUID != null) {
-          playerTeleportList.add(playerTeleportListUUID);
+          lobbyData.playerTeleportList.add(playerTeleportListUUID);
         }
       }
     }
@@ -154,7 +155,7 @@ public class LobbyData extends SavedData {
 
     // Store Player Teleport List
     ListTag playerTeleportListTag = new ListTag();
-    Iterator<UUID> playerTeleportListIterator = playerTeleportList.iterator();
+    Iterator<UUID> playerTeleportListIterator = this.playerTeleportList.iterator();
     while (playerTeleportListIterator.hasNext()) {
       UUID playerTeleportListUUID = playerTeleportListIterator.next();
       if (playerTeleportListUUID != null) {

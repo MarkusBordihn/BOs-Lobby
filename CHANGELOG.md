@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.30
+
+- Fixed an issue were dedicated servers are not storing the per life-time to the lobby list.
+
 ### 2022.05.27
 
 - Added option to transfers player only once per life-time to the lobby.
