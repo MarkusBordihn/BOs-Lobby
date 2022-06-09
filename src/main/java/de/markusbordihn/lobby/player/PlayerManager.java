@@ -29,12 +29,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraftforge.event.TickEvent;
@@ -70,7 +67,7 @@ public class PlayerManager {
   private static short ticker = 0;
 
   private static Component lobbyCommand =
-      new TextComponent("/lobby").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
+      Component.literal("/lobby").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
           .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/lobby")));
 
   protected PlayerManager() {}
@@ -144,9 +141,8 @@ public class PlayerManager {
       // Send message to player that he will be transferred.
       if ((generalDefaultToLobbyAlways || !playerTeleportList.contains(player.getUUID()))
           && player.level != DimensionManager.getLobbyDimension()) {
-        player.sendMessage(
-            new TranslatableComponent(Constants.TEXT_PREFIX + "transfer_to_lobby", lobbyCommand),
-            Util.NIL_UUID);
+        player.sendSystemMessage(
+            Component.translatable(Constants.TEXT_PREFIX + "transfer_to_lobby", lobbyCommand));
       }
       playerValidationList.add(new PlayerValidation(player));
     }

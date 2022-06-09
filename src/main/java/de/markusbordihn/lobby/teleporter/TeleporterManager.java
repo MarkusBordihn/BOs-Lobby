@@ -23,13 +23,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -129,22 +126,22 @@ public class TeleporterManager {
     voidSpawnPointZ = COMMON.voidSpawnPointZ.get();
 
     // Construct Clickable commands
-    fishingCommand = new TextComponent("/" + COMMON.fishingCommandName.get())
+    fishingCommand = Component.literal("/" + COMMON.fishingCommandName.get())
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(
             ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.fishingCommandName.get())));
-    gamingCommand = new TextComponent("/" + COMMON.gamingCommandName.get())
+    gamingCommand = Component.literal("/" + COMMON.gamingCommandName.get())
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(
             ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.gamingCommandName.get())));
-    lobbyCommand = new TextComponent("/" + COMMON.lobbyCommandName.get())
+    lobbyCommand = Component.literal("/" + COMMON.lobbyCommandName.get())
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(
             ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.lobbyCommandName.get())));
-    miningCommand = new TextComponent("/" + COMMON.miningCommandName.get())
+    miningCommand = Component.literal("/" + COMMON.miningCommandName.get())
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(
             ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.miningCommandName.get())));
-    spawnCommand = new TextComponent("/" + COMMON.defaultCommandName.get())
+    spawnCommand = Component.literal("/" + COMMON.defaultCommandName.get())
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(
             ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.defaultCommandName.get())));
-    voidCommand = new TextComponent("/" + COMMON.voidCommandName.get())
+    voidCommand = Component.literal("/" + COMMON.voidCommandName.get())
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(
             new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.voidCommandName.get())));
 
@@ -190,10 +187,8 @@ public class TeleporterManager {
       successfullyTeleported = teleportPlayer(player, defaultDimension);
     }
     if (successfullyTeleported && !isSameDimension) {
-      player.sendMessage(
-          new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_default", fishingCommand,
-              gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand),
-          Util.NIL_UUID);
+      player.sendSystemMessage(Component.translatable(Constants.TEXT_PREFIX + "welcome_to_default",
+          fishingCommand, gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand));
     }
     return successfullyTeleported;
   }
@@ -211,10 +206,8 @@ public class TeleporterManager {
               defaultFishingSpawnPoint.getY(), defaultFishingSpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
-      player.sendMessage(
-          new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_fishing", fishingCommand,
-              gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand),
-          Util.NIL_UUID);
+      player.sendSystemMessage(Component.translatable(Constants.TEXT_PREFIX + "welcome_to_fishing",
+          fishingCommand, gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand));
     }
     return successfullyTeleported;
   }
@@ -232,10 +225,8 @@ public class TeleporterManager {
               defaultGamingSpawnPoint.getY(), defaultGamingSpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
-      player.sendMessage(
-          new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_gaming", fishingCommand,
-              gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand),
-          Util.NIL_UUID);
+      player.sendSystemMessage(Component.translatable(Constants.TEXT_PREFIX + "welcome_to_gaming",
+          fishingCommand, gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand));
     }
     return successfullyTeleported;
   }
@@ -252,10 +243,8 @@ public class TeleporterManager {
           defaultLobbySpawnPoint.getY(), defaultLobbySpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
-      player.sendMessage(
-          new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_lobby", fishingCommand,
-              gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand),
-          Util.NIL_UUID);
+      player.sendSystemMessage(Component.translatable(Constants.TEXT_PREFIX + "welcome_to_lobby",
+          fishingCommand, gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand));
     }
     return successfullyTeleported;
   }
@@ -273,10 +262,8 @@ public class TeleporterManager {
               defaultMiningSpawnPoint.getY(), defaultMiningSpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
-      player.sendMessage(
-          new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_mining", fishingCommand,
-              gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand),
-          Util.NIL_UUID);
+      player.sendSystemMessage(Component.translatable(Constants.TEXT_PREFIX + "welcome_to_mining",
+          fishingCommand, gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand));
     }
     return successfullyTeleported;
   }
@@ -293,10 +280,8 @@ public class TeleporterManager {
           defaultVoidSpawnPoint.getY(), defaultVoidSpawnPoint.getZ());
     }
     if (successfullyTeleported && !isSameDimension) {
-      player.sendMessage(
-          new TranslatableComponent(Constants.TEXT_PREFIX + "welcome_to_void", fishingCommand,
-              gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand),
-          Util.NIL_UUID);
+      player.sendSystemMessage(Component.translatable(Constants.TEXT_PREFIX + "welcome_to_void",
+          fishingCommand, gamingCommand, lobbyCommand, miningCommand, spawnCommand, voidCommand));
     }
     return successfullyTeleported;
   }

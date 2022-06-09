@@ -26,9 +26,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-
+import net.minecraft.network.chat.Component;
 import de.markusbordihn.lobby.Constants;
 
 public abstract class CustomCommand implements Command<CommandSourceStack> {
@@ -39,11 +37,10 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
-    commandSource.sendSuccess(new TextComponent(feedback), false);
+    commandSource.sendSuccess(Component.literal(feedback), false);
   }
 
-  public static void sendFeedback(CommandContext<CommandSourceStack> context,
-      TranslatableComponent feedback) {
+  public static void sendFeedback(CommandContext<CommandSourceStack> context, Component feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(feedback, false);
   }

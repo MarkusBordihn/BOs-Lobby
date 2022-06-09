@@ -28,7 +28,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -77,7 +77,7 @@ public class FishingCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
+      sendFeedback(context, Component.translatable(Constants.TELEPORT_FAILED_COOLDOWN,
           DIMENSION_NAME, coolDownTimer - currentTimer));
       return 0;
     } else {
@@ -86,15 +86,15 @@ public class FishingCommand extends CustomCommand {
 
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getFishingDimension() == null) {
-      sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
+      sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
           DIMENSION_NAME, DimensionManager.getFishingDimensionName()));
     } else if (!fishingRestrictCommand
         || player.getLevel() != DimensionManager.getFishingDimension()) {
       sendFeedback(context,
-          new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
+          Component.translatable(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
       DimensionManager.teleportToFishing(player);
     } else {
-      sendFeedback(context, new TranslatableComponent(
+      sendFeedback(context, Component.translatable(
           Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
     }
     return 0;
