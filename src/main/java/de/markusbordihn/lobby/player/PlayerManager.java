@@ -53,18 +53,18 @@ public class PlayerManager {
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static boolean lobbyEnabled = COMMON.lobbyEnabled.get();
   private static boolean generalDefaultToLobby = COMMON.generalDefaultToLobby.get();
-  private static boolean generalDefaultToLobbyOnce = COMMON.generalDefaultToLobbyOnce.get();
   private static boolean generalDefaultToLobbyAlways = COMMON.generalDefaultToLobbyAlways.get();
+  private static boolean generalDefaultToLobbyOnce = COMMON.generalDefaultToLobbyOnce.get();
+  private static boolean lobbyEnabled = COMMON.lobbyEnabled.get();
 
   private static Set<UUID> playerTeleportList = ConcurrentHashMap.newKeySet();
   private static Set<PlayerValidation> playerValidationList = ConcurrentHashMap.newKeySet();
 
-  private static int playerLoginTrackingTimeout = 45;
-  private static long playerLoginValidationTimeoutMilli =
-      TimeUnit.SECONDS.toMillis(playerLoginTrackingTimeout);
-  private static short ticker = 0;
+  private static final int PLAYER_LOGIN_TRACKING_TIMEOUT = 45;
+  private static final long PLAYER_LOGIN_VALIDATION_TIMEOUT_MILLI =
+      TimeUnit.SECONDS.toMillis(PLAYER_LOGIN_TRACKING_TIMEOUT);
+  private static int ticker = 0;
 
   private static Component lobbyCommand =
       Component.literal("/lobby").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
@@ -133,7 +133,7 @@ public class PlayerManager {
 
       log.info("{} Player {} {} logged in and will be tracked for {} secs.",
           Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity(),
-          playerLoginTrackingTimeout);
+          PLAYER_LOGIN_VALIDATION_TIMEOUT_MILLI);
 
       // Heal player by 1 point, just in case.
       player.heal(1);
@@ -162,7 +162,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handleServerTickEvent(TickEvent.ServerTickEvent event) {
-    if (event.phase == TickEvent.Phase.END || ticker++ < 40 || !automaticTransferIsEnabled()) {
+    if (event.phase == TickEvent.Phase.END || !automaticTransferIsEnabled() || ticker++ < 40) {
       return;
     }
 
@@ -172,17 +172,16 @@ public class PlayerManager {
         for (PlayerValidation playerValidation : playerValidationList) {
           String username = playerValidation.getUsername();
           if (playerValidation.hasPlayerMoved()) {
-            long validationTimeInSecs =
-                TimeUnit.MILLISECONDS.toSeconds(playerValidation.getValidationTimeElapsed());
+            long validationTimeInSecs = playerValidation.getValidationTimeSecondsElapsed();
             log.info("{} Player was successful validated after {} secs.", username,
                 validationTimeInSecs);
             transferringPlayerToLobby(playerValidation.getPlayer());
             addPlayer(username);
           } else if (playerValidation
-              .getValidationTimeElapsed() >= playerLoginValidationTimeoutMilli) {
+              .getValidationTimeElapsed() >= PLAYER_LOGIN_VALIDATION_TIMEOUT_MILLI) {
             log.warn(
                 "User tracking for player {} timed out after {} secs. User will not be teleported to lobby!",
-                username, playerLoginTrackingTimeout);
+                username, PLAYER_LOGIN_TRACKING_TIMEOUT);
             addPlayer(username);
           }
         }

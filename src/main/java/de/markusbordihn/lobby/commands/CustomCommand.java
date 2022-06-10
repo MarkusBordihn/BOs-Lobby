@@ -27,6 +27,8 @@ import com.mojang.brigadier.context.CommandContext;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 import de.markusbordihn.lobby.Constants;
 
 public abstract class CustomCommand implements Command<CommandSourceStack> {
@@ -41,6 +43,12 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
   }
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, Component feedback) {
+    CommandSourceStack commandSource = context.getSource();
+    commandSource.sendSuccess(feedback, false);
+  }
+
+  public static void sendFeedback(CommandContext<CommandSourceStack> context,
+      MutableComponent feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(feedback, false);
   }

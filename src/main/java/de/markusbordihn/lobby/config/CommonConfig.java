@@ -61,6 +61,10 @@ public final class CommonConfig {
     public final ForgeConfigSpec.BooleanValue generalDefaultToLobbyOnce;
     public final ForgeConfigSpec.BooleanValue generalDefaultToLobbyAlways;
 
+    public final ForgeConfigSpec.BooleanValue teleportDelayCounterVisible;
+    public final ForgeConfigSpec.BooleanValue teleportDelayEnabled;
+    public final ForgeConfigSpec.IntValue teleportDelayCounter;
+
     public final ForgeConfigSpec.BooleanValue defaultEnabled;
     public final ForgeConfigSpec.ConfigValue<String> defaultDimension;
     public final ForgeConfigSpec.ConfigValue<String> defaultCommandName;
@@ -145,6 +149,17 @@ public final class CommonConfig {
               .define("generalDefaultToLobbyOnce", false);
       generalDefaultToLobbyAlways = builder.comment("Always teleport player to the lobby!")
           .define("generalDefaultToLobbyAlways", false);
+      builder.pop();
+
+      builder.push("Teleport");
+      teleportDelayEnabled = builder.comment("Enables teleport delay to avoid cheating!")
+          .define("teleportDelayEnabled", true);
+      teleportDelayCounterVisible =
+          builder.comment("Shows/hide the teleport countdown in the user chat.")
+              .define("teleportDelayCounterVisible", true);
+      teleportDelayCounter =
+          builder.comment("Teleport delay in seconds a player needs to stand still to teleport.")
+              .defineInRange("teleportDelayCounter", 10, 0, 60);
       builder.pop();
 
       builder.push("Default Dimension");
