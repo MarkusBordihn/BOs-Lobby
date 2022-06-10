@@ -19,6 +19,7 @@
 
 package de.markusbordihn.lobby.player;
 
+import java.util.concurrent.TimeUnit;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
@@ -30,7 +31,7 @@ public class PlayerValidation {
   private double rotationYawHead;
   private long lastValidationTime = System.currentTimeMillis();
 
-  PlayerValidation(ServerPlayer player) {
+  public PlayerValidation(ServerPlayer player) {
     this.player = player;
     this.position = player.position();
     this.rotationYawHead = player.getYHeadRot();
@@ -41,6 +42,11 @@ public class PlayerValidation {
     return (!this.username.equals(this.player.getName().getString())
         || !this.position.equals(this.player.position())
         || this.rotationYawHead != this.player.getYHeadRot());
+  }
+
+  public boolean hasPlayerMovedPosition() {
+    return (!this.username.equals(this.player.getName().getString())
+        || !this.position.equals(this.player.position()));
   }
 
   public ServerPlayer getPlayer() {
@@ -57,5 +63,9 @@ public class PlayerValidation {
 
   public long getValidationTimeElapsed() {
     return System.currentTimeMillis() - this.lastValidationTime;
+  }
+
+  public long getValidationTimeSecondsElapsed() {
+    return TimeUnit.MILLISECONDS.toSeconds(getValidationTimeElapsed());
   }
 }

@@ -1,7 +1,7 @@
+# 🏝 Lobby, Fishing and Mining Dimension
+
 [![Lobby, Fishing and Mining Dimension Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 [![Lobby, Fishing and Mining Dimension Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
-
-# 🏝 Lobby, Fishing and Mining Dimension
 
 Provides a easy to use lobby (with an underground maze), fishing and optimized mining dimension for you and your friends.
 
@@ -15,6 +15,7 @@ Provides a easy to use lobby (with an underground maze), fishing and optimized m
 - Default lobby will be automatically expand with additional features like hidden places.
 - Automatically transfer users to the lobby on first join and/or after server restart or always.
 - Fall damage and fire damage protection for wrongly set default world spawn point.
+- Teleport countdown and move detection to allow fair game play even in PVP.
 
 **Note: Please make sure to create regular backups of your dimensions, before installing or updating this mod.**
 
@@ -110,7 +111,12 @@ Use the following data files to customize the lobby:
 ## Translations / Messages
 
 The messages and text could be adjusted over the translation file [en_us.json][en_us.json] in a resource pack.
-You can use the following placeholders inside each of the messages:
+
+A resource pack example is available at [customization/resourecepacks/](customization/resourecepacks/).
+
+### Custom Welcome Messages
+
+You can use the following placeholders inside each of the welcome messages:
 
 - `%1$s` Teleport command for fishing dimension
 - `%2$s` Teleport command for gaming dimension
@@ -121,7 +127,14 @@ You can use the following placeholders inside each of the messages:
 
 Example: `Welcome to the default dimension, please use the %1$s, %3$s or %4$s command to change to a different dimension.`
 
-A resource pack example is available at [customization/resourecepacks/](customization/resourecepacks/).
+### Custom Teleport Countdown Messages
+
+You can use the following placeholders inside the teleport countdown messages:
+
+- `%1$s` Dimension name
+- `%2$s` Teleport delay or remaining delay time
+
+Example: `Teleporting to %1$s in %2$s secs, please stand still!` or `Teleporting to %1$s in %2$s secs ...`
 
 ## FAQ
 

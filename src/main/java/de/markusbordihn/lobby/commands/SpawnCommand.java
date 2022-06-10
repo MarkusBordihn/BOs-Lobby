@@ -26,6 +26,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -39,6 +40,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
+import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 @EventBusSubscriber
 public class SpawnCommand extends CustomCommand {
@@ -48,7 +50,9 @@ public class SpawnCommand extends CustomCommand {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean defaultRestrictCommand = COMMON.defaultRestrictCommand.get();
+  private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+  private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
@@ -58,6 +62,8 @@ public class SpawnCommand extends CustomCommand {
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     defaultRestrictCommand = COMMON.defaultRestrictCommand.get();
     generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+    teleportDelayCounter = COMMON.teleportDelayCounter.get();
+    teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -78,7 +84,7 @@ public class SpawnCommand extends CustomCommand {
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
       sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer));
+          DIMENSION_NAME, coolDownTimer - currentTimer).withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + generalCommandCoolDown);
@@ -90,12 +96,20 @@ public class SpawnCommand extends CustomCommand {
           DIMENSION_NAME, DimensionManager.getDefaultDimensionName()));
     } else if (!defaultRestrictCommand
         || player.getLevel() != DimensionManager.getDefaultDimension()) {
-      sendFeedback(context,
-          new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
-      DimensionManager.teleportToDefault(player);
+      if (teleportDelayEnabled && teleportDelayCounter > 0) {
+        sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_TO_IN_MESSAGE,
+            DIMENSION_NAME, teleportDelayCounter).withStyle(ChatFormatting.GREEN));
+        PlayerTeleportManager.teleportPlayerToDefault(player);
+      } else {
+        sendFeedback(context,
+            new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME)
+                .withStyle(ChatFormatting.GREEN));
+        DimensionManager.teleportToDefault(player);
+      }
     } else {
-      sendFeedback(context, new TranslatableComponent(
-          Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              DIMENSION_NAME).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }
