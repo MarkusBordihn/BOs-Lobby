@@ -5,6 +5,8 @@
 
 Provides a easy to use lobby (with an underground maze), fishing and optimized mining dimension for you and your friends.
 
+![Example images](examples/logo.gif)
+
 ## Features ⭐
 
 - Easy to use, no extra setup needed.
