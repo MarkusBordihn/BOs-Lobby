@@ -1,9 +1,11 @@
-# 🏝 Lobby, Fishing and Mining Dimension
+# 🏝 Lobby, Fishing and Mining Dimension (1.18.2)
 
 [![Lobby, Fishing and Mining Dimension Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 [![Lobby, Fishing and Mining Dimension Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 
 Provides a easy to use lobby (with an underground maze), fishing and optimized mining dimension for you and your friends.
+
+![Example images](examples/logo.gif)
 
 ## Features ⭐
 

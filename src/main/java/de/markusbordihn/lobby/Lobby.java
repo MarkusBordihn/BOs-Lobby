@@ -28,6 +28,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import de.markusbordihn.lobby.block.ModBlocks;
 import de.markusbordihn.lobby.item.ModItems;
+import de.markusbordihn.lobby.utils.StopModReposts;
 
 @Mod(Constants.MOD_ID)
 public class Lobby {
@@ -36,6 +37,8 @@ public class Lobby {
 
   public Lobby() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+    StopModReposts.checkStopModReposts();
 
     modEventBus.addListener(ClientSetup::new);
 

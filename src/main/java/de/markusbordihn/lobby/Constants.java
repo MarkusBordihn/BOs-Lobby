@@ -32,6 +32,7 @@ public final class Constants {
   public static final String MOD_COMMAND = "lobby";
   public static final String MOD_ID = "lobby";
   public static final String MOD_NAME = "Lobby";
+  public static final String MOD_URL = "https://www.curseforge.com/minecraft/mc-mods/lobby";
   public static final String ISSUE_REPORT = "https://github.com/MarkusBordihn/BOs-Lobby/issues";
 
   // Prefixes
