@@ -33,38 +33,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
-@EventBusSubscriber
 public class GamingCommand extends CustomCommand {
 
   public static final String DIMENSION_NAME = "Gaming";
   public static final int PERMISSION_LEVEL = 0;
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static boolean gamingRestrictCommand = COMMON.gamingRestrictCommand.get();
-  private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
-  private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
-  private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
   private static final GamingCommand command = new GamingCommand();
-
-  @SubscribeEvent
-  public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    gamingRestrictCommand = COMMON.gamingRestrictCommand.get();
-    generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
-    teleportDelayCounter = COMMON.teleportDelayCounter.get();
-    teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
-  }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
     if (Boolean.FALSE.equals(COMMON.gamingEnabled.get())) {
@@ -87,19 +70,19 @@ public class GamingCommand extends CustomCommand {
           DIMENSION_NAME, coolDownTimer - currentTimer).withStyle(ChatFormatting.RED));
       return 0;
     } else {
-      coolDownPlayerMap.put(player, currentTimer + generalCommandCoolDown);
+      coolDownPlayerMap.put(player, currentTimer + COMMON.generalCommandCoolDown.get());
     }
 
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getGamingDimension() == null) {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
           DIMENSION_NAME, DimensionManager.getGamingDimensionName()));
-    } else if (!gamingRestrictCommand
+    } else if (Boolean.TRUE.equals(!COMMON.gamingRestrictCommand.get())
         || player.getLevel() != DimensionManager.getGamingDimension()) {
-      if (teleportDelayEnabled && teleportDelayCounter > 0) {
-        sendFeedback(context, Component
-            .translatable(Constants.TELEPORT_TO_IN_MESSAGE, DIMENSION_NAME, teleportDelayCounter)
-            .withStyle(ChatFormatting.GREEN));
+      if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
+          && COMMON.teleportDelayCounter.get() > 0) {
+        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE,
+            DIMENSION_NAME, COMMON.teleportDelayCounter.get()).withStyle(ChatFormatting.GREEN));
         PlayerTeleportManager.teleportPlayerToGaming(player);
       } else {
         sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME)

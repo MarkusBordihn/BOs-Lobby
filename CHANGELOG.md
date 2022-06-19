@@ -5,6 +5,15 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.06.19
+
+- Added new Mining base for new level generator settings.
+Note: The new random level generator will never generate the same caves at the same place, even with the same seed.
+For this reason it was not possible to re-use the old mining base or to create a seamless integration with the generated world.
+
+- Added support for live config updates for specific settings.
+- Fixed ConfigValue#get() change.
+
 ### 2022.06.10
 
 - Added countdown for teleport commands to avoid cheating and allowing fair PVP.

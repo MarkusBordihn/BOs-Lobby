@@ -46,9 +46,6 @@ public class PlayerTeleportManager {
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static boolean teleportDelayCounterVisible = COMMON.teleportDelayCounterVisible.get();
-  private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
-  private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Set<PlayerValidation> teleportPlayerToDefaultList = ConcurrentHashMap.newKeySet();
   private static Set<PlayerValidation> teleportPlayerToFishingList = ConcurrentHashMap.newKeySet();
@@ -66,20 +63,18 @@ public class PlayerTeleportManager {
 
   @SubscribeEvent
   public static void onServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    teleportDelayCounter = COMMON.teleportDelayCounter.get();
-    teleportDelayCounterVisible = COMMON.teleportDelayCounterVisible.get();
-    teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
-
-    if (teleportDelayEnabled && teleportDelayCounter > 0) {
-      log.info("Teleporting of Players will be delayed by {} seconds.", teleportDelayCounter);
+    if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
+        && COMMON.teleportDelayCounter.get() > 0) {
+      log.info("Teleporting of Players will be delayed by {} seconds.",
+          COMMON.teleportDelayCounter.get());
     }
   }
 
   @SubscribeEvent
   public static void handleServerTickEvent(TickEvent.ServerTickEvent event) {
 
-    if (event.phase == TickEvent.Phase.END || !teleportDelayEnabled || teleportDelayCounter <= 0
-        || ticker++ < PLAYER_TELEPORT_CHECK) {
+    if (Boolean.TRUE.equals(event.phase == TickEvent.Phase.END || !COMMON.teleportDelayEnabled.get()
+        || COMMON.teleportDelayCounter.get() <= 0) || ticker++ < PLAYER_TELEPORT_CHECK) {
       return;
     }
 
@@ -134,7 +129,8 @@ public class PlayerTeleportManager {
                   .withStyle(ChatFormatting.RED));
           playerValidationSet.remove(playerValidation);
           return;
-        } else if (playerValidation.getValidationTimeSecondsElapsed() >= teleportDelayCounter) {
+        } else if (playerValidation.getValidationTimeSecondsElapsed() >= COMMON.teleportDelayCounter
+            .get()) {
           switch (dimensionName) {
             case "Default":
               DimensionManager.teleportToDefault(player);
@@ -160,11 +156,11 @@ public class PlayerTeleportManager {
           playerValidationSet.remove(playerValidation);
           return;
         } else {
-          long teleportCounterRemaining =
-              teleportDelayCounter - playerValidation.getValidationTimeSecondsElapsed();
+          long teleportCounterRemaining = COMMON.teleportDelayCounter.get()
+              - playerValidation.getValidationTimeSecondsElapsed();
           log.debug("Player {} has not moved, teleport in {} secs ...", username,
               teleportCounterRemaining);
-          if (teleportDelayCounterVisible) {
+          if (Boolean.TRUE.equals(COMMON.teleportDelayCounterVisible.get())) {
             player.sendSystemMessage(
                 Component.translatable(Constants.TEXT_PREFIX + "teleport_remaining", dimensionName,
                     teleportCounterRemaining).withStyle(ChatFormatting.GREEN));

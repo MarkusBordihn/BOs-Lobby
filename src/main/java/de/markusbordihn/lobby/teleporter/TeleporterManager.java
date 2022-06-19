@@ -45,42 +45,11 @@ public class TeleporterManager {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
-  // Custom spawn definitions
-  private static boolean defaultUseCustomSpawnPoint = COMMON.defaultUseCustomSpawnPoint.get();
-  private static int defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
-  private static int defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
-  private static int defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
-
-  private static boolean fishingUseCustomSpawnPoint = COMMON.fishingUseCustomSpawnPoint.get();
-  private static int fishingSpawnPointX = COMMON.fishingSpawnPointX.get();
-  private static int fishingSpawnPointY = COMMON.fishingSpawnPointY.get();
-  private static int fishingSpawnPointZ = COMMON.fishingSpawnPointZ.get();
-
-  private static boolean gamingUseCustomSpawnPoint = COMMON.gamingUseCustomSpawnPoint.get();
-  private static int gamingSpawnPointX = COMMON.gamingSpawnPointX.get();
-  private static int gamingSpawnPointY = COMMON.gamingSpawnPointY.get();
-  private static int gamingSpawnPointZ = COMMON.gamingSpawnPointZ.get();
-
-  private static boolean lobbyUseCustomSpawnPoint = COMMON.lobbyUseCustomSpawnPoint.get();
-  private static int lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
-  private static int lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
-  private static int lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
-
-  private static boolean miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
-  private static int miningSpawnPointX = COMMON.miningSpawnPointX.get();
-  private static int miningSpawnPointY = COMMON.miningSpawnPointY.get();
-  private static int miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
-
-  private static boolean voidUseCustomSpawnPoint = COMMON.voidUseCustomSpawnPoint.get();
-  private static int voidSpawnPointX = COMMON.voidSpawnPointX.get();
-  private static int voidSpawnPointY = COMMON.voidSpawnPointY.get();
-  private static int voidSpawnPointZ = COMMON.voidSpawnPointZ.get();
-
   // Default spawn points for the default structures
   private static BlockPos defaultFishingSpawnPoint = new BlockPos(42, 51, 12);
   private static BlockPos defaultGamingSpawnPoint = new BlockPos(0, 4, 0);
   private static BlockPos defaultLobbySpawnPoint = new BlockPos(9, 11, 9);
-  private static BlockPos defaultMiningSpawnPoint = new BlockPos(203, 9, 560);
+  private static BlockPos defaultMiningSpawnPoint = new BlockPos(194, 22, 563);
   private static BlockPos defaultVoidSpawnPoint = new BlockPos(0, 4, 0);
 
   // Clickable commands
@@ -95,35 +64,6 @@ public class TeleporterManager {
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    // Make sure we have the current config settings.
-    defaultSpawnPointX = COMMON.defaultSpawnPointX.get();
-    defaultSpawnPointY = COMMON.defaultSpawnPointY.get();
-    defaultSpawnPointZ = COMMON.defaultSpawnPointZ.get();
-
-    fishingUseCustomSpawnPoint = COMMON.fishingUseCustomSpawnPoint.get();
-    fishingSpawnPointX = COMMON.fishingSpawnPointX.get();
-    fishingSpawnPointY = COMMON.fishingSpawnPointY.get();
-    fishingSpawnPointZ = COMMON.fishingSpawnPointZ.get();
-
-    gamingUseCustomSpawnPoint = COMMON.gamingUseCustomSpawnPoint.get();
-    gamingSpawnPointX = COMMON.gamingSpawnPointX.get();
-    gamingSpawnPointY = COMMON.gamingSpawnPointY.get();
-    gamingSpawnPointZ = COMMON.gamingSpawnPointZ.get();
-
-    lobbyUseCustomSpawnPoint = COMMON.lobbyUseCustomSpawnPoint.get();
-    lobbySpawnPointX = COMMON.lobbySpawnPointX.get();
-    lobbySpawnPointY = COMMON.lobbySpawnPointY.get();
-    lobbySpawnPointZ = COMMON.lobbySpawnPointZ.get();
-
-    miningUseCustomSpawnPoint = COMMON.miningUseCustomSpawnPoint.get();
-    miningSpawnPointX = COMMON.miningSpawnPointX.get();
-    miningSpawnPointY = COMMON.miningSpawnPointY.get();
-    miningSpawnPointZ = COMMON.miningSpawnPointZ.get();
-
-    voidUseCustomSpawnPoint = COMMON.voidUseCustomSpawnPoint.get();
-    voidSpawnPointX = COMMON.voidSpawnPointX.get();
-    voidSpawnPointY = COMMON.voidSpawnPointY.get();
-    voidSpawnPointZ = COMMON.voidSpawnPointZ.get();
 
     // Construct Clickable commands
     fishingCommand = Component.literal("/" + COMMON.fishingCommandName.get())
@@ -145,34 +85,35 @@ public class TeleporterManager {
         .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(
             new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + COMMON.voidCommandName.get())));
 
-    if (defaultUseCustomSpawnPoint) {
+    if (Boolean.TRUE.equals(COMMON.defaultUseCustomSpawnPoint.get())) {
       log.info("{} Using custom spawn point {} {} {} for default dimension",
-          Constants.LOG_TELEPORT_MANAGER_PREFIX, defaultSpawnPointX, defaultSpawnPointY,
-          defaultSpawnPointZ);
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.defaultSpawnPointX.get(),
+          COMMON.defaultSpawnPointY.get(), COMMON.defaultSpawnPointZ.get());
     }
-    if (fishingUseCustomSpawnPoint) {
+    if (Boolean.TRUE.equals(COMMON.fishingUseCustomSpawnPoint.get())) {
       log.info("{} Using custom spawn point {} {} {} for fishing dimension",
-          Constants.LOG_TELEPORT_MANAGER_PREFIX, fishingSpawnPointX, fishingSpawnPointY,
-          fishingSpawnPointZ);
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.fishingSpawnPointX.get(),
+          COMMON.fishingSpawnPointY.get(), COMMON.fishingSpawnPointZ.get());
     }
-    if (gamingUseCustomSpawnPoint) {
+    if (Boolean.TRUE.equals(COMMON.gamingUseCustomSpawnPoint.get())) {
       log.info("{} Using custom spawn point {} {} {} for gaming dimension",
-          Constants.LOG_TELEPORT_MANAGER_PREFIX, gamingSpawnPointX, gamingSpawnPointY,
-          gamingSpawnPointZ);
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.gamingSpawnPointX.get(),
+          COMMON.gamingSpawnPointY.get(), COMMON.gamingSpawnPointZ.get());
     }
-    if (lobbyUseCustomSpawnPoint) {
+    if (Boolean.TRUE.equals(COMMON.lobbyUseCustomSpawnPoint.get())) {
       log.info("{} Using custom spawn point {} {} {} for lobby dimension",
-          Constants.LOG_TELEPORT_MANAGER_PREFIX, lobbySpawnPointX, lobbySpawnPointY,
-          lobbySpawnPointZ);
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.lobbySpawnPointX.get(),
+          COMMON.lobbySpawnPointY.get(), COMMON.lobbySpawnPointZ.get());
     }
-    if (miningUseCustomSpawnPoint) {
+    if (Boolean.TRUE.equals(COMMON.miningUseCustomSpawnPoint.get())) {
       log.info("{} Using custom spawn point {} {} {} for mining dimension",
-          Constants.LOG_TELEPORT_MANAGER_PREFIX, miningSpawnPointX, miningSpawnPointY,
-          miningSpawnPointZ);
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.miningSpawnPointX.get(),
+          COMMON.miningSpawnPointY.get(), COMMON.miningSpawnPointZ.get());
     }
-    if (voidUseCustomSpawnPoint) {
+    if (Boolean.TRUE.equals(COMMON.voidUseCustomSpawnPoint.get())) {
       log.info("{} Using custom spawn point {} {} {} for void dimension",
-          Constants.LOG_TELEPORT_MANAGER_PREFIX, voidSpawnPointX, voidSpawnPointY, voidSpawnPointZ);
+          Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.voidSpawnPointX.get(),
+          COMMON.voidSpawnPointY.get(), COMMON.voidSpawnPointZ.get());
     }
   }
 
@@ -180,9 +121,10 @@ public class TeleporterManager {
     ServerLevel defaultDimension = DimensionManager.getDefaultDimension();
     boolean isSameDimension = player.level == defaultDimension;
     boolean successfullyTeleported = false;
-    if (defaultUseCustomSpawnPoint) {
-      successfullyTeleported = teleportPlayer(player, defaultDimension, defaultSpawnPointX,
-          defaultSpawnPointY, defaultSpawnPointZ);
+    if (Boolean.TRUE.equals(COMMON.defaultUseCustomSpawnPoint.get())) {
+      successfullyTeleported =
+          teleportPlayer(player, defaultDimension, COMMON.defaultSpawnPointX.get(),
+              COMMON.defaultSpawnPointY.get(), COMMON.defaultSpawnPointZ.get());
     } else {
       successfullyTeleported = teleportPlayer(player, defaultDimension);
     }
@@ -197,9 +139,10 @@ public class TeleporterManager {
     ServerLevel fishingDimension = DimensionManager.getFishingDimension();
     boolean isSameDimension = player.level == fishingDimension;
     boolean successfullyTeleported = false;
-    if (fishingUseCustomSpawnPoint) {
-      successfullyTeleported = teleportPlayer(player, fishingDimension, fishingSpawnPointX,
-          fishingSpawnPointY, fishingSpawnPointZ);
+    if (Boolean.TRUE.equals(COMMON.fishingUseCustomSpawnPoint.get())) {
+      successfullyTeleported =
+          teleportPlayer(player, fishingDimension, COMMON.fishingSpawnPointX.get(),
+              COMMON.fishingSpawnPointY.get(), COMMON.fishingSpawnPointZ.get());
     } else {
       successfullyTeleported =
           teleportPlayer(player, fishingDimension, defaultFishingSpawnPoint.getX(),
@@ -216,9 +159,10 @@ public class TeleporterManager {
     ServerLevel gamingDimension = DimensionManager.getGamingDimension();
     boolean isSameDimension = player.level == gamingDimension;
     boolean successfullyTeleported = false;
-    if (gamingUseCustomSpawnPoint) {
-      successfullyTeleported = teleportPlayer(player, gamingDimension, gamingSpawnPointX,
-          gamingSpawnPointY, gamingSpawnPointZ);
+    if (Boolean.TRUE.equals(COMMON.gamingUseCustomSpawnPoint.get())) {
+      successfullyTeleported =
+          teleportPlayer(player, gamingDimension, COMMON.gamingSpawnPointX.get(),
+              COMMON.gamingSpawnPointY.get(), COMMON.gamingSpawnPointZ.get());
     } else {
       successfullyTeleported =
           teleportPlayer(player, gamingDimension, defaultGamingSpawnPoint.getX(),
@@ -235,9 +179,9 @@ public class TeleporterManager {
     ServerLevel lobbyDimension = DimensionManager.getLobbyDimension();
     boolean isSameDimension = player.level == lobbyDimension;
     boolean successfullyTeleported = false;
-    if (lobbyUseCustomSpawnPoint) {
-      successfullyTeleported = teleportPlayer(player, lobbyDimension, lobbySpawnPointX,
-          lobbySpawnPointY, lobbySpawnPointZ);
+    if (Boolean.TRUE.equals(COMMON.lobbyUseCustomSpawnPoint.get())) {
+      successfullyTeleported = teleportPlayer(player, lobbyDimension, COMMON.lobbySpawnPointX.get(),
+          COMMON.lobbySpawnPointY.get(), COMMON.lobbySpawnPointZ.get());
     } else {
       successfullyTeleported = teleportPlayer(player, lobbyDimension, defaultLobbySpawnPoint.getX(),
           defaultLobbySpawnPoint.getY(), defaultLobbySpawnPoint.getZ());
@@ -253,9 +197,10 @@ public class TeleporterManager {
     ServerLevel miningDimension = DimensionManager.getMiningDimension();
     boolean isSameDimension = player.level == miningDimension;
     boolean successfullyTeleported = false;
-    if (miningUseCustomSpawnPoint) {
-      successfullyTeleported = teleportPlayer(player, miningDimension, miningSpawnPointX,
-          miningSpawnPointY, miningSpawnPointZ);
+    if (Boolean.TRUE.equals(COMMON.miningUseCustomSpawnPoint.get())) {
+      successfullyTeleported =
+          teleportPlayer(player, miningDimension, COMMON.miningSpawnPointX.get(),
+              COMMON.miningSpawnPointY.get(), COMMON.miningSpawnPointZ.get());
     } else {
       successfullyTeleported =
           teleportPlayer(player, miningDimension, defaultMiningSpawnPoint.getX(),
@@ -272,9 +217,9 @@ public class TeleporterManager {
     ServerLevel voidDimension = DimensionManager.getVoidDimension();
     boolean isSameDimension = player.level == voidDimension;
     boolean successfullyTeleported = false;
-    if (voidUseCustomSpawnPoint) {
-      successfullyTeleported =
-          teleportPlayer(player, voidDimension, voidSpawnPointX, voidSpawnPointY, voidSpawnPointZ);
+    if (Boolean.TRUE.equals(COMMON.voidUseCustomSpawnPoint.get())) {
+      successfullyTeleported = teleportPlayer(player, voidDimension, COMMON.voidSpawnPointX.get(),
+          COMMON.voidSpawnPointY.get(), COMMON.voidSpawnPointZ.get());
     } else {
       successfullyTeleported = teleportPlayer(player, voidDimension, defaultVoidSpawnPoint.getX(),
           defaultVoidSpawnPoint.getY(), defaultVoidSpawnPoint.getZ());

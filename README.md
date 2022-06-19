@@ -38,6 +38,7 @@ You will start in a mining base which provides you some of the basic stuff.
 To return to the mining base just use the `/mining` command.
 
 ![Screenshot of the mining dimension][mining_dimension]
+![Screenshot of the mining dimension basement][mining_dimension_basement]
 
 **Note:** The first load of the dimension could take some time, because the need to generate the world and preparing the spawning area.
 
@@ -221,8 +222,11 @@ Please only download the mod from the official CurseForge page or with the offic
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
 
 [mod_page]: https://www.curseforge.com/minecraft/mc-mods/lobby
-[fishing_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/fishing_dimension.png
-[lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
-[mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
+
+[fishing_dimension]: examples/fishing_dimension.png
+[lobby_dimension]: examples/lobby_dimension.png
+[mining_dimension]: examples/mining_dimension_v5.png
+[mining_dimension_basement]: examples/mining_dimension_basement_v5.png
+
 [shutup-experimental-settings]: https://www.curseforge.com/minecraft/mc-mods/shutup-experimental-settings
 [en_us.json]: src/main/resources/assets/lobby/lang/en_us.json
