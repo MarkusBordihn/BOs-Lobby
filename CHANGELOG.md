@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.07.12
+
+- Refactored code for version 1.19-41.0.96.
+
 ### 2022.06.19
 
 - Added new Mining base for new level generator settings.

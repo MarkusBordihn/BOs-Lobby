@@ -111,7 +111,7 @@ public class PlayerManager {
     if (!automaticTransferIsEnabled()) {
       return;
     }
-    String username = event.getPlayer().getName().getString();
+    String username = event.getEntity().getName().getString();
     if (!username.isEmpty()) {
       ServerPlayer player =
           ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(username);
@@ -139,7 +139,7 @@ public class PlayerManager {
     if (!automaticTransferIsEnabled()) {
       return;
     }
-    String username = event.getPlayer().getName().getString();
+    String username = event.getEntity().getName().getString();
     if (!username.isEmpty()) {
       log.debug("{} Player {} logged out.", Constants.LOG_PLAYER_MANAGER_PREFIX, event.getEntity());
       removePlayer(username);

@@ -45,7 +45,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -139,7 +139,7 @@ public class DimensionManager {
 
   @SubscribeEvent
   public static void onChangeDimension(PlayerChangedDimensionEvent event) {
-    Player player = event.getPlayer();
+    Player player = event.getEntity();
     String fromLocation = event.getFrom().location().toString();
     String toLocation = event.getTo().location().toString();
 
@@ -238,10 +238,10 @@ public class DimensionManager {
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void handleEntityJoinWorldEvent(EntityJoinWorldEvent event) {
+  public static void handleEntityJoinLevelEvent(EntityJoinLevelEvent event) {
 
     // Ignore client side and everything which is not the mining dimension.
-    Level level = event.getWorld();
+    Level level = event.getLevel();
     String dimensionLocation = level.dimension().location().toString();
     if (level.isClientSide() || !dimensionLocation.equals(COMMON.miningDimension.get())) {
       return;
@@ -533,7 +533,7 @@ public class DimensionManager {
   private static void handleSpawnEvent(LivingSpawnEvent event) {
 
     // Ignore client side.
-    LevelAccessor level = event.getWorld();
+    LevelAccessor level = event.getLevel();
     if (level.isClientSide()) {
       return;
     }
