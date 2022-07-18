@@ -21,7 +21,7 @@ Provides a easy to use lobby (with an underground maze), fishing and optimized m
 
 **Note: Please make sure to create regular backups of your dimensions, before installing or updating this mod.**
 
-## Lobby Dimension
+## 🏕️ Lobby Dimension
 
 The lobby dimension is a place to hang out with friends or to enjoy some of the provided content (wip).
 But you are free to build your own lobby as well or you can just expand the existing lobby.
@@ -30,7 +30,7 @@ All players are automatically in the adventure game mode in the lobby.
 
 ![Screenshot of the lobby dimension][lobby_dimension]
 
-## Mining Dimension
+## ⛏️ Mining Dimension
 
 The mining dimension will be generated on the first load over the `/mining` command.
 It will not include any treasure chest or any mobs, so it could be only use for mining.
@@ -43,7 +43,7 @@ To return to the mining base just use the `/mining` command.
 
 **Note:** The first load of the dimension could take some time, because the need to generate the world and preparing the spawning area.
 
-## Fishing Dimension
+## 🐟 Fishing Dimension
 
 The fishing dimension will be generated on the first load over the `/fishing` command.
 It will include only fish's and ocean relevant structures.
@@ -51,15 +51,15 @@ All players are automatically in the adventure game mode in the fishing dimensio
 
 ![Screenshot of the fishing dimension][fishing_dimension]
 
-## Gaming Dimension
+## 🎲 Gaming Dimension
 
 The optional gaming dimension could be enabled over the config file and could be used as based for your gaming dimension.
 
-## Void Dimension
+## 🕳️ Void Dimension
 
 The optional void dimension could be enabled over the config file and could be used for anything else like mob farm or PVP area.
 
-## User Commands
+## #️⃣ User Commands
 
 - **/fishing** teleports you to the fishing dimension
 - **/lobby** teleports you to the lobby
@@ -70,13 +70,13 @@ The optional void dimension could be enabled over the config file and could be u
 
 Note: The command names could be adjusted over the config file.
 
-## Customization
+## ⚙️ Customization
 
 You can customize the fishing, gaming, lobby, mining and void dimension over data files or by changing to creative mode.
 
 **Please make sure to create regular backups for your lobby and/or customized mining dimension.**
 
-### Lobby Customization
+### 🏕️ Lobby Customization ⚙️
 
 The lobby will be automatically in the game mode adventure.
 Use the following data files to customize the lobby:
@@ -88,7 +88,7 @@ Use the following data files to customize the lobby:
 
 **Note:** The `lobby_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
-### Mining Customization
+### ⛏️ Mining Customization ⚙️
 
 The optimization are parts of the code, you can use the following data files for customization:
 
@@ -98,7 +98,7 @@ The optimization are parts of the code, you can use the following data files for
 
 **Note:** The `mining_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
-### Fishing Customization
+### 🐟 Fishing Customization ⚙️
 
 The fishing dimension will be automatically in the game mode adventure.
 Use the following data files to customize the lobby:
@@ -110,7 +110,7 @@ Use the following data files to customize the lobby:
 
 **Note:** The `fishing_dimension_load.mcfunction` file will be only loaded once (per world) to make sure your changes are not overwritten.
 
-## Translations / Messages
+## 🌐 Translations / Messages
 
 The messages and text could be adjusted over the translation file [en_us.json][en_us.json] in a resource pack.
 
@@ -138,7 +138,7 @@ You can use the following placeholders inside the teleport countdown messages:
 
 Example: `Teleporting to %1$s in %2$s secs, please stand still!` or `Teleporting to %1$s in %2$s secs ...`
 
-## FAQ
+## ❓FAQ
 
 ### How can I reset a dimension ?
 
@@ -203,6 +203,14 @@ Normally the issue is fixed by just restarting the server, you will additionally
 
 Unfortunately I have no time to work on a separate fabric version.
 
+### How to remove the mod and restore my former world ?
+
+The mod adds the new dimension over data-packs, as soon you remove the mod, these data-packs are missing and Minecraft is unable to create the additional dimensions.
+
+**The easiest way would be to restore the recommend backup you created before installing or updating the mod.**
+
+For more details, please check: [How to restore your world ?][how_to_restore_your_world]
+
 ## Version Status Overview 🛠️
 
 | Version        | Status                |
@@ -211,7 +219,8 @@ Unfortunately I have no time to work on a separate fabric version.
 | Forge 1.16.5   | ❌ Not planned        |
 | Forge 1.17.1   | ❌ Not planned        |
 | Forge 1.18.1   | ⚠️ Maintenance only   |
-| Forge 1.18.2   | ✔️ Active development |
+| Forge 1.18.2   | ⚠️ Maintenance only   |
+| Forge 1.19     | ✔️ Active development |
 
 ## Note
 
@@ -227,3 +236,4 @@ If you are downloading this mod from other sources we could not make sure that i
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
 [shutup-experimental-settings]: https://www.curseforge.com/minecraft/mc-mods/shutup-experimental-settings
 [en_us.json]: src/main/resources/assets/lobby/lang/en_us.json
+[how_to_restore_your_world]: doc/HOW_TO_RESTORE_YOUR_WORLD.md
