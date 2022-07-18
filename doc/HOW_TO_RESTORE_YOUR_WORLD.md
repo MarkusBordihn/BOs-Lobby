@@ -8,7 +8,7 @@ The mod adds the new dimensions over data-packs, as soon you remove the mod, the
 
 The easiest way would be to restore the recommend backup you created before installing or updating the mod.
 
-In most cases it's already enough to copy the former level.dat` to the current world.
+In most cases it's already enough to copy the former `level.dat` to the current world.
 
 **Note: Copy the former `level.dat` only works in the case you haven't added any new mods or major changes in between!**
 
