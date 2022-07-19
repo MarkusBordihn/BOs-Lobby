@@ -25,33 +25,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.ambient.Bat;
-import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.vehicle.MinecartChest;
-import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -113,27 +97,6 @@ public class DimensionManager {
     if (COMMON.defaultHeal.get() > 0) {
       log.info("{} Enable heal for default dimension for {} ticks.",
           Constants.LOG_DIMENSION_MANAGER_PREFIX, COMMON.defaultHeal.get());
-    }
-
-    if (Boolean.TRUE.equals(COMMON.fishingDisableMobSpawning.get())) {
-      log.info("{} Disable Mob Spawning for fishing dimension.",
-          Constants.LOG_DIMENSION_MANAGER_PREFIX);
-    }
-    if (Boolean.TRUE.equals(COMMON.lobbyDisableMobSpawning.get())) {
-      log.info("{} Disable mob spawning for lobby dimension.",
-          Constants.LOG_DIMENSION_MANAGER_PREFIX);
-    }
-    if (Boolean.TRUE.equals(COMMON.miningDisableBatSpawning.get())) {
-      log.info("{} Disable bat spawning for mining dimension.",
-          Constants.LOG_DIMENSION_MANAGER_PREFIX);
-    }
-    if (Boolean.TRUE.equals(COMMON.miningDisableMinecartChestSpawning.get())) {
-      log.info("{} Disable minecraft chest spawning for mining dimension.",
-          Constants.LOG_DIMENSION_MANAGER_PREFIX);
-    }
-    if (Boolean.TRUE.equals(COMMON.miningDisableMobSpawning.get())) {
-      log.info("{} Disable mob spawning for mining dimension.",
-          Constants.LOG_DIMENSION_MANAGER_PREFIX);
     }
   }
 
@@ -235,46 +198,6 @@ public class DimensionManager {
         gameTypeReset.remove(serverPlayer);
       }
     }
-  }
-
-  @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void handleEntityJoinLevelEvent(EntityJoinLevelEvent event) {
-
-    // Ignore client side and everything which is not the mining dimension.
-    Level level = event.getLevel();
-    String dimensionLocation = level.dimension().location().toString();
-    if (level.isClientSide() || !dimensionLocation.equals(COMMON.miningDimension.get())) {
-      return;
-    }
-
-    // Ignore specific entities and deny spawn of all others.
-    Entity entity = event.getEntity();
-    if (entity instanceof ItemEntity || entity instanceof ExperienceOrb
-        || entity instanceof LightningBolt || entity instanceof FallingBlockEntity
-        || entity instanceof Projectile || entity instanceof Player) {
-      return;
-    }
-
-    // Allow/deny Minecart Chest spawning
-    if (Boolean.TRUE.equals(COMMON.miningDisableMinecartChestSpawning.get())
-        && entity instanceof MinecartChest) {
-      event.setResult(Event.Result.DENY);
-    }
-
-    // Allow/deny Mob spawning
-    if (Boolean.TRUE.equals(COMMON.miningDisableMobSpawning.get())) {
-      event.setResult(Event.Result.DENY);
-    }
-  }
-
-  @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void handleLivingCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event) {
-    handleSpawnEvent(event);
-  }
-
-  @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void handleLivingSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn event) {
-    handleSpawnEvent(event);
   }
 
   private static void mapServerLevel(MinecraftServer server) {
@@ -416,10 +339,13 @@ public class DimensionManager {
     return miningLevel;
   }
 
+  public static ServerLevel getMiningDimensionRaw() {
+    return miningLevel;
+  }
+
   public static String getMiningDimensionName() {
     return COMMON.miningDimension.get();
   }
-
 
   public static ServerLevel getDefaultDimension() {
     if (defaultLevel == null) {
@@ -528,100 +454,6 @@ public class DimensionManager {
 
   private static boolean shouldChangeGameType(Player player) {
     return !(player.isSpectator() || (player.hasPermissions(2) && player.isCreative()));
-  }
-
-  private static void handleSpawnEvent(LivingSpawnEvent event) {
-
-    // Ignore client side.
-    LevelAccessor level = event.getLevel();
-    if (level.isClientSide()) {
-      return;
-    }
-
-    // Ignore null entities and specific entities.
-    Entity entity = event.getEntity();
-    if (entity == null || entity instanceof Projectile) {
-      return;
-    }
-
-    // Control spawns depending on the dimension.
-    String dimensionLocation = entity.getLevel().dimension().location().toString();
-    if (Boolean.TRUE.equals(COMMON.fishingDisableMobSpawning.get())
-        && COMMON.fishingDimension.get().equals(dimensionLocation)) {
-      handleSpawnEventFishing(event);
-    } else if (Boolean.TRUE.equals(COMMON.lobbyDisableMobSpawning.get())
-        && COMMON.lobbyDimension.get().equals(dimensionLocation)) {
-      handleSpawnEventLobby(event);
-    } else if (Boolean.TRUE.equals(COMMON.gamingDisableMobSpawning.get())
-        && COMMON.gamingDimension.get().equals(dimensionLocation)) {
-      handleSpawnEventGaming(event);
-    } else if ((COMMON.miningDisableBatSpawning.get()
-        || COMMON.miningDisableMinecartChestSpawning.get() || COMMON.miningDisableMobSpawning.get())
-        && COMMON.miningDimension.get().equals(dimensionLocation)) {
-      handleSpawnEventMining(level, entity, event);
-    } else if (Boolean.TRUE.equals(COMMON.voidDisableMobSpawning.get())
-        && COMMON.voidDimension.get().equals(dimensionLocation)) {
-      handleSpawnEventVoid(event);
-    }
-  }
-
-  private static void handleSpawnEventFishing(LivingSpawnEvent event) {
-    if (Boolean.TRUE.equals(COMMON.fishingDisableMobSpawning.get())) {
-      event.setResult(Event.Result.DENY);
-    }
-  }
-
-  private static void handleSpawnEventGaming(LivingSpawnEvent event) {
-    if (Boolean.TRUE.equals(COMMON.gamingDisableMobSpawning.get())) {
-      event.setResult(Event.Result.DENY);
-    }
-  }
-
-  private static void handleSpawnEventLobby(LivingSpawnEvent event) {
-    if (Boolean.TRUE.equals(COMMON.lobbyDisableMobSpawning.get())) {
-      event.setResult(Event.Result.DENY);
-    }
-  }
-
-  private static void handleSpawnEventMining(LevelAccessor level, Entity entity,
-      LivingSpawnEvent event) {
-    // Removing spawners as soon they try to spawn something.
-    if (COMMON.miningRemoveSpawner.get() && event instanceof LivingSpawnEvent.CheckSpawn checkSpawn
-        && checkSpawn.getSpawner() != null) {
-      BaseSpawner spawner = checkSpawn.getSpawner();
-      BlockPos blockPos = spawner.getSpawnerBlockEntity().getBlockPos();
-      if (blockPos != null) {
-        log.debug("{} Removing spawner {} at {}", Constants.LOG_DIMENSION_MANAGER_PREFIX, spawner,
-            blockPos);
-        level.removeBlock(blockPos, true);
-      }
-    }
-
-    // Allow/deny bat spawning for better cave experience
-    if (entity instanceof Bat) {
-      if (Boolean.TRUE.equals(COMMON.miningDisableBatSpawning.get())) {
-        event.setResult(Event.Result.DENY);
-      }
-      return;
-    }
-
-    // Allow/deny Minecart Chest spawning
-    if (entity instanceof MinecartChest) {
-      if (Boolean.TRUE.equals(COMMON.miningDisableMinecartChestSpawning.get())) {
-        event.setResult(Event.Result.DENY);
-      }
-      return;
-    }
-
-    if (Boolean.TRUE.equals(COMMON.miningDisableMobSpawning.get())) {
-      event.setResult(Event.Result.DENY);
-    }
-  }
-
-  private static void handleSpawnEventVoid(LivingSpawnEvent event) {
-    if (Boolean.TRUE.equals(COMMON.voidDisableMobSpawning.get())) {
-      event.setResult(Event.Result.DENY);
-    }
   }
 
 }

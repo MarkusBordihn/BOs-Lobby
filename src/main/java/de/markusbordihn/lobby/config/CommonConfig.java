@@ -67,7 +67,9 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue defaultEnabled;
     public final ForgeConfigSpec.ConfigValue<String> defaultDimension;
+    public final ForgeConfigSpec.ConfigValue<String> defaultDimensionName;
     public final ForgeConfigSpec.ConfigValue<String> defaultCommandName;
+    public final ForgeConfigSpec.IntValue defaultCommandPermissionLevel;
     public final ForgeConfigSpec.BooleanValue defaultRestrictCommand;
     public final ForgeConfigSpec.BooleanValue defaultUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue defaultFireProtection;
@@ -79,7 +81,9 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue lobbyEnabled;
     public final ForgeConfigSpec.ConfigValue<String> lobbyDimension;
+    public final ForgeConfigSpec.ConfigValue<String> lobbyDimensionName;
     public final ForgeConfigSpec.ConfigValue<String> lobbyCommandName;
+    public final ForgeConfigSpec.IntValue lobbyCommandPermissionLevel;
     public final ForgeConfigSpec.BooleanValue lobbyRestrictCommand;
     public final ForgeConfigSpec.BooleanValue lobbyDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue lobbyUseCustomSpawnPoint;
@@ -90,11 +94,14 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue miningEnabled;
     public final ForgeConfigSpec.ConfigValue<String> miningDimension;
+    public final ForgeConfigSpec.ConfigValue<String> miningDimensionName;
     public final ForgeConfigSpec.ConfigValue<String> miningCommandName;
+    public final ForgeConfigSpec.IntValue miningCommandPermissionLevel;
     public final ForgeConfigSpec.BooleanValue miningRestrictCommand;
     public final ForgeConfigSpec.BooleanValue miningDisableBatSpawning;
     public final ForgeConfigSpec.BooleanValue miningDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue miningDisableMinecartChestSpawning;
+    public final ForgeConfigSpec.BooleanValue miningRemoveLootChest;
     public final ForgeConfigSpec.BooleanValue miningRemoveSpawner;
     public final ForgeConfigSpec.BooleanValue miningUseCustomSpawnPoint;
     public final ForgeConfigSpec.IntValue miningSpawnPointX;
@@ -103,7 +110,9 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue fishingEnabled;
     public final ForgeConfigSpec.ConfigValue<String> fishingDimension;
+    public final ForgeConfigSpec.ConfigValue<String> fishingDimensionName;
     public final ForgeConfigSpec.ConfigValue<String> fishingCommandName;
+    public final ForgeConfigSpec.IntValue fishingCommandPermissionLevel;
     public final ForgeConfigSpec.BooleanValue fishingRestrictCommand;
     public final ForgeConfigSpec.BooleanValue fishingDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue fishingUseCustomSpawnPoint;
@@ -114,7 +123,9 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue gamingEnabled;
     public final ForgeConfigSpec.ConfigValue<String> gamingDimension;
+    public final ForgeConfigSpec.ConfigValue<String> gamingDimensionName;
     public final ForgeConfigSpec.ConfigValue<String> gamingCommandName;
+    public final ForgeConfigSpec.IntValue gamingCommandPermissionLevel;
     public final ForgeConfigSpec.BooleanValue gamingRestrictCommand;
     public final ForgeConfigSpec.BooleanValue gamingDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue gamingUseCustomSpawnPoint;
@@ -125,7 +136,9 @@ public final class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue voidEnabled;
     public final ForgeConfigSpec.ConfigValue<String> voidDimension;
+    public final ForgeConfigSpec.ConfigValue<String> voidDimensionName;
     public final ForgeConfigSpec.ConfigValue<String> voidCommandName;
+    public final ForgeConfigSpec.IntValue voidCommandPermissionLevel;
     public final ForgeConfigSpec.BooleanValue voidRestrictCommand;
     public final ForgeConfigSpec.BooleanValue voidDisableMobSpawning;
     public final ForgeConfigSpec.BooleanValue voidUseCustomSpawnPoint;
@@ -165,9 +178,12 @@ public final class CommonConfig {
       builder.push("Default Dimension");
       defaultEnabled = builder.define("defaultEnabled", true);
       defaultDimension = builder.define("defaultDimension", "minecraft:overworld");
+      defaultDimensionName = builder.define("defaultDimensionName", "Spawn");
       defaultCommandName =
           builder.comment("Command user could use to teleport to the dimension like /spawn")
               .define("defaultCommandName", "spawn");
+      defaultCommandPermissionLevel =
+          builder.defineInRange("defaultCommandPermissionLevel", 0, 0, 4);
       defaultRestrictCommand = builder.comment(
           "If enabled the teleport command could not be used if the user is already in the default dimension.")
           .define("defaultRestrictCommand", false);
@@ -188,9 +204,11 @@ public final class CommonConfig {
       builder.push("Lobby Dimension");
       lobbyEnabled = builder.define("lobbyEnabled", true);
       lobbyDimension = builder.define("lobbyDimension", "lobby:lobby_dimension");
+      lobbyDimensionName = builder.define("lobbyDimensionName", "Lobby");
       lobbyCommandName =
           builder.comment("Command user could use to teleport to the dimension like /lobby")
               .define("lobbyCommandName", "lobby");
+      lobbyCommandPermissionLevel = builder.defineInRange("lobbyCommandPermissionLevel", 0, 0, 4);
       lobbyRestrictCommand = builder.comment(
           "If enabled the teleport command could not be used if the user is already in the lobby dimension.")
           .define("lobbyRestrictCommand", false);
@@ -207,9 +225,11 @@ public final class CommonConfig {
       builder.push("Mining Dimension");
       miningEnabled = builder.define("miningEnabled", true);
       miningDimension = builder.define("miningDimension", "lobby:mining_dimension");
+      miningDimensionName = builder.define("miningDimensionName", "Mining");
       miningCommandName =
           builder.comment("Command user could use to teleport to the dimension like /mining")
               .define("miningCommandName", "mining");
+      miningCommandPermissionLevel = builder.defineInRange("miningCommandPermissionLevel", 0, 0, 4);
       miningRestrictCommand = builder.comment(
           "If enabled the teleport command could not be used if the user is already in the mining dimension.")
           .define("miningRestrictCommand", false);
@@ -217,6 +237,7 @@ public final class CommonConfig {
       miningDisableBatSpawning = builder.define("miningDisableBatSpawning", true);
       miningDisableMinecartChestSpawning =
           builder.define("miningDisableMinecartChestSpawning", true);
+      miningRemoveLootChest = builder.define("miningRemoveLootChest", true);
       miningRemoveSpawner = builder.define("miningRemoveSpawner", true);
       miningUseCustomSpawnPoint = builder.define("miningUseCustomSpawnPoint", false);
       miningSpawnPointX = builder.defineInRange("miningSpawnPointX", 200, -1000, 1000);
@@ -227,9 +248,12 @@ public final class CommonConfig {
       builder.push("Fishing Dimension");
       fishingEnabled = builder.define("fishingEnabled", true);
       fishingDimension = builder.define("fishingDimension", "lobby:fishing_dimension");
+      fishingDimensionName = builder.define("fishingDimensionName", "Fishing");
       fishingCommandName =
           builder.comment("Command user could use to teleport to the dimension like /fishing")
               .define("fishingCommandName", "fishing");
+      fishingCommandPermissionLevel =
+          builder.defineInRange("fishingCommandPermissionLevel", 0, 0, 4);
       fishingRestrictCommand = builder.comment(
           "If enabled the teleport command could not be used if the user is already in the fishing dimension.")
           .define("fishingRestrictCommand", false);
@@ -246,9 +270,11 @@ public final class CommonConfig {
       builder.push("Gaming Dimension");
       gamingEnabled = builder.define("gamingEnabled", false);
       gamingDimension = builder.define("gamingDimension", "lobby:gaming_dimension");
+      gamingDimensionName = builder.define("gamingDimensionName", "Gaming");
       gamingCommandName =
           builder.comment("Command user could use to teleport to the dimension like /gaming")
               .define("gamingCommandName", "gaming");
+      gamingCommandPermissionLevel = builder.defineInRange("gamingCommandPermissionLevel", 0, 0, 4);
       gamingRestrictCommand = builder.comment(
           "If enabled the teleport command could not be used if the user is already in the gaming dimension.")
           .define("gamingRestrictCommand", false);
@@ -265,9 +291,11 @@ public final class CommonConfig {
       builder.push("Void Dimension");
       voidEnabled = builder.define("voidEnabled", false);
       voidDimension = builder.define("voidDimension", "lobby:void_dimension");
+      voidDimensionName = builder.define("voidDimensionName", "Void");
       voidCommandName =
           builder.comment("Command user could use to teleport to the dimension like /void")
               .define("voidCommandName", "void");
+      voidCommandPermissionLevel = builder.defineInRange("voidCommandPermissionLevel", 0, 0, 4);
       voidRestrictCommand = builder.comment(
           "If enabled the teleport command could not be used if the user is already in the void dimension.")
           .define("voidRestrictCommand", false);

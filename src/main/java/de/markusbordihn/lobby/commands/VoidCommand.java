@@ -40,9 +40,6 @@ import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 public class VoidCommand extends CustomCommand {
 
-  public static final String DIMENSION_NAME = "Void";
-  public static final int PERMISSION_LEVEL = 0;
-
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
@@ -53,9 +50,11 @@ public class VoidCommand extends CustomCommand {
     if (Boolean.FALSE.equals(COMMON.voidEnabled.get())) {
       return;
     }
-    registerCommand(COMMON.voidCommandName.get(), DIMENSION_NAME, PERMISSION_LEVEL);
+    registerCommand(COMMON.voidCommandName.get(), COMMON.voidDimensionName.get(),
+        COMMON.voidCommandPermissionLevel.get());
     dispatcher.register(Commands.literal(COMMON.voidCommandName.get())
-        .requires(cs -> cs.hasPermission(PERMISSION_LEVEL)).executes(command));
+        .requires(cs -> cs.hasPermission(COMMON.voidCommandPermissionLevel.get()))
+        .executes(command));
   }
 
   @Override
@@ -66,8 +65,9 @@ public class VoidCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, Component.translatable(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer).withStyle(ChatFormatting.RED));
+      sendFeedback(context,
+          Component.translatable(Constants.TELEPORT_FAILED_COOLDOWN, COMMON.voidDimensionName.get(),
+              coolDownTimer - currentTimer).withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + COMMON.generalCommandCoolDown.get());
@@ -76,23 +76,25 @@ public class VoidCommand extends CustomCommand {
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getVoidDimension() == null) {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getVoidDimensionName()));
+          COMMON.voidDimensionName.get(), DimensionManager.getVoidDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.voidRestrictCommand.get())
         || player.getLevel() != DimensionManager.getVoidDimension()) {
-      if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get()) && COMMON.teleportDelayCounter.get() > 0) {
-        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE,
-            DIMENSION_NAME, COMMON.teleportDelayCounter.get()).withStyle(ChatFormatting.GREEN));
+      if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
+          && COMMON.teleportDelayCounter.get() > 0) {
+        sendFeedback(context,
+            Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE, COMMON.voidDimensionName.get(),
+                COMMON.teleportDelayCounter.get()).withStyle(ChatFormatting.GREEN));
         PlayerTeleportManager.teleportPlayerToVoid(player);
       } else {
-        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME)
-            .withStyle(ChatFormatting.GREEN));
+        sendFeedback(context,
+            Component.translatable(Constants.TELEPORT_TO_MESSAGE, COMMON.voidDimensionName.get())
+                .withStyle(ChatFormatting.GREEN));
         DimensionManager.teleportToVoid(player);
       }
     } else {
       sendFeedback(context,
-          Component
-              .translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME)
-              .withStyle(ChatFormatting.YELLOW));
+          Component.translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              COMMON.voidDimensionName.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }

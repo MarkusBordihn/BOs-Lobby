@@ -14,7 +14,7 @@ In most cases it's already enough to copy the former `level.dat` to the current 
 
 ## 👉 How to restore your world without a backup
 
-**⚠️ Make sure that you created a backup of your world! ⚠️**
+⚠️ **Make sure that you created a backup of your world!** ⚠️
 
 In the case you haven't created any recommend backups, you need to make sure to remove all references to the lobby data packs.
 

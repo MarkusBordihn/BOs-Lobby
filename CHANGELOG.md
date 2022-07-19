@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.07.19
+
+- Added option to automatically remove loot chests from the mining dimension.
+- Added option to adjust teleport command permission per dimension.
+- Added option to define dimension name over the config file.
+
 ### 2022.07.12
 
 - Refactored code for version 1.19-41.0.96.

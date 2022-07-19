@@ -40,9 +40,6 @@ import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 public class MiningCommand extends CustomCommand {
 
-  public static final String DIMENSION_NAME = "Mining";
-  public static final int PERMISSION_LEVEL = 0;
-
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
@@ -53,9 +50,11 @@ public class MiningCommand extends CustomCommand {
     if (Boolean.FALSE.equals(COMMON.miningEnabled.get())) {
       return;
     }
-    registerCommand(COMMON.miningCommandName.get(), DIMENSION_NAME, PERMISSION_LEVEL);
+    registerCommand(COMMON.miningCommandName.get(), COMMON.miningDimensionName.get(),
+        COMMON.miningCommandPermissionLevel.get());
     dispatcher.register(Commands.literal(COMMON.miningCommandName.get())
-        .requires(cs -> cs.hasPermission(PERMISSION_LEVEL)).executes(command));
+        .requires(cs -> cs.hasPermission(COMMON.miningCommandPermissionLevel.get()))
+        .executes(command));
   }
 
   @Override
@@ -66,8 +65,10 @@ public class MiningCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, Component.translatable(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer).withStyle(ChatFormatting.RED));
+      sendFeedback(context,
+          Component.translatable(Constants.TELEPORT_FAILED_COOLDOWN,
+              COMMON.miningDimensionName.get(), coolDownTimer - currentTimer)
+              .withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + COMMON.generalCommandCoolDown.get());
@@ -76,24 +77,26 @@ public class MiningCommand extends CustomCommand {
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getMiningDimension() == null) {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getMiningDimensionName()));
+          COMMON.miningDimensionName.get(), DimensionManager.getMiningDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.miningRestrictCommand.get())
         || player.getLevel() != DimensionManager.getMiningDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
-        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE,
-            DIMENSION_NAME, COMMON.teleportDelayCounter.get()).withStyle(ChatFormatting.GREEN));
+        sendFeedback(context,
+            Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE,
+                COMMON.miningDimensionName.get(), COMMON.teleportDelayCounter.get())
+                .withStyle(ChatFormatting.GREEN));
         PlayerTeleportManager.teleportPlayerToMining(player);
       } else {
-        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME)
-            .withStyle(ChatFormatting.GREEN));
+        sendFeedback(context,
+            Component.translatable(Constants.TELEPORT_TO_MESSAGE, COMMON.miningDimensionName.get())
+                .withStyle(ChatFormatting.GREEN));
         DimensionManager.teleportToMining(player);
       }
     } else {
       sendFeedback(context,
-          Component
-              .translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME)
-              .withStyle(ChatFormatting.YELLOW));
+          Component.translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              COMMON.miningDimensionName.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }

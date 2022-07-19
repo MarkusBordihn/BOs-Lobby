@@ -40,9 +40,6 @@ import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 public class FishingCommand extends CustomCommand {
 
-  public static final String DIMENSION_NAME = "Fishing";
-  public static final int PERMISSION_LEVEL = 0;
-
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
@@ -53,9 +50,11 @@ public class FishingCommand extends CustomCommand {
     if (Boolean.FALSE.equals(COMMON.fishingEnabled.get())) {
       return;
     }
-    registerCommand(COMMON.fishingCommandName.get(), DIMENSION_NAME, PERMISSION_LEVEL);
+    registerCommand(COMMON.fishingCommandName.get(), DimensionManager.getFishingDimensionName(),
+        COMMON.fishingCommandPermissionLevel.get());
     dispatcher.register(Commands.literal(COMMON.fishingCommandName.get())
-        .requires(cs -> cs.hasPermission(PERMISSION_LEVEL)).executes(command));
+        .requires(cs -> cs.hasPermission(COMMON.fishingCommandPermissionLevel.get()))
+        .executes(command));
   }
 
   @Override
@@ -66,8 +65,11 @@ public class FishingCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, Component.translatable(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer).withStyle(ChatFormatting.RED));
+      sendFeedback(context,
+          Component
+              .translatable(Constants.TELEPORT_FAILED_COOLDOWN,
+                  DimensionManager.getFishingDimensionName(), coolDownTimer - currentTimer)
+              .withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + COMMON.generalCommandCoolDown.get());
@@ -76,24 +78,27 @@ public class FishingCommand extends CustomCommand {
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getFishingDimension() == null) {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getFishingDimensionName()));
+          DimensionManager.getFishingDimensionName(), DimensionManager.getFishingDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.fishingRestrictCommand.get())
         || player.getLevel() != DimensionManager.getFishingDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
-        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE,
-            DIMENSION_NAME, COMMON.teleportDelayCounter.get()).withStyle(ChatFormatting.GREEN));
+        sendFeedback(context,
+            Component
+                .translatable(Constants.TELEPORT_TO_IN_MESSAGE,
+                    DimensionManager.getFishingDimensionName(), COMMON.teleportDelayCounter.get())
+                .withStyle(ChatFormatting.GREEN));
         PlayerTeleportManager.teleportPlayerToFishing(player);
       } else {
-        sendFeedback(context, Component.translatable(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME)
+        sendFeedback(context, Component
+            .translatable(Constants.TELEPORT_TO_MESSAGE, DimensionManager.getFishingDimensionName())
             .withStyle(ChatFormatting.GREEN));
         DimensionManager.teleportToFishing(player);
       }
     } else {
       sendFeedback(context,
-          Component
-              .translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME)
-              .withStyle(ChatFormatting.YELLOW));
+          Component.translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              DimensionManager.getFishingDimensionName()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }
