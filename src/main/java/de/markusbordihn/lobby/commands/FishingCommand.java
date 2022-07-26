@@ -78,27 +78,26 @@ public class FishingCommand extends CustomCommand {
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getFishingDimension() == null) {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DimensionManager.getFishingDimensionName(), DimensionManager.getFishingDimensionName()));
+          COMMON.fishingDimensionName.get(), DimensionManager.getFishingDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.fishingRestrictCommand.get())
         || player.getLevel() != DimensionManager.getFishingDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
         sendFeedback(context,
-            Component
-                .translatable(Constants.TELEPORT_TO_IN_MESSAGE,
-                    DimensionManager.getFishingDimensionName(), COMMON.teleportDelayCounter.get())
+            Component.translatable(Constants.TELEPORT_TO_IN_MESSAGE,
+                COMMON.fishingDimensionName.get(), COMMON.teleportDelayCounter.get())
                 .withStyle(ChatFormatting.GREEN));
         PlayerTeleportManager.teleportPlayerToFishing(player);
       } else {
-        sendFeedback(context, Component
-            .translatable(Constants.TELEPORT_TO_MESSAGE, DimensionManager.getFishingDimensionName())
-            .withStyle(ChatFormatting.GREEN));
+        sendFeedback(context,
+            Component.translatable(Constants.TELEPORT_TO_MESSAGE, COMMON.fishingDimensionName.get())
+                .withStyle(ChatFormatting.GREEN));
         DimensionManager.teleportToFishing(player);
       }
     } else {
       sendFeedback(context,
           Component.translatable(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
-              DimensionManager.getFishingDimensionName()).withStyle(ChatFormatting.YELLOW));
+              COMMON.fishingDimensionName.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }
