@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -60,11 +61,14 @@ public class CommandManager {
     if (minecraftServer == null) {
       return;
     }
-    log.debug("Execute Server Command: {}", command);
+    log.debug("Execute Server Command: /{}", command);
     Commands commands = minecraftServer.getCommands();
     CommandSourceStack commandSourceStack =
         minecraftServer.createCommandSourceStack().withSuppressedOutput();
-    commands.performCommand(commandSourceStack, command);
+    CommandDispatcher<CommandSourceStack> commandDispatcher = commands.getDispatcher();
+    ParseResults<CommandSourceStack> parseResults =
+        commandDispatcher.parse(command, commandSourceStack);
+    commands.performCommand(parseResults, command);
   }
 
   public static void executeServerCommand(String command, ServerLevel level) {
@@ -76,21 +80,14 @@ public class CommandManager {
     Commands commands = minecraftServer.getCommands();
     CommandSourceStack commandSourceStack =
         minecraftServer.createCommandSourceStack().withLevel(level).withSuppressedOutput();
-    commands.performCommand(commandSourceStack, command);
+    CommandDispatcher<CommandSourceStack> commandDispatcher = commands.getDispatcher();
+    ParseResults<CommandSourceStack> parseResults =
+        commandDispatcher.parse(command, commandSourceStack);
+    commands.performCommand(parseResults, command);
   }
 
   public static void executeServerFunction(String functionName, ServerLevel level) {
     executeServerCommand(String.format("function %s", functionName), level);
   }
 
-  public static void executeUserCommand(String command) {
-    MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
-    if (minecraftServer == null) {
-      return;
-    }
-    log.debug("Execute User Command: {}", command);
-    Commands commands = minecraftServer.getCommands();
-    CommandSourceStack commandSourceStack = minecraftServer.createCommandSourceStack();
-    commands.performCommand(commandSourceStack, command);
-  }
 }
