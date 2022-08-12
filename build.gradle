@@ -18,7 +18,6 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-compileJava {options.encoding = "UTF-8"}
 
 version = "${version_major}.${version_minor}.${version_patch}"
 archivesBaseName = "${mod_id}_${mc_version}"
@@ -131,6 +130,9 @@ dependencies {
 
   // Additional helpful Mods for development (dev depenedency)
   // runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3822592")
+
+  // Integration: ftb-essentials-forge
+  compileOnly fg.deobf("curse.maven:ftb-essentials-forge-410811:3890132")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

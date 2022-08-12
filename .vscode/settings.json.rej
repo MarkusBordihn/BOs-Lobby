@@ -1,0 +1,10 @@
+diff a/.vscode/settings.json b/.vscode/settings.json	(rejected hunks)
+@@ -23,6 +23,8 @@
+     "DISPLAYTEST",
+     "firstperson",
+     "Framebuffer",
++    "FTBE",
++    "ftbessentials",
+     "glowstone",
+     "gradlew",
+     "grandle",

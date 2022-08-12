@@ -18,6 +18,7 @@ Provides a easy to use lobby (with an underground maze), fishing and optimized m
 - Automatically transfer users to the lobby on first join and/or after server restart or always.
 - Fall damage and fire damage protection for wrongly set default world spawn point.
 - Teleport countdown and move detection to allow fair game play even in PVP.
+- Integration for [FTB Essentials][ftbessentials] to support `/back` history command.
 
 **Note: Please make sure to create regular backups of your dimensions, before installing or updating this mod.**
 
@@ -218,9 +219,11 @@ For more details, please check: [How to restore your world ?][how_to_restore_you
 | Fabric Version | ❌ Not planned        |
 | Forge 1.16.5   | ❌ Not planned        |
 | Forge 1.17.1   | ❌ Not planned        |
-| Forge 1.18.1   | ⚠️ Maintenance only   |
+| Forge 1.18.1   | ⚠️ Deprecated         |
 | Forge 1.18.2   | ⚠️ Maintenance only   |
-| Forge 1.19     | ✔️ Active development |
+| Forge 1.19     | ⚠️ Deprecated         |
+| Forge 1.19.1   | ⚠️ Deprecated         |
+| Forge 1.19.2   | ✔️ Active development |
 
 ## Note
 
@@ -237,3 +240,4 @@ If you are downloading this mod from other sources we could not make sure that i
 [shutup-experimental-settings]: https://www.curseforge.com/minecraft/mc-mods/shutup-experimental-settings
 [en_us.json]: src/main/resources/assets/lobby/lang/en_us.json
 [how_to_restore_your_world]: doc/HOW_TO_RESTORE_YOUR_WORLD.md
+[ftbessentials]: https://www.curseforge.com/minecraft/mc-mods/ftb-essentials-forge
