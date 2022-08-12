@@ -27,12 +27,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import dev.ftb.mods.ftbessentials.util.FTBEPlayerData;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
@@ -114,6 +119,9 @@ public class TeleporterManager {
       log.info("{} Using custom spawn point {} {} {} for void dimension",
           Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.voidSpawnPointX.get(),
           COMMON.voidSpawnPointY.get(), COMMON.voidSpawnPointZ.get());
+    }
+    if (ModList.get().isLoaded("ftbessentials")) {
+      log.info("Enable FTB Essentials integration.");
     }
   }
 
@@ -250,12 +258,25 @@ public class TeleporterManager {
 
     // If we are already in the same dimension use a simple teleport instead.
     if (player.level == dimension) {
+      addTeleportHistory(player);
       player.teleportTo(x, y, z);
       return true;
     }
 
     // Use dimensional teleporter for the player.
+    addTeleportHistory(player);
     player.teleportTo(dimension, x, y, z, player.getYRot(), player.getXRot());
     return true;
+  }
+
+  private static void addTeleportHistory(ServerPlayer player) {
+    ServerLevel level = player.getLevel();
+    ResourceKey<Level> dimension = level.dimension();
+    BlockPos blockPos = player.blockPosition();
+
+    log.debug("Add teleport history for player {} in {} with {}", player, dimension, blockPos);
+    if (ModList.get().isLoaded("ftbessentials")) {
+      FTBEPlayerData.addTeleportHistory(player, dimension, blockPos);
+    }
   }
 }
