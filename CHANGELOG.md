@@ -7,11 +7,12 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2022.08.12
 
+- Refactored code for version 1.19.2-43.0.8
 - Added FTB Essentials support for the `/back` history command.
 
 ### 2022.07.31
 
-- Refactored code for version 1.19.1-42.0.1.
+- Refactored code for version 1.19.1-42.0.1
 
 ### 2022.07.19
 
@@ -21,7 +22,7 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2022.07.12
 
-- Refactored code for version 1.19-41.0.96.
+- Refactored code for version 1.19-41.0.96
 
 ### 2022.06.19
 
@@ -38,7 +39,7 @@ For this reason it was not possible to re-use the old mining base or to create a
 
 ### 2022.06.09
 
-- Refactored code for version 1.19-41.0.5.
+- Refactored code for version 1.19-41.0.5
 
 ### 2022.05.30
 
