@@ -129,6 +129,9 @@ dependencies {
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
   minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
 
+  // Integration: ftb-essentials-forge
+  compileOnly fg.deobf("curse.maven:ftb-essentials-forge-410811:3601274")
+
   // Additional helpful Mods for development (dev depenedency)
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
   runtimeOnly fg.deobf("curse.maven:jade-324717:3614180")

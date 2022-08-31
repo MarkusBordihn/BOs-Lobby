@@ -47,6 +47,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
+import de.markusbordihn.lobby.data.LobbyData;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
 @EventBusSubscriber
@@ -57,14 +58,16 @@ public class PlayerManager {
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean generalDefaultToLobby = COMMON.generalDefaultToLobby.get();
   private static boolean generalDefaultToLobbyAlways = COMMON.generalDefaultToLobbyAlways.get();
+  private static boolean generalDefaultToLobbyOnce = COMMON.generalDefaultToLobbyOnce.get();
+  private static boolean lobbyEnabled = COMMON.lobbyEnabled.get();
 
   private static Set<UUID> playerTeleportList = ConcurrentHashMap.newKeySet();
   private static Set<PlayerValidation> playerValidationList = ConcurrentHashMap.newKeySet();
 
-  private static int playerLoginTrackingTimeout = 45;
-  private static long playerLoginValidationTimeoutMilli =
-      TimeUnit.SECONDS.toMillis(playerLoginTrackingTimeout);
-  private static short ticker = 0;
+  private static final int PLAYER_LOGIN_TRACKING_TIMEOUT = 45;
+  private static final long PLAYER_LOGIN_VALIDATION_TIMEOUT_MILLI =
+      TimeUnit.SECONDS.toMillis(PLAYER_LOGIN_TRACKING_TIMEOUT);
+  private static int ticker = 0;
 
   private static Component lobbyCommand =
       new TextComponent("/lobby").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
@@ -77,25 +80,44 @@ public class PlayerManager {
     playerTeleportList = ConcurrentHashMap.newKeySet();
     playerValidationList = ConcurrentHashMap.newKeySet();
 
+    lobbyEnabled = COMMON.lobbyEnabled.get();
     generalDefaultToLobby = COMMON.generalDefaultToLobby.get();
+    generalDefaultToLobbyOnce = COMMON.generalDefaultToLobbyOnce.get();
     generalDefaultToLobbyAlways = COMMON.generalDefaultToLobbyAlways.get();
   }
 
   @SubscribeEvent
   public static void handleServerStartingEvent(ServerStartingEvent event) {
-    if (generalDefaultToLobbyAlways || generalDefaultToLobby) {
+    if (automaticTransferIsEnabled()) {
       if (DimensionManager.getLobbyDimension() == null) {
         log.error("{} Unable to find lobby dimension {}, transfer to lobby will be disabled!",
             Constants.LOG_PLAYER_MANAGER_PREFIX, DimensionManager.getLobbyDimensionName());
         generalDefaultToLobby = false;
+        generalDefaultToLobbyOnce = false;
+        generalDefaultToLobbyAlways = false;
+      } else if (!lobbyEnabled) {
+        log.error("{} lobby dimension is disabled {}, transfer to lobby will be disabled!",
+            Constants.LOG_PLAYER_MANAGER_PREFIX, DimensionManager.getLobbyDimensionName());
+        generalDefaultToLobby = false;
+        generalDefaultToLobbyOnce = false;
         generalDefaultToLobbyAlways = false;
       } else {
-        if (generalDefaultToLobbyAlways) {
+        if (generalDefaultToLobbyOnce) {
+          log.info("{} Only teleports the player once to the lobby with their first connect!",
+              Constants.LOG_TELEPORT_MANAGER_PREFIX);
+          Set<UUID> storedPlayerTeleportList = LobbyData.get().getPlayerTeleportList();
+          if (!storedPlayerTeleportList.isEmpty()) {
+            log.info(
+                "{} Using stored Player Teleport List to limiting automatic transfers to lobby: {}",
+                Constants.LOG_TELEPORT_MANAGER_PREFIX, storedPlayerTeleportList);
+            playerTeleportList.addAll(storedPlayerTeleportList);
+          }
+        } else if (generalDefaultToLobbyAlways) {
           log.info("{} Always teleport players to lobby on their server join!",
               Constants.LOG_TELEPORT_MANAGER_PREFIX);
         } else {
           log.info(
-              "{} Only teleport player to the lobby for their first connect or after a server restart.",
+              "{} Teleports the player to the lobby for their first connect or after a server restart!.",
               Constants.LOG_TELEPORT_MANAGER_PREFIX);
         }
       }
@@ -104,7 +126,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-    if (!generalDefaultToLobbyAlways && !generalDefaultToLobby) {
+    if (!automaticTransferIsEnabled()) {
       return;
     }
     String username = event.getPlayer().getName().getString();
@@ -114,7 +136,7 @@ public class PlayerManager {
 
       log.info("{} Player {} {} logged in and will be tracked for {} secs.",
           Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity(),
-          playerLoginTrackingTimeout);
+          PLAYER_LOGIN_TRACKING_TIMEOUT);
 
       // Heal player by 1 point, just in case.
       player.heal(1);
@@ -132,7 +154,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handlePlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-    if (!generalDefaultToLobbyAlways && !generalDefaultToLobby) {
+    if (!automaticTransferIsEnabled()) {
       return;
     }
     String username = event.getPlayer().getName().getString();
@@ -144,8 +166,7 @@ public class PlayerManager {
 
   @SubscribeEvent
   public static void handleServerTickEvent(TickEvent.ServerTickEvent event) {
-    if (event.phase == TickEvent.Phase.END || ticker++ < 40
-        || (!generalDefaultToLobbyAlways && !generalDefaultToLobby)) {
+    if (event.phase == TickEvent.Phase.END || !automaticTransferIsEnabled() || ticker++ < 40) {
       return;
     }
 
@@ -155,17 +176,16 @@ public class PlayerManager {
         for (PlayerValidation playerValidation : playerValidationList) {
           String username = playerValidation.getUsername();
           if (playerValidation.hasPlayerMoved()) {
-            long validationTimeInSecs =
-                TimeUnit.MILLISECONDS.toSeconds(playerValidation.getValidationTimeElapsed());
+            long validationTimeInSecs = playerValidation.getValidationTimeSecondsElapsed();
             log.info("{} Player was successful validated after {} secs.", username,
                 validationTimeInSecs);
             transferringPlayerToLobby(playerValidation.getPlayer());
             addPlayer(username);
           } else if (playerValidation
-              .getValidationTimeElapsed() >= playerLoginValidationTimeoutMilli) {
+              .getValidationTimeElapsed() >= PLAYER_LOGIN_VALIDATION_TIMEOUT_MILLI) {
             log.warn(
                 "User tracking for player {} timed out after {} secs. User will not be teleported to lobby!",
-                username, playerLoginTrackingTimeout);
+                username, PLAYER_LOGIN_TRACKING_TIMEOUT);
             addPlayer(username);
           }
         }
@@ -176,6 +196,10 @@ public class PlayerManager {
       }
     }
     ticker = 0;
+  }
+
+  private static boolean automaticTransferIsEnabled() {
+    return generalDefaultToLobby || generalDefaultToLobbyOnce || generalDefaultToLobbyAlways;
   }
 
   private static void addPlayer(String username) {
@@ -218,18 +242,28 @@ public class PlayerManager {
     if (player == null || player.level == DimensionManager.getLobbyDimension()) {
       return;
     }
-    if (generalDefaultToLobbyAlways
-        || (generalDefaultToLobby && !playerTeleportList.contains(player.getUUID()))) {
+    if (generalDefaultToLobbyAlways || ((generalDefaultToLobbyOnce || generalDefaultToLobby)
+        && !playerTeleportList.contains(player.getUUID()))) {
       if (!generalDefaultToLobbyAlways && playerTeleportList.contains(player.getUUID())) {
         log.info("{} Skip transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
             player, player.level);
       } else {
-        log.info("{} Transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
-            player, player.level);
+        if (generalDefaultToLobbyOnce) {
+          log.info("{} Transferring {} ({}) for the first time and only once to lobby ...",
+              Constants.LOG_TELEPORT_MANAGER_PREFIX, player, player.level);
+        } else {
+          log.info("{} Transferring {} ({}) to lobby ...", Constants.LOG_TELEPORT_MANAGER_PREFIX,
+              player, player.level);
+        }
         DimensionManager.teleportToLobby(player);
       }
     }
     playerTeleportList.add(player.getUUID());
+
+    // Store Player Teleport List, if user should be only transferred once!
+    if (generalDefaultToLobbyOnce) {
+      LobbyData.get().setPlayerTeleportList(playerTeleportList);
+    }
   }
 
 }

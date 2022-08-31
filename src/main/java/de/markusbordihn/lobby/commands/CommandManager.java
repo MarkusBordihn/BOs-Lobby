@@ -28,6 +28,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -47,9 +48,11 @@ public class CommandManager {
     log.info("Registering commands for {} ...", Constants.MOD_NAME);
     CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
     FishingCommand.register(commandDispatcher);
+    GamingCommand.register(commandDispatcher);
     LobbyCommand.register(commandDispatcher);
     MiningCommand.register(commandDispatcher);
     SpawnCommand.register(commandDispatcher);
+    VoidCommand.register(commandDispatcher);
   }
 
   public static void executeServerCommand(String command) {

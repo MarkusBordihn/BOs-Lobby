@@ -1,7 +1,7 @@
+# 🏝 Lobby, Fishing and Mining Dimension (1.18.1 - Deprecated)
+
 [![Lobby, Fishing and Mining Dimension Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 [![Lobby, Fishing and Mining Dimension Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
-
-# 🏝 Lobby, Fishing and Mining Dimension
 
 Provides a easy to use lobby (with an underground maze), fishing and optimized mining dimension for you and your friends.
 
@@ -163,8 +163,11 @@ Unfortunately I have no time to work on a separate fabric version.
 | Fabric Version | ❌ Not planned        |
 | Forge 1.16.5   | ❌ Not planned        |
 | Forge 1.17.1   | ❌ Not planned        |
-| Forge 1.18.1   | ⚠️ Maintenance only   |
-| Forge 1.18.2   | ✔️ Active development |
+| Forge 1.18.1   | ⚠️ Deprecated         |
+| Forge 1.18.2   | ⚠️ Maintenance only   |
+| Forge 1.19     | ⚠️ Deprecated         |
+| Forge 1.19.1   | ⚠️ Deprecated         |
+| Forge 1.19.2   | ✔️ Active development |
 
 ## Note
 
@@ -178,5 +181,4 @@ If you are downloading this mod from other sources we could not make sure that i
 [fishing_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/fishing_dimension.png
 [lobby_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/lobby_dimension.png
 [mining_dimension]: https://raw.githubusercontent.com/MarkusBordihn/BOs-Lobby/main/examples/mining_dimension.png
-
 [shutup-experimental-settings]: https://www.curseforge.com/minecraft/mc-mods/shutup-experimental-settings

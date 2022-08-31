@@ -26,6 +26,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -39,16 +40,16 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
+import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 @EventBusSubscriber
 public class FishingCommand extends CustomCommand {
 
-  public static final String NAME = "fishing";
-  public static final String DIMENSION_NAME = "Fishing";
-
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean fishingRestrictCommand = COMMON.fishingRestrictCommand.get();
+  private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+  private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
@@ -58,11 +59,19 @@ public class FishingCommand extends CustomCommand {
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     fishingRestrictCommand = COMMON.fishingRestrictCommand.get();
     generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+    teleportDelayCounter = COMMON.teleportDelayCounter.get();
+    teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-    dispatcher
-        .register(Commands.literal(NAME).requires(cs -> cs.hasPermission(0)).executes(command));
+    if (Boolean.FALSE.equals(COMMON.fishingEnabled.get())) {
+      return;
+    }
+    registerCommand(COMMON.fishingCommandName.get(), COMMON.fishingDimension.get(),
+        COMMON.fishingCommandPermissionLevel.get());
+    dispatcher.register(Commands.literal(COMMON.fishingCommandName.get())
+        .requires(cs -> cs.hasPermission(COMMON.fishingCommandPermissionLevel.get()))
+        .executes(command));
   }
 
   @Override
@@ -73,8 +82,10 @@ public class FishingCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
+              COMMON.fishingDimension.get(), coolDownTimer - currentTimer)
+                  .withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + generalCommandCoolDown);
@@ -83,15 +94,25 @@ public class FishingCommand extends CustomCommand {
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getFishingDimension() == null) {
       sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getFishingDimensionName()));
+          COMMON.fishingDimension.get(), DimensionManager.getFishingDimensionName()));
     } else if (!fishingRestrictCommand
         || player.getLevel() != DimensionManager.getFishingDimension()) {
-      sendFeedback(context,
-          new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
-      DimensionManager.teleportToFishing(player);
+      if (teleportDelayEnabled && teleportDelayCounter > 0) {
+        sendFeedback(context,
+            new TranslatableComponent(Constants.TELEPORT_TO_IN_MESSAGE,
+                COMMON.fishingDimension.get(), teleportDelayCounter)
+                    .withStyle(ChatFormatting.GREEN));
+        PlayerTeleportManager.teleportPlayerToFishing(player);
+      } else {
+        sendFeedback(context,
+            new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, COMMON.fishingDimension.get())
+                .withStyle(ChatFormatting.GREEN));
+        DimensionManager.teleportToFishing(player);
+      }
     } else {
-      sendFeedback(context, new TranslatableComponent(
-          Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              COMMON.fishingDimension.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }

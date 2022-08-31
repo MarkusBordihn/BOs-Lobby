@@ -26,6 +26,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -39,16 +40,16 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
+import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 @EventBusSubscriber
 public class LobbyCommand extends CustomCommand {
 
-  public static final String NAME = "lobby";
-  public static final String DIMENSION_NAME = "Lobby";
-
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean lobbyRestrictCommand = COMMON.lobbyRestrictCommand.get();
+  private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+  private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
@@ -56,13 +57,21 @@ public class LobbyCommand extends CustomCommand {
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    lobbyRestrictCommand = COMMON.lobbyRestrictCommand.get();
     generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+    lobbyRestrictCommand = COMMON.lobbyRestrictCommand.get();
+    teleportDelayCounter = COMMON.teleportDelayCounter.get();
+    teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-    dispatcher
-        .register(Commands.literal(NAME).requires(cs -> cs.hasPermission(0)).executes(command));
+    if (Boolean.FALSE.equals(COMMON.lobbyEnabled.get())) {
+      return;
+    }
+    registerCommand(COMMON.lobbyCommandName.get(), COMMON.lobbyDimensionName.get(),
+        COMMON.lobbyCommandPermissionLevel.get());
+    dispatcher.register(Commands.literal(COMMON.lobbyCommandName.get())
+        .requires(cs -> cs.hasPermission(COMMON.lobbyCommandPermissionLevel.get()))
+        .executes(command));
   }
 
   @Override
@@ -73,8 +82,10 @@ public class LobbyCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
+              COMMON.lobbyDimensionName.get(), coolDownTimer - currentTimer)
+                  .withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + generalCommandCoolDown);
@@ -82,15 +93,26 @@ public class LobbyCommand extends CustomCommand {
 
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getLobbyDimension() == null) {
-      sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getLobbyDimensionName()));
-    } else if (!lobbyRestrictCommand || player.getLevel() != DimensionManager.getLobbyDimension()) {
       sendFeedback(context,
-          new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
-      DimensionManager.teleportToLobby(player);
+          new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
+              COMMON.lobbyDimensionName.get(), DimensionManager.getLobbyDimensionName())
+                  .withStyle(ChatFormatting.RED));
+    } else if (!lobbyRestrictCommand || player.getLevel() != DimensionManager.getLobbyDimension()) {
+      if (teleportDelayEnabled && teleportDelayCounter > 0) {
+        sendFeedback(context,
+            new TranslatableComponent(Constants.TELEPORT_TO_IN_MESSAGE,
+                COMMON.lobbyDimensionName.get(), teleportDelayCounter)
+                    .withStyle(ChatFormatting.GREEN));
+        PlayerTeleportManager.teleportPlayerToLobby(player);
+      } else {
+        sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE,
+            COMMON.lobbyDimensionName.get()).withStyle(ChatFormatting.GREEN));
+        DimensionManager.teleportToLobby(player);
+      }
     } else {
-      sendFeedback(context, new TranslatableComponent(
-          Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              COMMON.lobbyDimensionName.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }

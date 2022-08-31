@@ -32,6 +32,7 @@ public final class Constants {
   public static final String MOD_COMMAND = "lobby";
   public static final String MOD_ID = "lobby";
   public static final String MOD_NAME = "Lobby";
+  public static final String MOD_URL = "https://www.curseforge.com/minecraft/mc-mods/lobby";
   public static final String ISSUE_REPORT = "https://github.com/MarkusBordihn/BOs-Lobby/issues";
 
   // Prefixes
@@ -41,6 +42,7 @@ public final class Constants {
   public static final String UNABLE_TO_TELEPORT_MESSAGE =
       Constants.TEXT_PREFIX + "unable_to_teleport";
   public static final String TELEPORT_TO_MESSAGE = Constants.TEXT_PREFIX + "teleport_to";
+  public static final String TELEPORT_TO_IN_MESSAGE = Constants.TEXT_PREFIX + "teleport_to_in";
   public static final String TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE =
       Constants.TEXT_PREFIX + "failed_already_in_dimension";
   public static final String TELEPORT_FAILED_COOLDOWN = Constants.TEXT_PREFIX + "failed_cooldown";

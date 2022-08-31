@@ -43,34 +43,34 @@ import de.markusbordihn.lobby.dimension.DimensionManager;
 import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 @EventBusSubscriber
-public class SpawnCommand extends CustomCommand {
+public class GamingCommand extends CustomCommand {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static boolean defaultRestrictCommand = COMMON.defaultRestrictCommand.get();
+  private static boolean gamingRestrictCommand = COMMON.gamingRestrictCommand.get();
   private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
   private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
-  private static final SpawnCommand command = new SpawnCommand();
+  private static final GamingCommand command = new GamingCommand();
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    defaultRestrictCommand = COMMON.defaultRestrictCommand.get();
+    gamingRestrictCommand = COMMON.gamingRestrictCommand.get();
     generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
     teleportDelayCounter = COMMON.teleportDelayCounter.get();
     teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-    if (Boolean.FALSE.equals(COMMON.defaultEnabled.get())) {
+    if (Boolean.FALSE.equals(COMMON.gamingEnabled.get())) {
       return;
     }
-    registerCommand(COMMON.defaultCommandName.get(), COMMON.defaultDimensionName.get(),
-        COMMON.defaultCommandPermissionLevel.get());
-    dispatcher.register(Commands.literal(COMMON.defaultCommandName.get())
-        .requires(cs -> cs.hasPermission(COMMON.defaultCommandPermissionLevel.get()))
+    registerCommand(COMMON.gamingCommandName.get(), COMMON.gamingDimensionName.get(),
+        COMMON.gamingCommandPermissionLevel.get());
+    dispatcher.register(Commands.literal(COMMON.gamingCommandName.get())
+        .requires(cs -> cs.hasPermission(COMMON.gamingCommandPermissionLevel.get()))
         .executes(command));
   }
 
@@ -84,7 +84,7 @@ public class SpawnCommand extends CustomCommand {
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
       sendFeedback(context,
           new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
-              COMMON.defaultDimensionName.get(), coolDownTimer - currentTimer)
+              COMMON.gamingDimensionName.get(), coolDownTimer - currentTimer)
                   .withStyle(ChatFormatting.RED));
       return 0;
     } else {
@@ -92,26 +92,26 @@ public class SpawnCommand extends CustomCommand {
     }
 
     // Provide feedback to the player for their teleporter request.
-    if (DimensionManager.getDefaultDimension() == null) {
+    if (DimensionManager.getGamingDimension() == null) {
       sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          COMMON.defaultDimensionName.get(), DimensionManager.getDefaultDimensionName()));
-    } else if (!defaultRestrictCommand
-        || player.getLevel() != DimensionManager.getDefaultDimension()) {
+          COMMON.gamingDimensionName.get(), DimensionManager.getGamingDimensionName()));
+    } else if (!gamingRestrictCommand
+        || player.getLevel() != DimensionManager.getGamingDimension()) {
       if (teleportDelayEnabled && teleportDelayCounter > 0) {
         sendFeedback(context,
             new TranslatableComponent(Constants.TELEPORT_TO_IN_MESSAGE,
-                COMMON.defaultDimensionName.get(), teleportDelayCounter)
+                COMMON.gamingDimensionName.get(), teleportDelayCounter)
                     .withStyle(ChatFormatting.GREEN));
-        PlayerTeleportManager.teleportPlayerToDefault(player);
+        PlayerTeleportManager.teleportPlayerToGaming(player);
       } else {
         sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE,
-            COMMON.defaultDimensionName.get()).withStyle(ChatFormatting.GREEN));
-        DimensionManager.teleportToDefault(player);
+            COMMON.gamingDimensionName.get()).withStyle(ChatFormatting.GREEN));
+        DimensionManager.teleportToGaming(player);
       }
     } else {
       sendFeedback(context,
           new TranslatableComponent(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
-              COMMON.defaultDimensionName.get()).withStyle(ChatFormatting.YELLOW));
+              COMMON.gamingDimensionName.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }

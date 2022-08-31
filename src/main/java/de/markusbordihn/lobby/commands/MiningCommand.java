@@ -26,6 +26,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -39,16 +40,16 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
 import de.markusbordihn.lobby.dimension.DimensionManager;
+import de.markusbordihn.lobby.teleporter.PlayerTeleportManager;
 
 @EventBusSubscriber
 public class MiningCommand extends CustomCommand {
 
-  public static final String NAME = "mining";
-  public static final String DIMENSION_NAME = "Mining";
-
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean miningRestrictCommand = COMMON.miningRestrictCommand.get();
+  private static boolean teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   private static int generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+  private static int teleportDelayCounter = COMMON.teleportDelayCounter.get();
 
   private static Map<Player, Long> coolDownPlayerMap = new ConcurrentHashMap<>();
 
@@ -58,11 +59,19 @@ public class MiningCommand extends CustomCommand {
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     miningRestrictCommand = COMMON.miningRestrictCommand.get();
     generalCommandCoolDown = COMMON.generalCommandCoolDown.get();
+    teleportDelayCounter = COMMON.teleportDelayCounter.get();
+    teleportDelayEnabled = COMMON.teleportDelayEnabled.get();
   }
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-    dispatcher
-        .register(Commands.literal(NAME).requires(cs -> cs.hasPermission(0)).executes(command));
+    if (Boolean.FALSE.equals(COMMON.miningEnabled.get())) {
+      return;
+    }
+    registerCommand(COMMON.miningCommandName.get(), COMMON.miningDimensionName.get(),
+        COMMON.miningCommandPermissionLevel.get());
+    dispatcher.register(Commands.literal(COMMON.miningCommandName.get())
+        .requires(cs -> cs.hasPermission(COMMON.miningCommandPermissionLevel.get()))
+        .executes(command));
   }
 
   @Override
@@ -73,8 +82,10 @@ public class MiningCommand extends CustomCommand {
     Long coolDownTimer = coolDownPlayerMap.getOrDefault(player, null);
     Long currentTimer = java.time.Instant.now().getEpochSecond();
     if (coolDownTimer != null && coolDownTimer > currentTimer) {
-      sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
-          DIMENSION_NAME, coolDownTimer - currentTimer));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_COOLDOWN,
+              COMMON.miningDimensionName.get(), coolDownTimer - currentTimer)
+                  .withStyle(ChatFormatting.RED));
       return 0;
     } else {
       coolDownPlayerMap.put(player, currentTimer + generalCommandCoolDown);
@@ -83,15 +94,24 @@ public class MiningCommand extends CustomCommand {
     // Provide feedback to the player for their teleporter request.
     if (DimensionManager.getMiningDimension() == null) {
       sendFeedback(context, new TranslatableComponent(Constants.UNABLE_TO_TELEPORT_MESSAGE,
-          DIMENSION_NAME, DimensionManager.getMiningDimensionName()));
+          COMMON.miningDimensionName.get(), DimensionManager.getMiningDimensionName()));
     } else if (!miningRestrictCommand
         || player.getLevel() != DimensionManager.getMiningDimension()) {
-      sendFeedback(context,
-          new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE, DIMENSION_NAME));
-      DimensionManager.teleportToMining(player);
+      if (teleportDelayEnabled && teleportDelayCounter > 0) {
+        sendFeedback(context,
+            new TranslatableComponent(Constants.TELEPORT_TO_IN_MESSAGE,
+                COMMON.miningDimensionName.get(), teleportDelayCounter)
+                    .withStyle(ChatFormatting.GREEN));
+        PlayerTeleportManager.teleportPlayerToMining(player);
+      } else {
+        sendFeedback(context, new TranslatableComponent(Constants.TELEPORT_TO_MESSAGE,
+            COMMON.miningDimensionName.get()).withStyle(ChatFormatting.GREEN));
+        DimensionManager.teleportToMining(player);
+      }
     } else {
-      sendFeedback(context, new TranslatableComponent(
-          Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE, DIMENSION_NAME));
+      sendFeedback(context,
+          new TranslatableComponent(Constants.TELEPORT_FAILED_ALREADY_IN_DIMENSION_MESSAGE,
+              COMMON.miningDimensionName.get()).withStyle(ChatFormatting.YELLOW));
     }
     return 0;
   }

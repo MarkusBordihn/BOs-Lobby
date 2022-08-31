@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.08.31
+
+- Last update for the deprecated 1.18.1 version.
+
 ### 2022.04.11
 
 - Added larger lobby update with additional buildings and hidden dungeon maze.

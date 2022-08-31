@@ -27,8 +27,10 @@ import net.minecraft.server.level.ServerLevel;
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.commands.CommandManager;
 import de.markusbordihn.lobby.data.FishingData;
+import de.markusbordihn.lobby.data.GamingData;
 import de.markusbordihn.lobby.data.LobbyData;
 import de.markusbordihn.lobby.data.MiningData;
+import de.markusbordihn.lobby.data.VoidData;
 import de.markusbordihn.lobby.dimension.DimensionManager;
 
 public class DataPackHandler {
@@ -58,6 +60,20 @@ public class DataPackHandler {
       } else {
         prepareDataPack(level);
         FishingData.get().setDimensionLoaded(true);
+      }
+    } else if (level == DimensionManager.getGamingDimension()) {
+      if (GamingData.get().getDimensionLoaded()) {
+        log.info("Skip Data Pack for gaming dimension {} because it was already loaded!", level);
+      } else {
+        prepareDataPack(level);
+        GamingData.get().setDimensionLoaded(true);
+      }
+    } else if (level == DimensionManager.getVoidDimension()) {
+      if (VoidData.get().getDimensionLoaded()) {
+        log.info("Skip Data Pack for void dimension {} because it was already loaded!", level);
+      } else {
+        prepareDataPack(level);
+        VoidData.get().setDimensionLoaded(true);
       }
     } else {
       log.warn("Unable to get status for level {} to confirm data pack load status!", level);

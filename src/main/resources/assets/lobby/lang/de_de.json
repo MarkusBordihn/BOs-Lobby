@@ -1,0 +1,14 @@
+{
+  "text.lobby.welcome_to_default": "Willkommen zur Standarddimension, bitte verwenden Sie den Befehl %1$s, %3$s oder %4$s, um zu einer anderen Dimension zu wechseln.",
+  "text.lobby.welcome_to_fishing": "Willkommen in der Angeldimension, bitte verwenden Sie den Befehl %3$s, %4$s oder %5$s, um zu einer anderen Dimension zu wechseln.",
+  "text.lobby.welcome_to_gaming": "Willkommen in der Gaming-Dimension, bitte verwenden Sie den Befehl %1$s, %3$s oder %5$s, um zu einer anderen Dimension zu wechseln.",
+  "text.lobby.welcome_to_lobby": "Willkommen in der Lobby, bitte verwenden Sie den Befehl %1$s, %4$s oder %5$s, um zu einer anderen Dimension zu wechseln.",
+  "text.lobby.welcome_to_mining": "Willkommen in der Mining-Dimension, bitte verwenden Sie den Befehl %1$s, %3$s oder %5$s, um zu einer anderen Dimension zu wechseln.",
+  "text.lobby.welcome_to_void": "Willkommen in der Void-Dimension, bitte verwenden Sie den Befehl %1$s, %3$s oder %5$s, um zu einer anderen Dimension zu wechseln.",
+
+  "text.lobby.failed_already_in_dimension": "Fehler beim Teleportieren, Sie befinden sich bereits in der Dimension %1$s!",
+  "text.lobby.failed_cooldown": "Fehler beim Teleportieren nach %1$s, Sie können den Teleportationsbefehl in %2$s Sekunden erneut verwenden!",
+  "text.lobby.teleport_to": "Teleportiere nach %1$s, bitte nicht bewegen!",
+  "text.lobby.transfer_to_lobby": "Bitte warten Sie, Sie werden automatisch in die Lobby transportiert! Wenn nicht, verwenden Sie stattdessen bitte den Befehl %1$s.",
+  "text.lobby.unable_to_teleport": "Teleportieren nach %1$s nicht möglich, da %2$s Dimension nicht geladen ist!"
+}
