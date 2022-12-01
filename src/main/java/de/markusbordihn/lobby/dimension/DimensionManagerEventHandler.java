@@ -170,7 +170,7 @@ public class DimensionManagerEventHandler {
             && (blockEntity instanceof ChestBlockEntity
                 || blockEntity instanceof BarrelBlockEntity)) {
           CompoundTag compoundTagSaving = chunk.getBlockEntityNbtForSaving(blockPos);
-          if (compoundTagSaving.contains("LootTable")
+          if (compoundTagSaving != null && compoundTagSaving.contains("LootTable")
               && !compoundTagSaving.getString("LootTable").isEmpty()) {
             log.debug("{} Removing loot chest block entity {} at {}",
                 Constants.LOG_DIMENSION_MANAGER_PREFIX, blockEntity, blockPos);
@@ -232,14 +232,17 @@ public class DimensionManagerEventHandler {
   private static void handleSpawnEventMining(LevelAccessor level, Entity entity,
       LivingSpawnEvent event) {
     // Removing spawners as soon they try to spawn something.
-    if (COMMON.miningRemoveSpawner.get() && event instanceof LivingSpawnEvent.CheckSpawn checkSpawn
-        && checkSpawn.getSpawner() != null) {
+    if (COMMON.miningRemoveSpawner.get()
+        && event instanceof LivingSpawnEvent.CheckSpawn checkSpawn) {
       BaseSpawner spawner = checkSpawn.getSpawner();
-      BlockPos blockPos = spawner.getSpawnerBlockEntity().getBlockPos();
-      if (blockPos != null) {
-        log.debug("{} Removing spawner {} at {}", Constants.LOG_DIMENSION_MANAGER_PREFIX, spawner,
-            blockPos);
-        level.removeBlock(blockPos, true);
+      BlockEntity spawnerBlockEntity = spawner != null ? spawner.getSpawnerBlockEntity() : null;
+      if (spawnerBlockEntity != null) {
+        BlockPos blockPos = spawnerBlockEntity.getBlockPos();
+        if (blockPos != null) {
+          log.debug("{} Removing spawner {} at {}", Constants.LOG_DIMENSION_MANAGER_PREFIX, spawner,
+              blockPos);
+          level.removeBlock(blockPos, true);
+        }
       }
     }
 

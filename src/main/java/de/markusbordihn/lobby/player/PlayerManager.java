@@ -133,22 +133,26 @@ public class PlayerManager {
     if (!username.isEmpty()) {
       ServerPlayer player =
           ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(username);
+      if (player != null) {
+        log.info("{} Player {} {} logged in and will be tracked for {} secs.",
+            Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity(),
+            PLAYER_LOGIN_TRACKING_TIMEOUT);
 
-      log.info("{} Player {} {} logged in and will be tracked for {} secs.",
-          Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity(),
-          PLAYER_LOGIN_TRACKING_TIMEOUT);
+        // Heal player by 1 point, just in case.
+        player.heal(1);
 
-      // Heal player by 1 point, just in case.
-      player.heal(1);
-
-      // Send message to player that he will be transferred.
-      if ((generalDefaultToLobbyAlways || !playerTeleportList.contains(player.getUUID()))
-          && player.level != DimensionManager.getLobbyDimension()) {
-        player.sendMessage(
-            new TranslatableComponent(Constants.TEXT_PREFIX + "transfer_to_lobby", lobbyCommand),
-            Util.NIL_UUID);
+        // Send message to player that he will be transferred.
+        if ((generalDefaultToLobbyAlways || !playerTeleportList.contains(player.getUUID()))
+            && player.level != DimensionManager.getLobbyDimension()) {
+          player.sendMessage(
+              new TranslatableComponent(Constants.TEXT_PREFIX + "transfer_to_lobby", lobbyCommand),
+              Util.NIL_UUID);
+        }
+        playerValidationList.add(new PlayerValidation(player));
+      } else {
+        log.warn("{} Unable to track player {} {}, it's unknown for the server!",
+            Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity());
       }
-      playerValidationList.add(new PlayerValidation(player));
     }
   }
 
