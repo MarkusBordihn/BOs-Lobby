@@ -116,12 +116,19 @@ public class PlayerManager {
       ServerPlayer player =
           ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayerByName(username);
 
+      if (player == null) {
+        log.error("{} Unable to get player for {} {} from the server!",
+            Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity());
+        return;
+      }
+
       log.info("{} Player {} {} logged in and will be tracked for {} secs.",
           Constants.LOG_PLAYER_MANAGER_PREFIX, username, event.getEntity(),
           PLAYER_LOGIN_VALIDATION_TIMEOUT_MILLI);
 
       // Heal player by 1 point, just in case.
       player.heal(1);
+
 
       // Send message to player that he will be transferred.
       if ((COMMON.generalDefaultToLobbyAlways.get()

@@ -19,30 +19,10 @@
 
 package de.markusbordihn.lobby;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import de.markusbordihn.lobby.block.ModBlocks;
-import de.markusbordihn.lobby.item.ModItems;
 
 @Mod(Constants.MOD_ID)
 public class Lobby {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  public Lobby() {
-    final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-    modEventBus.addListener(ClientSetup::new);
-
-    log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
-    ModItems.ITEMS.register(modEventBus);
-
-    log.info("{} Blocks ...", Constants.LOG_REGISTER_PREFIX);
-    ModBlocks.BLOCKS.register(modEventBus);
-  }
+  public Lobby() { /* Constructor is needed for mod loader, even not used by the mod itself. */ }
 }
