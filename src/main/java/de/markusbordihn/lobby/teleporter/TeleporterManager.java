@@ -34,10 +34,7 @@ import net.minecraft.world.level.Level;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import dev.ftb.mods.ftbessentials.util.FTBEPlayerData;
 
 import de.markusbordihn.lobby.Constants;
 import de.markusbordihn.lobby.config.CommonConfig;
@@ -119,9 +116,6 @@ public class TeleporterManager {
       log.info("{} Using custom spawn point {} {} {} for void dimension",
           Constants.LOG_TELEPORT_MANAGER_PREFIX, COMMON.voidSpawnPointX.get(),
           COMMON.voidSpawnPointY.get(), COMMON.voidSpawnPointZ.get());
-    }
-    if (ModList.get().isLoaded("ftbessentials")) {
-      log.info("Enable FTB Essentials integration.");
     }
   }
 
@@ -275,8 +269,5 @@ public class TeleporterManager {
     BlockPos blockPos = player.blockPosition();
 
     log.debug("Add teleport history for player {} in {} with {}", player, dimension, blockPos);
-    if (ModList.get().isLoaded("ftbessentials")) {
-      FTBEPlayerData.addTeleportHistory(player, dimension, blockPos);
-    }
   }
 }

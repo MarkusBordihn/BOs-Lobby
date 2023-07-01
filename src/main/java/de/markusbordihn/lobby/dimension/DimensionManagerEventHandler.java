@@ -45,8 +45,10 @@ import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.dimension.DimensionType;
 
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent.FinalizeSpawn;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -125,13 +127,15 @@ public class DimensionManagerEventHandler {
     }
   }
 
+  // MobSpawnEvent is fired when an Entity is about to be spawned.
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void handleLivingCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event) {
+  public static void handleLivingCheckSpawnEvent(MobSpawnEvent event) {
     handleSpawnEvent(event);
   }
 
+  // FinalizeSpawn is fired before a entity is finalized.
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void handleLivingSpecialSpawnEvent(LivingSpawnEvent.SpecialSpawn event) {
+  public static void handleLivingSpecialSpawnEvent(FinalizeSpawn event) {
     handleSpawnEvent(event);
   }
 
@@ -182,17 +186,17 @@ public class DimensionManagerEventHandler {
     }
   }
 
-  private static void handleSpawnEvent(LivingSpawnEvent event) {
-
-    // Ignore client side.
-    LevelAccessor level = event.getLevel();
-    if (level.isClientSide()) {
-      return;
-    }
+  private static void handleSpawnEvent(EntityEvent event) {
 
     // Ignore null entities and specific entities.
     Entity entity = event.getEntity();
     if (entity == null || entity instanceof Projectile) {
+      return;
+    }
+
+    // Ignore client side.
+    LevelAccessor level = entity.getLevel();
+    if (level.isClientSide()) {
       return;
     }
 
@@ -211,30 +215,29 @@ public class DimensionManagerEventHandler {
     }
   }
 
-  private static void handleSpawnEventFishing(LivingSpawnEvent event) {
+  private static void handleSpawnEventFishing(EntityEvent event) {
     if (Boolean.TRUE.equals(COMMON.fishingDisableMobSpawning.get())) {
       event.setResult(Event.Result.DENY);
     }
   }
 
-  private static void handleSpawnEventGaming(LivingSpawnEvent event) {
+  private static void handleSpawnEventGaming(EntityEvent event) {
     if (Boolean.TRUE.equals(COMMON.gamingDisableMobSpawning.get())) {
       event.setResult(Event.Result.DENY);
     }
   }
 
-  private static void handleSpawnEventLobby(LivingSpawnEvent event) {
+  private static void handleSpawnEventLobby(EntityEvent event) {
     if (Boolean.TRUE.equals(COMMON.lobbyDisableMobSpawning.get())) {
       event.setResult(Event.Result.DENY);
     }
   }
 
   private static void handleSpawnEventMining(LevelAccessor level, Entity entity,
-      LivingSpawnEvent event) {
+      EntityEvent event) {
     // Removing spawners as soon they try to spawn something.
-    if (COMMON.miningRemoveSpawner.get()
-        && event instanceof LivingSpawnEvent.CheckSpawn checkSpawn) {
-      BaseSpawner spawner = checkSpawn.getSpawner();
+    if (COMMON.miningRemoveSpawner.get() && event instanceof FinalizeSpawn finalizeSpawn) {
+      BaseSpawner spawner = finalizeSpawn.getSpawner();
       if (spawner != null) {
         BlockEntity blockEntity = spawner.getSpawnerBlockEntity();
         if (blockEntity != null) {
@@ -269,7 +272,7 @@ public class DimensionManagerEventHandler {
     }
   }
 
-  private static void handleSpawnEventVoid(LivingSpawnEvent event) {
+  private static void handleSpawnEventVoid(EntityEvent event) {
     if (Boolean.TRUE.equals(COMMON.voidDisableMobSpawning.get())) {
       event.setResult(Event.Result.DENY);
     }

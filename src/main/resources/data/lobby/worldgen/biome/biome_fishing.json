@@ -1,6 +1,7 @@
 {
   "temperature": 0.5,
   "downfall": 0.5,
+  "has_precipitation": false,
   "precipitation": "none",
   "category": "ocean",
   "effects": {

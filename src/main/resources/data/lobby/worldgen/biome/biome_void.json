@@ -1,4 +1,5 @@
 {
+  "has_precipitation": false,
   "scale": 1,
   "effects": {
     "fog_color": 12638463,
