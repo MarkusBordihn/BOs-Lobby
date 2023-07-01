@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.03.05
+
+- Refactored code for version 1.19.3-44.1.21
+
 ### 2022.12.11
 
 - Refactored code for version 1.19.3-44.0.6

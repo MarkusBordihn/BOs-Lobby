@@ -19,10 +19,14 @@
 
 package de.markusbordihn.lobby;
 
+import de.markusbordihn.lobby.utils.StopModReposts;
+
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(Constants.MOD_ID)
 public class Lobby {
 
-  public Lobby() { /* Constructor is needed for mod loader, even not used by the mod itself. */ }
+  public Lobby() {
+    StopModReposts.checkStopModReposts();
+  }
 }
