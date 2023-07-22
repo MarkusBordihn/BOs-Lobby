@@ -39,18 +39,18 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
-    commandSource.sendSuccess(Component.literal(feedback), false);
+    commandSource.sendSuccess(() -> Component.literal(feedback), false);
   }
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, Component feedback) {
     CommandSourceStack commandSource = context.getSource();
-    commandSource.sendSuccess(feedback, false);
+    commandSource.sendSuccess(() -> feedback, false);
   }
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context,
       MutableComponent feedback) {
     CommandSourceStack commandSource = context.getSource();
-    commandSource.sendSuccess(feedback, false);
+    commandSource.sendSuccess(() -> feedback, false);
   }
 
   public static void registerCommand(String commandName, String dimensionName, int permission) {

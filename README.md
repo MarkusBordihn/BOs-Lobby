@@ -1,4 +1,4 @@
-# 🏝 Lobby, Fishing and Mining Dimension
+# 🏝 Lobby, Fishing and Mining Dimension (1.20)
 
 [![Lobby, Fishing and Mining Dimension Downloads](http://cf.way2muchnoise.eu/full_567798_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
 [![Lobby, Fishing and Mining Dimension Versions](http://cf.way2muchnoise.eu/versions/Minecraft_567798_all.svg)](https://www.curseforge.com/minecraft/mc-mods/lobby)
@@ -224,7 +224,11 @@ For more details, please check: [How to restore your world ?][how_to_restore_you
 | Forge 1.18.2   | ⚠️ Maintenance only   |
 | Forge 1.19     | ⚠️ Deprecated         |
 | Forge 1.19.1   | ⚠️ Deprecated         |
-| Forge 1.19.2   | ✔️ Active development |
+| Forge 1.19.2   | ⚠️ Deprecated         |
+| Forge 1.19.3   | ⚠️ Deprecated         |
+| Forge 1.19.4   | ⚠️ Maintenance only   |
+| Forge 1.20     | ⚠️ Deprecated         |
+| Forge 1.20.1   | ✔️ Active development |
 
 ## Note
 

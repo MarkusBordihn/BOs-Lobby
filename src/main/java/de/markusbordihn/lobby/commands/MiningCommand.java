@@ -79,7 +79,7 @@ public class MiningCommand extends CustomCommand {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
           COMMON.miningDimensionName.get(), DimensionManager.getMiningDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.miningRestrictCommand.get())
-        || player.getLevel() != DimensionManager.getMiningDimension()) {
+        || player.level() != DimensionManager.getMiningDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
         sendFeedback(context,

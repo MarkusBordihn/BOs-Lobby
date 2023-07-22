@@ -80,7 +80,7 @@ public class FishingCommand extends CustomCommand {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
           COMMON.fishingDimensionName.get(), DimensionManager.getFishingDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.fishingRestrictCommand.get())
-        || player.getLevel() != DimensionManager.getFishingDimension()) {
+        || player.level() != DimensionManager.getFishingDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
         sendFeedback(context,

@@ -195,13 +195,13 @@ public class DimensionManagerEventHandler {
     }
 
     // Ignore client side.
-    LevelAccessor level = entity.getLevel();
+    LevelAccessor level = entity.level();
     if (level.isClientSide()) {
       return;
     }
 
     // Control spawns depending on the dimension.
-    String dimensionLocation = entity.getLevel().dimension().location().toString();
+    String dimensionLocation = entity.level().dimension().location().toString();
     if (COMMON.fishingDimension.get().equals(dimensionLocation)) {
       handleSpawnEventFishing(event);
     } else if (COMMON.lobbyDimension.get().equals(dimensionLocation)) {

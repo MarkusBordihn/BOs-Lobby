@@ -121,7 +121,7 @@ public class TeleporterManager {
 
   public static boolean teleportToDefaultDimension(ServerPlayer player) {
     ServerLevel defaultDimension = DimensionManager.getDefaultDimension();
-    boolean isSameDimension = player.level == defaultDimension;
+    boolean isSameDimension = player.level() == defaultDimension;
     boolean successfullyTeleported = false;
     if (Boolean.TRUE.equals(COMMON.defaultUseCustomSpawnPoint.get())) {
       successfullyTeleported =
@@ -139,7 +139,7 @@ public class TeleporterManager {
 
   public static boolean teleportToFishingDimension(ServerPlayer player) {
     ServerLevel fishingDimension = DimensionManager.getFishingDimension();
-    boolean isSameDimension = player.level == fishingDimension;
+    boolean isSameDimension = player.level() == fishingDimension;
     boolean successfullyTeleported = false;
     if (Boolean.TRUE.equals(COMMON.fishingUseCustomSpawnPoint.get())) {
       successfullyTeleported =
@@ -159,7 +159,7 @@ public class TeleporterManager {
 
   public static boolean teleportToGamingDimension(ServerPlayer player) {
     ServerLevel gamingDimension = DimensionManager.getGamingDimension();
-    boolean isSameDimension = player.level == gamingDimension;
+    boolean isSameDimension = player.level() == gamingDimension;
     boolean successfullyTeleported = false;
     if (Boolean.TRUE.equals(COMMON.gamingUseCustomSpawnPoint.get())) {
       successfullyTeleported =
@@ -179,7 +179,7 @@ public class TeleporterManager {
 
   public static boolean teleportToLobbyDimension(ServerPlayer player) {
     ServerLevel lobbyDimension = DimensionManager.getLobbyDimension();
-    boolean isSameDimension = player.level == lobbyDimension;
+    boolean isSameDimension = player.level() == lobbyDimension;
     boolean successfullyTeleported = false;
     if (Boolean.TRUE.equals(COMMON.lobbyUseCustomSpawnPoint.get())) {
       successfullyTeleported = teleportPlayer(player, lobbyDimension, COMMON.lobbySpawnPointX.get(),
@@ -197,7 +197,7 @@ public class TeleporterManager {
 
   public static boolean teleportToMiningDimension(ServerPlayer player) {
     ServerLevel miningDimension = DimensionManager.getMiningDimension();
-    boolean isSameDimension = player.level == miningDimension;
+    boolean isSameDimension = player.level() == miningDimension;
     boolean successfullyTeleported = false;
     if (Boolean.TRUE.equals(COMMON.miningUseCustomSpawnPoint.get())) {
       successfullyTeleported =
@@ -217,7 +217,7 @@ public class TeleporterManager {
 
   public static boolean teleportToVoidDimension(ServerPlayer player) {
     ServerLevel voidDimension = DimensionManager.getVoidDimension();
-    boolean isSameDimension = player.level == voidDimension;
+    boolean isSameDimension = player.level() == voidDimension;
     boolean successfullyTeleported = false;
     if (Boolean.TRUE.equals(COMMON.voidUseCustomSpawnPoint.get())) {
       successfullyTeleported = teleportPlayer(player, voidDimension, COMMON.voidSpawnPointX.get(),
@@ -235,7 +235,7 @@ public class TeleporterManager {
 
   private static boolean teleportPlayer(ServerPlayer player, ServerLevel dimension) {
     // Ignore client side levels and if dimension was not found.
-    if (player.getLevel().isClientSide() || dimension == null) {
+    if (player.level().isClientSide() || dimension == null) {
       return false;
     }
     BlockPos sharedSpawnPos = dimension.getSharedSpawnPos();
@@ -246,12 +246,12 @@ public class TeleporterManager {
   private static boolean teleportPlayer(ServerPlayer player, ServerLevel dimension, int x, int y,
       int z) {
     // Ignore client side levels and if dimension was not found.
-    if (player.getLevel().isClientSide() || dimension == null) {
+    if (player.level().isClientSide() || dimension == null) {
       return false;
     }
 
     // If we are already in the same dimension use a simple teleport instead.
-    if (player.level == dimension) {
+    if (player.level() == dimension) {
       addTeleportHistory(player);
       player.teleportTo(x, y, z);
       return true;
@@ -264,7 +264,7 @@ public class TeleporterManager {
   }
 
   private static void addTeleportHistory(ServerPlayer player) {
-    ServerLevel level = player.getLevel();
+    Level level = player.level();
     ResourceKey<Level> dimension = level.dimension();
     BlockPos blockPos = player.blockPosition();
 

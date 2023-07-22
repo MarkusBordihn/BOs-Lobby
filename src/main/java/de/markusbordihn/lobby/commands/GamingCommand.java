@@ -79,7 +79,7 @@ public class GamingCommand extends CustomCommand {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
           COMMON.gamingDimensionName.get(), DimensionManager.getGamingDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.gamingRestrictCommand.get())
-        || player.getLevel() != DimensionManager.getGamingDimension()) {
+        || player.level() != DimensionManager.getGamingDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
         sendFeedback(context,

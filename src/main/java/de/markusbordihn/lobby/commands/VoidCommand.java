@@ -78,7 +78,7 @@ public class VoidCommand extends CustomCommand {
       sendFeedback(context, Component.translatable(Constants.UNABLE_TO_TELEPORT_MESSAGE,
           COMMON.voidDimensionName.get(), DimensionManager.getVoidDimensionName()));
     } else if (Boolean.TRUE.equals(!COMMON.voidRestrictCommand.get())
-        || player.getLevel() != DimensionManager.getVoidDimension()) {
+        || player.level() != DimensionManager.getVoidDimension()) {
       if (Boolean.TRUE.equals(COMMON.teleportDelayEnabled.get())
           && COMMON.teleportDelayCounter.get() > 0) {
         sendFeedback(context,
